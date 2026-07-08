@@ -74,6 +74,104 @@ const createProduct = async (req, res) => {
     }
 };
 
+const getProducts = async (req, res) => {
+
+    try {
+
+        const {
+            keyword,
+            category,
+            minPrice,
+            maxPrice,
+            sort,
+            page = 1
+        } = req.query;
+
+        let filter = {};
+
+        if (keyword) {
+            filter.name = {
+                $regex: keyword,
+                $options: "i"
+            };
+        }
+
+        if (category) {
+            filter.category = category;
+        }
+
+        if (minPrice || maxPrice) {
+
+            filter.price = {};
+
+            if (minPrice) {
+                filter.price.$gte = Number(minPrice);
+            }
+
+            if (maxPrice) {
+                filter.price.$lte = Number(maxPrice);
+            }
+
+        }
+
+        const limit = 10;
+
+        const skip = (page - 1) * limit;
+
+        let sortOption = {
+            createdAt: -1
+        };
+
+        if (sort === "price") {
+            sortOption = { price: 1 };
+        }
+
+        if (sort === "-price") {
+            sortOption = { price: -1 };
+        }
+
+        if (sort === "rating") {
+            sortOption = { rating: -1 };
+        }
+
+        const products = await Product.find(filter)
+            .sort(sortOption)
+            .skip(skip)
+            .limit(limit);
+
+        const totalProducts = await Product.countDocuments(filter);
+
+        res.status(200).json({
+
+            success: true,
+
+            count: products.length,
+
+            totalProducts,
+
+            currentPage: Number(page),
+
+            totalPages: Math.ceil(totalProducts / limit),
+
+            products
+
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+
+            success: false,
+
+            message: error.message
+
+        });
+
+    }
+
+};
+
 module.exports = {
-    createProduct
+    createProduct,
+    getProducts
 };
