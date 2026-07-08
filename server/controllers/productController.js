@@ -78,7 +78,6 @@ const createProduct = async (req, res) => {
 const getProducts = async (req, res) => {
 
     try {
-
         const {
             keyword,
             category,
@@ -112,7 +111,6 @@ const getProducts = async (req, res) => {
             if (maxPrice) {
                 filter.price.$lte = Number(maxPrice);
             }
-
         }
 
         const limit = 10;
@@ -143,31 +141,19 @@ const getProducts = async (req, res) => {
         const totalProducts = await Product.countDocuments(filter);
 
         res.status(200).json({
-
             success: true,
-
             count: products.length,
-
             totalProducts,
-
             currentPage: Number(page),
-
             totalPages: Math.ceil(totalProducts / limit),
-
             products
-
         });
 
     } catch (error) {
-
         res.status(500).json({
-
             success: false,
-
             message: error.message
-
         });
-
     }
 
 };
@@ -175,61 +161,101 @@ const getProducts = async (req, res) => {
 const getProductById = async (req, res) => {
 
     try {
-
         const { id } = req.params;
-
         if (!mongoose.Types.ObjectId.isValid(id)) {
-
             return res.status(400).json({
-
                 success: false,
-
                 message: "Invalid Product ID"
-
             });
-
         }
 
         const product = await Product.findById(id);
-
         if (!product) {
-
             return res.status(404).json({
-
                 success: false,
-
                 message: "Product not found"
-
             });
-
         }
 
         res.status(200).json({
-
             success: true,
-
             product
-
         });
-
     }
 
     catch (error) {
-
         res.status(500).json({
-
             success: false,
-
             message: error.message
-
         });
+    }
+};
 
+const updateProduct = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Product ID"
+            });
+        }
+
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+
+        const {
+            name,
+            description,
+            price,
+            category,
+            brand,
+            stock,
+            material,
+            color,
+            dimensions,
+            discount,
+            featured
+        } = req.body;
+
+        product.name = name || product.name;
+        product.description = description || product.description;
+        product.price = price ?? product.price;
+        product.category = category || product.category;
+        product.brand = brand || product.brand;
+        product.stock = stock ?? product.stock;
+        product.material = material || product.material;
+        product.color = color || product.color;
+        product.dimensions = dimensions || product.dimensions;
+        product.discount = discount ?? product.discount;
+        product.featured = featured ?? product.featured;
+        await product.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Product updated successfully",
+            product
+        });
     }
 
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 module.exports = {
     createProduct,
     getProducts,
-    getProductById
+    getProductById,
+    updateProduct
 };
