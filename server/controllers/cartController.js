@@ -65,6 +65,36 @@ const addToCart = async (req, res) => {
     }
 };
 
-module.exports = {
-    addToCart
+const getCart = async (req, res) => {
+    try{
+        const userId = req.user.id;
+        const cart = await Cart.findOne({
+            user:userId
+        }).populate("items.product");
+
+        if(!cart){
+            return res.status(200).json({
+                success:true,
+                message:"Cart is empty",
+                cart:{
+                    items:[],
+                    totalAmount:0
+                }
+            });
+        }
+
+        res.status(200).json({
+            success:true,
+            cart
+        });
+    }
+
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
 };
+
+module.exports = { addToCart, getCart};
