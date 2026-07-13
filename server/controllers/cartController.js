@@ -98,115 +98,70 @@ const getCart = async (req, res) => {
 };
 
 const updateCartItem = async (req, res) => {
-
     try{
-
         const { productId } = req.params;
-
         const { quantity } = req.body;
-
         const userId = req.user.id;
 
         if(quantity < 1){
-
             return res.status(400).json({
-
                 success:false,
-
                 message:"Quantity must be at least 1"
-
             });
-
         }
 
         const cart = await Cart.findOne({
-
             user:userId
-
         });
 
         if(!cart){
 
             return res.status(404).json({
-
                 success:false,
-
                 message:"Cart not found"
-
             });
-
         }
 
         const item = cart.items.find(
-
             item=>item.product.toString()===productId
-
         );
 
         if(!item){
-
             return res.status(404).json({
-
                 success:false,
-
                 message:"Product not found in cart"
-
             });
-
         }
 
         const product = await Product.findById(productId);
-
         if(quantity > product.stock){
-
             return res.status(400).json({
-
                 success:false,
-
                 message:"Requested quantity exceeds available stock"
-
             });
-
         }
 
         item.quantity = quantity;
-
         cart.totalAmount = cart.items.reduce(
-
             (total,item)=>
-
             total + item.price * item.quantity,
-
             0
-
         );
 
         await cart.save();
-
         res.status(200).json({
-
             success:true,
-
             message:"Cart updated successfully",
-
             cart
-
         });
-
     }
 
     catch(error){
-
         res.status(500).json({
-
             success:false,
-
             message:error.message
-
         });
-
     }
-
 };
 
 module.exports = { addToCart, getCart , updateCartItem };
