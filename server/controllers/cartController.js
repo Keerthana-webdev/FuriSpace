@@ -229,4 +229,45 @@ const removeCartItem = async (req, res) => {
     }
 };
 
-module.exports = { addToCart, getCart , updateCartItem, removeCartItem};
+const clearCart = async (req,res)=>{
+
+    try{
+        const userId = req.user.id;
+        const cart = await Cart.findOne({
+            user:userId
+        });
+
+        if(!cart){
+            return res.status(404).json({
+                success:false,
+                message:"Cart not found"
+            });
+        }
+
+        if(cart.items.length===0){
+            return res.status(200).json({
+                success:true,
+                message:"Cart is already empty",
+                cart
+            });
+        }
+
+        cart.items=[];
+        cart.totalAmount=0;
+        await cart.save();
+        res.status(200).json({
+            success:true,
+            message:"Cart cleared successfully",
+            cart
+        });
+    }
+
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+};
+
+module.exports = { addToCart, getCart , updateCartItem, removeCartItem, clearCart};
