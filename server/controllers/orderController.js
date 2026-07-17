@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
@@ -97,4 +99,50 @@ const getMyOrders = async (req, res) => {
     }
 };
 
-module.exports = { placeOrder, getMyOrders };
+const getOrderById = async (req,res)=>{
+    try{
+        const { orderId } = req.params;
+        if(!mongoose.Types.ObjectId.isValid(orderId)){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid Order ID"
+            });
+        }
+
+        const order = await Order.findById(orderId)
+        .populate("user","name email")
+        .populate("orderItems.product","name images");
+        if(!order){
+
+            return res.status(404).json({
+                success:false,
+                message:"Order not found"
+            });
+        }
+
+        if(
+            order.user._id.toString() !== req.user.id &&
+            req.user.role !== "admin"
+        ){
+
+            return res.status(403).json({
+                success:false,
+                message:"Access denied"
+            });
+        }
+
+        res.status(200).json({
+            success:true,
+            order
+        });
+    }
+
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+};
+
+module.exports = { placeOrder, getMyOrders, getOrderById };
