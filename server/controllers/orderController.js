@@ -145,4 +145,78 @@ const getOrderById = async (req,res)=>{
     }
 };
 
-module.exports = { placeOrder, getMyOrders, getOrderById };
+const cancelOrder = async (req,res)=>{
+    try{
+        const { orderId } = req.params;
+        const userId = req.user.id;
+        if(!mongoose.Types.ObjectId.isValid(orderId)){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid Order ID"
+            });
+        }
+
+        const order = await Order.findById(orderId);
+        if(!order){
+            return res.status(404).json({
+                success:false,
+                message:"Order not found"
+            });
+        }
+
+        if(order.user.toString() !== userId){
+            return res.status(403).json({
+                success:false,
+                message:"Access denied"
+            });
+        }
+
+        if(
+            order.orderStatus==="Shipped" ||
+            order.orderStatus==="Out for Delivery" ||
+            order.orderStatus==="Delivered"
+        ){
+
+            return res.status(400).json({
+                success:false,
+                message:"Order cannot be cancelled"
+            });
+        }
+
+        if(order.orderStatus==="Cancelled"){
+            return res.status(400).json({
+                success:false,
+                message:"Order already cancelled"
+            });
+        }
+
+        for(const item of order.orderItems){
+            const product = await Product.findById(item.product);
+            if(product){
+                product.stock += item.quantity;
+                await product.save();
+            }
+        }
+
+        order.orderStatus="Cancelled";
+        if(order.paymentMethod !== "COD"){
+            order.paymentStatus="Failed";
+        }
+
+        await order.save();
+        res.status(200).json({
+            success:true,
+            message:"Order cancelled successfully",
+            order
+        });
+    }
+
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+};
+
+module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder };
