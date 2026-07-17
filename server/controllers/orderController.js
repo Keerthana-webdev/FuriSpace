@@ -6,10 +6,7 @@ const Product = require("../models/Product");
 
 const placeOrder = async (req, res) => {
   try {
-    const {
-      shippingAddress,
-      paymentMethod,
-    } = req.body;
+    const { shippingAddress, paymentMethod } = req.body;
 
     const userId = req.user.id;
 
@@ -64,7 +61,6 @@ const placeOrder = async (req, res) => {
       message: "Order placed successfully",
       order,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -74,149 +70,171 @@ const placeOrder = async (req, res) => {
 };
 
 const getMyOrders = async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const orders = await Order.find({
-            user: userId
-        })
+  try {
+    const userId = req.user.id;
+    const orders = await Order.find({
+      user: userId,
+    })
 
-        .sort({
-            createdAt: -1
-        });
+      .sort({
+        createdAt: -1,
+      });
 
-        res.status(200).json({
-            success: true,
-            count: orders.length,
-            orders
-        });
-    }
-
-    catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
-const getOrderById = async (req,res)=>{
-    try{
-        const { orderId } = req.params;
-        if(!mongoose.Types.ObjectId.isValid(orderId)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid Order ID"
-            });
-        }
-
-        const order = await Order.findById(orderId)
-        .populate("user","name email")
-        .populate("orderItems.product","name images");
-        if(!order){
-
-            return res.status(404).json({
-                success:false,
-                message:"Order not found"
-            });
-        }
-
-        if(
-            order.user._id.toString() !== req.user.id &&
-            req.user.role !== "admin"
-        ){
-
-            return res.status(403).json({
-                success:false,
-                message:"Access denied"
-            });
-        }
-
-        res.status(200).json({
-            success:true,
-            order
-        });
+const getOrderById = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Order ID",
+      });
     }
 
-    catch(error){
-        res.status(500).json({
-            success:false,
-            message:error.message
-        });
+    const order = await Order.findById(orderId)
+      .populate("user", "name email")
+      .populate("orderItems.product", "name images");
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
     }
+
+    if (
+      order.user._id.toString() !== req.user.id &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
-const cancelOrder = async (req,res)=>{
-    try{
-        const { orderId } = req.params;
-        const userId = req.user.id;
-        if(!mongoose.Types.ObjectId.isValid(orderId)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid Order ID"
-            });
-        }
-
-        const order = await Order.findById(orderId);
-        if(!order){
-            return res.status(404).json({
-                success:false,
-                message:"Order not found"
-            });
-        }
-
-        if(order.user.toString() !== userId){
-            return res.status(403).json({
-                success:false,
-                message:"Access denied"
-            });
-        }
-
-        if(
-            order.orderStatus==="Shipped" ||
-            order.orderStatus==="Out for Delivery" ||
-            order.orderStatus==="Delivered"
-        ){
-
-            return res.status(400).json({
-                success:false,
-                message:"Order cannot be cancelled"
-            });
-        }
-
-        if(order.orderStatus==="Cancelled"){
-            return res.status(400).json({
-                success:false,
-                message:"Order already cancelled"
-            });
-        }
-
-        for(const item of order.orderItems){
-            const product = await Product.findById(item.product);
-            if(product){
-                product.stock += item.quantity;
-                await product.save();
-            }
-        }
-
-        order.orderStatus="Cancelled";
-        if(order.paymentMethod !== "COD"){
-            order.paymentStatus="Failed";
-        }
-
-        await order.save();
-        res.status(200).json({
-            success:true,
-            message:"Order cancelled successfully",
-            order
-        });
+const cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const userId = req.user.id;
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Order ID",
+      });
     }
 
-    catch(error){
-        res.status(500).json({
-            success:false,
-            message:error.message
-        });
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
     }
+
+    if (order.user.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+
+    if (
+      order.orderStatus === "Shipped" ||
+      order.orderStatus === "Out for Delivery" ||
+      order.orderStatus === "Delivered"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Order cannot be cancelled",
+      });
+    }
+
+    if (order.orderStatus === "Cancelled") {
+      return res.status(400).json({
+        success: false,
+        message: "Order already cancelled",
+      });
+    }
+
+    for (const item of order.orderItems) {
+      const product = await Product.findById(item.product);
+      if (product) {
+        product.stock += item.quantity;
+        await product.save();
+      }
+    }
+
+    order.orderStatus = "Cancelled";
+    if (order.paymentMethod !== "COD") {
+      order.paymentStatus = "Failed";
+    }
+
+    await order.save();
+    res.status(200).json({
+      success: true,
+      message: "Order cancelled successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
-module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder };
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+
+      .populate(
+        "user",
+        "name email",
+      )
+
+      .populate(
+        "orderItems.product",
+        "name images category",
+      )
+
+      .sort({
+        createdAt: -1,
+      });
+
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder, getAllOrders };

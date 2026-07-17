@@ -17,20 +17,15 @@ const protect = (req, res, next) => {
 
         const token = authHeader.split(" ")[1];
 
-        const decoded = jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        );
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         req.user = decoded;
 
         next();
 
-    }
+    } catch (error) {
 
-    catch (error) {
-
-        res.status(401).json({
+        return res.status(401).json({
             success: false,
             message: "Invalid token"
         });
@@ -39,4 +34,21 @@ const protect = (req, res, next) => {
 
 };
 
-module.exports = protect;
+// Admin Middleware
+const adminOnly = (req, res, next) => {
+
+    if (req.user && req.user.role === "admin") {
+        next();
+    } else {
+        return res.status(403).json({
+            success: false,
+            message: "Access denied. Admin only."
+        });
+    }
+
+};
+
+module.exports = {
+    protect,
+    adminOnly
+};
