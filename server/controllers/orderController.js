@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const User = require("../models/User");
 
 const placeOrder = async (req, res) => {
   try {
@@ -210,15 +211,9 @@ const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
 
-      .populate(
-        "user",
-        "name email",
-      )
+      .populate("user", "name email")
 
-      .populate(
-        "orderItems.product",
-        "name images category",
-      )
+      .populate("orderItems.product", "name images category")
 
       .sort({
         createdAt: -1,
@@ -237,73 +232,201 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-const updateOrderStatus = async (req,res)=>{
-    try{
-        const { orderId } = req.params;
-        console.log(req.body);
-        const { orderStatus } = req.body;
-        if(!mongoose.Types.ObjectId.isValid(orderId)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid Order ID"
-            });
-        }
-
-        const order = await Order.findById(orderId);
-        if(!order){
-            return res.status(404).json({
-                success:false,
-                message:"Order not found"
-            });
-        }
-
-        const validStatuses=[
-            "Processing",
-            "Confirmed",
-            "Shipped",
-            "Out for Delivery",
-            "Delivered",
-            "Cancelled"
-        ];
-
-        if(!validStatuses.includes(orderStatus)){
-            return res.status(400).json({
-                success:false,
-                message:"Invalid Order Status"
-            });
-        }
-
-        if(order.orderStatus==="Cancelled"){
-            return res.status(400).json({
-                success:false,
-                message:"Cancelled orders cannot be updated"
-            });
-        }
-
-        order.orderStatus=orderStatus;
-
-        if(
-            order.paymentMethod==="COD"
-            &&
-            orderStatus==="Delivered"
-        ){
-            order.paymentStatus="Paid";
-        }
-
-        await order.save();
-        res.status(200).json({
-            success:true,
-            message:"Order status updated successfully",
-            order
-        });
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    console.log(req.body);
+    const { orderStatus } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Order ID",
+      });
     }
 
-    catch(error){
-        res.status(500).json({
-            success:false,
-            message:error.message
-        });
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
     }
+
+    const validStatuses = [
+      "Processing",
+      "Confirmed",
+      "Shipped",
+      "Out for Delivery",
+      "Delivered",
+      "Cancelled",
+    ];
+
+    if (!validStatuses.includes(orderStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Order Status",
+      });
+    }
+
+    if (order.orderStatus === "Cancelled") {
+      return res.status(400).json({
+        success: false,
+        message: "Cancelled orders cannot be updated",
+      });
+    }
+
+    order.orderStatus = orderStatus;
+
+    if (order.paymentMethod === "COD" && orderStatus === "Delivered") {
+      order.paymentStatus = "Paid";
+    }
+
+    await order.save();
+    res.status(200).json({
+      success: true,
+      message: "Order status updated successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
-module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder, getAllOrders , updateOrderStatus };
+const dashboardStats = async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+
+    const totalCustomers = await User.countDocuments({
+      role: "customer",
+    });
+
+    const totalProducts = await Product.countDocuments();
+
+    const deliveredOrders = await Order.find({
+      orderStatus: "Delivered",
+    });
+
+    const totalRevenue = deliveredOrders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0,
+    );
+
+    const orderStatusStats = await Order.aggregate([
+      {
+        $group: {
+          _id: "$orderStatus",
+
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+    ]);
+
+    const monthlySales = await Order.aggregate([
+      {
+        $match: {
+          orderStatus: "Delivered",
+        },
+      },
+
+      {
+        $group: {
+          _id: {
+            month: {
+              $month: "$createdAt",
+            },
+          },
+
+          sales: {
+            $sum: "$totalAmount",
+          },
+        },
+      },
+
+      {
+        $sort: {
+          "_id.month": 1,
+        },
+      },
+    ]);
+
+    const topProducts = await Order.aggregate([
+      {
+        $match: {
+          orderStatus: "Delivered",
+        },
+      },
+
+      {
+        $unwind: "$orderItems",
+      },
+
+      {
+        $group: {
+          _id: "$orderItems.product",
+
+          quantity: {
+            $sum: "$orderItems.quantity",
+          },
+        },
+      },
+
+      {
+        $sort: {
+          quantity: -1,
+        },
+      },
+
+      {
+        $limit: 5,
+      },
+    ]);
+
+    const recentOrders = await Order.find()
+
+      .populate(
+        "user",
+        "name email",
+      )
+
+      .sort({
+        createdAt: -1,
+      })
+      .limit(5);
+
+    res.status(200).json({
+      success: true,
+
+      dashboard: {
+        totalOrders,
+        totalCustomers,
+        totalProducts,
+        totalRevenue,
+        orderStatusStats,
+        monthlySales,
+        topProducts,
+        recentOrders,
+      },
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {
+  placeOrder,
+  getMyOrders,
+  getOrderById,
+  cancelOrder,
+  getAllOrders,
+  updateOrderStatus,
+  dashboardStats
+};
