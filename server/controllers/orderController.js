@@ -237,4 +237,73 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder, getAllOrders };
+const updateOrderStatus = async (req,res)=>{
+    try{
+        const { orderId } = req.params;
+        console.log(req.body);
+        const { orderStatus } = req.body;
+        if(!mongoose.Types.ObjectId.isValid(orderId)){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid Order ID"
+            });
+        }
+
+        const order = await Order.findById(orderId);
+        if(!order){
+            return res.status(404).json({
+                success:false,
+                message:"Order not found"
+            });
+        }
+
+        const validStatuses=[
+            "Processing",
+            "Confirmed",
+            "Shipped",
+            "Out for Delivery",
+            "Delivered",
+            "Cancelled"
+        ];
+
+        if(!validStatuses.includes(orderStatus)){
+            return res.status(400).json({
+                success:false,
+                message:"Invalid Order Status"
+            });
+        }
+
+        if(order.orderStatus==="Cancelled"){
+            return res.status(400).json({
+                success:false,
+                message:"Cancelled orders cannot be updated"
+            });
+        }
+
+        order.orderStatus=orderStatus;
+
+        if(
+            order.paymentMethod==="COD"
+            &&
+            orderStatus==="Delivered"
+        ){
+            order.paymentStatus="Paid";
+        }
+
+        await order.save();
+        res.status(200).json({
+            success:true,
+            message:"Order status updated successfully",
+            order
+        });
+    }
+
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+};
+
+module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder, getAllOrders , updateOrderStatus };
