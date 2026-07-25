@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import "./Hero.css";
-import heroImage from "../../../assets/images/hero-sofa.png";
+import heroImage from "../../assets/images/hero-sofa.png";
 
 function Hero() {
   return (
