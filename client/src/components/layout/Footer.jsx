@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import {
-  FaFacebook,
-  FaInstagram,
-  FaTwitter,
-  FaLinkedin,
-  FaMapMarkerAlt,
-  FaPhone,
-  FaEnvelope,
-} from "react-icons/fa";
+  FiFacebook,
+  FiInstagram,
+  FiTwitter,
+  FiLinkedin,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiSend,
+} from "react-icons/fi";
+
 import "./Footer.css";
 
 function Footer() {
@@ -15,22 +17,18 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         {/* Company */}
+
         <div className="footer-section">
           <h2 className="footer-logo">FurniSpace</h2>
 
           <p>
-            Premium furniture designed for modern homes. We combine comfort,
-            elegance, and durability to make every space beautiful.
+            Premium furniture crafted for modern homes with style, comfort, and
+            quality.
           </p>
-
-          <div className="newsletter">
-            <input type="email" placeholder="Enter your email" />
-
-            <button>Subscribe</button>
-          </div>
         </div>
 
         {/* Quick Links */}
+
         <div className="footer-section">
           <h3>Quick Links</h3>
 
@@ -43,57 +41,77 @@ function Footer() {
           <Link to="#">Contact</Link>
         </div>
 
-        {/* Customer Support */}
-        <div className="footer-section">
-          <h3>Customer Support</h3>
+        {/* Support */}
 
-          <Link to="/orders">My Orders</Link>
+        <div className="footer-section">
+          <h3>Support</h3>
 
           <Link to="#">Shipping</Link>
 
           <Link to="#">Returns</Link>
 
           <Link to="#">Privacy Policy</Link>
+
+          <Link to="#">Terms & Conditions</Link>
         </div>
 
         {/* Contact */}
+
         <div className="footer-section">
-          <h3>Contact Us</h3>
+          <h3>Contact</h3>
 
           <p>
-            <FaMapMarkerAlt /> Bangalore, India
+            <FiMapPin /> Bangalore, India
           </p>
 
           <p>
-            <FaEnvelope /> support@furnispace.com
+            <FiPhone /> +91 9876543210
           </p>
 
           <p>
-            <FaPhone /> +91 9876543210
+            <FiMail /> support@furnispace.com
           </p>
+        </div>
 
-          <div className="social-icons">
-            <a href="#">
-              <FaFacebook />
-            </a>
+        {/* Newsletter */}
 
-            <a href="#">
-              <FaInstagram />
-            </a>
+        <div className="footer-section">
+          <h3>Newsletter</h3>
 
-            <a href="#">
-              <FaTwitter />
-            </a>
+          <p>Subscribe to receive our latest offers.</p>
 
-            <a href="#">
-              <FaLinkedin />
-            </a>
+          <div className="newsletter">
+            <input type="email" placeholder="Enter your email" />
+
+            <button>
+              <FiSend />
+            </button>
           </div>
         </div>
       </div>
 
+      {/* Bottom */}
+
       <div className="footer-bottom">
-        © 2026 FurniSpace. All Rights Reserved. ❤️ Made in India.
+        <div className="social-icons">
+          <a href="#">
+            <FiFacebook />
+          </a>
+
+          <a href="#">
+            <FiInstagram />
+          </a>
+
+          <a href="#">
+            <FiTwitter />
+          </a>
+
+          <a href="#">
+            <FiLinkedin />
+          </a>
+        </div>
+
+        <p>© 2026 FurniSpace. All Rights Reserved.</p>
       </div>
     </footer>
   );
