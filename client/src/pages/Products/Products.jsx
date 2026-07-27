@@ -1,27 +1,20 @@
-import FilterSidebar from "../../components/product/FilterSidebar";
-import SortDropdown from "../../components/product/SortDropdown";
+import ProductBanner from "../../components/product/ProductBanner";
+import ProductSidebar from "../../components/product/ProductSidebar";
 import ProductGrid from "../../components/product/ProductGrid";
+
 import "./Products.css";
 
 function Products() {
   return (
-    <section className="products-page">
-      <div className="products-header">
-        <input
-          type="text"
-          placeholder="Search furniture..."
-          className="search-input"
-        />
+    <>
+      <ProductBanner />
 
-        <SortDropdown />
-      </div>
-
-      <div className="products-container">
-        <FilterSidebar />
+      <section className="products-page">
+        <ProductSidebar />
 
         <ProductGrid />
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 

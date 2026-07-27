@@ -1,25 +1,5 @@
 function ProductGrid() {
-  return (
-    <div className="product-grid">
-
-      <div className="placeholder-card">
-        Product Card
-      </div>
-
-      <div className="placeholder-card">
-        Product Card
-      </div>
-
-      <div className="placeholder-card">
-        Product Card
-      </div>
-
-      <div className="placeholder-card">
-        Product Card
-      </div>
-
-    </div>
-  );
+  return <div>Product Grid Here</div>;
 }
 
 export default ProductGrid;
