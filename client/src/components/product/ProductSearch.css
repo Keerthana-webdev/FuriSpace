@@ -1,0 +1,51 @@
+.product-search {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  background: white;
+
+  padding: 15px 20px;
+
+  border-radius: 40px;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+
+  margin-bottom: 40px;
+}
+
+.product-search svg {
+  font-size: 22px;
+
+  color: #8b5e3c;
+}
+
+.product-search input {
+  flex: 1;
+
+  border: none;
+
+  outline: none;
+
+  font-size: 16px;
+}
+
+.product-search button {
+  border: none;
+
+  background: #8b5e3c;
+
+  color: white;
+
+  padding: 8px 18px;
+
+  border-radius: 20px;
+
+  cursor: pointer;
+}
+
+.product-search button:hover {
+  background: #6f472c;
+}

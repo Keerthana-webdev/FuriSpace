@@ -1,19 +1,17 @@
-.product-count{
-margin-bottom:30px;
-font-size:28px;
-font-weight:600;
-color:#333;
+.products-page {
+  display: grid;
+
+  grid-template-columns: 280px 1fr;
+
+  gap: 40px;
+
+  padding: 60px 8%;
+
+  background: #fafafa;
 }
 
-.products-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:30px;
-}
-
-.loading{
-text-align:center;
-padding:80px;
-font-size:24px;
-color:#666;
+@media (max-width: 900px) {
+  .products-page {
+    grid-template-columns: 1fr;
+  }
 }
