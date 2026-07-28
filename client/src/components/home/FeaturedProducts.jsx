@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../product/ProductCard";
-import { getProducts } from "../../services/productService";
+import { getAllProducts } from "../../services/productService";
 import "./FeaturedProducts.css";
 
 function FeaturedProducts() {
@@ -11,9 +11,9 @@ function FeaturedProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
+        const data = await getAllProducts();
 
-        setProducts(data);
+        setProducts(data.products);
       } catch (error) {
         console.log(error);
       } finally {
