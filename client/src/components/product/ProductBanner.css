@@ -26,3 +26,31 @@ margin-bottom:15px;
 .overlay p{
 font-size:20px;
 }
+
+.filter-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.filter-group input[type="range"] {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.clear-btn {
+  width: 100%;
+  padding: 12px;
+  background: #8b5e3c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.clear-btn:hover {
+  background: #6f472c;
+}
