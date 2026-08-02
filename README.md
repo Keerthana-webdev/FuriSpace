@@ -26,3 +26,12 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 - Inventory Management
 
 ---
+## Tech Stack
+
+### Frontend
+- React.js
+- React Router
+- Axios
+- Context API / Redux
+- CSS / Tailwind CSS
+
