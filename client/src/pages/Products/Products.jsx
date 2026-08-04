@@ -4,6 +4,7 @@ import ProductBanner from "../../components/product/ProductBanner";
 import ProductSidebar from "../../components/product/ProductSidebar";
 import ProductGrid from "../../components/product/ProductGrid";
 import ProductSearch from "../../components/product/ProductSearch";
+import ProductSort from "../../components/product/ProductSort";
 
 import { getAllProducts } from "../../services/productService";
 
