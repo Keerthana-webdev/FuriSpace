@@ -48,3 +48,24 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 
 ---
 
+###  Project Structure
+
+```
+FurniSpace
+│
+├── client/
+│   ├── src/
+│   ├── public/
+│
+├── server/
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── uploads/
+│   └── server.js
+│
+└── README.md
+```
+
