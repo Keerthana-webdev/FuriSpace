@@ -70,9 +70,9 @@ FurniSpace
 ```
 ---
 
-##  Installation
+###  Installation
 
-### Clone Repository
+#### Clone Repository
 
 ```bash
 git clone https://github.com/Keerthana-webdev/FurniSpace.git
