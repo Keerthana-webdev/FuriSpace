@@ -68,4 +68,12 @@ FurniSpace
 │
 └── README.md
 ```
+---
 
+##  Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Keerthana-webdev/FurniSpace.git
+```
