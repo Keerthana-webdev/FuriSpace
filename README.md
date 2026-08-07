@@ -77,3 +77,11 @@ FurniSpace
 ```bash
 git clone https://github.com/Keerthana-webdev/FurniSpace.git
 ```
+
+#### Backend
+
+```bash
+cd server
+npm install
+npm run dev
+```
