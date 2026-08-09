@@ -96,7 +96,7 @@ npm start
 
 ---
 
-## 🌟 Future Enhancements
+### Future Enhancements
 
 - AI Furniture Recommendation
 - AR Room Preview
