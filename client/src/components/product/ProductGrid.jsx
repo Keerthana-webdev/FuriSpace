@@ -1,4 +1,4 @@
-import ProductCard from "../home/ProductCard";
+import ProductCard from "./ProductCard";
 
 function ProductGrid({ products, loading, error }) {
   if (loading) {
