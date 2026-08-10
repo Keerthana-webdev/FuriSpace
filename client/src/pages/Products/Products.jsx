@@ -14,6 +14,7 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState("");
 
   // Filter States
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -47,23 +48,18 @@ function Products() {
       product.brand?.toLowerCase().includes(searchText);
 
     const matchesCategory =
-      selectedCategory === "" ||
-      product.category === selectedCategory;
+      selectedCategory === "" || product.category === selectedCategory;
 
     const matchesBrand =
-      selectedBrand === "" ||
-      product.brand === selectedBrand;
+      selectedBrand === "" || product.brand === selectedBrand;
 
     const matchesMaterial =
-      selectedMaterial === "" ||
-      product.material === selectedMaterial;
+      selectedMaterial === "" || product.material === selectedMaterial;
 
     const matchesColor =
-      selectedColor === "" ||
-      product.color === selectedColor;
+      selectedColor === "" || product.color === selectedColor;
 
-    const matchesPrice =
-      product.price <= maxPrice;
+    const matchesPrice = product.price <= maxPrice;
 
     return (
       matchesSearch &&
@@ -81,10 +77,7 @@ function Products() {
 
       <section className="products-page">
         <div>
-          <ProductSearch
-            search={search}
-            setSearch={setSearch}
-          />
+          <ProductSearch search={search} setSearch={setSearch} />
 
           <ProductSidebar
             selectedCategory={selectedCategory}
@@ -100,10 +93,9 @@ function Products() {
           />
         </div>
 
-        <ProductGrid
-          products={filteredProducts}
-          loading={loading}
-        />
+        <ProductSort sortBy={sortBy} setSortBy={setSortBy} />
+
+        <ProductGrid products={filteredProducts} loading={loading} />
       </section>
     </>
   );
