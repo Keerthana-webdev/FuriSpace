@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "./ProductCard.css";
 
 function ProductCard({ product }) {
-  const image = product.images?.[0] || "/placeholder.jpg";
+  const image = product.images?.[0]?.url || "/placeholder.jpg";
 
   const price = Number(product.price || 0);
 
