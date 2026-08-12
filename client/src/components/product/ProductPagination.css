@@ -1,0 +1,84 @@
+.product-pagination {
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 50px;
+
+  padding: 20px 0;
+}
+
+.pagination-numbers {
+  display: flex;
+
+  gap: 8px;
+}
+
+.pagination-arrow,
+.page-number {
+  width: 42px;
+
+  height: 42px;
+
+  border: 1px solid #ddd;
+
+  background: white;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  font-size: 15px;
+
+  transition: all 0.3s ease;
+}
+
+.pagination-arrow:hover:not(:disabled),
+.page-number:hover {
+  border-color: #8b5e3c;
+
+  color: #8b5e3c;
+
+  transform: translateY(-2px);
+}
+
+.page-number.active {
+  background: #8b5e3c;
+
+  color: white;
+
+  border-color: #8b5e3c;
+}
+
+.pagination-arrow:disabled {
+  opacity: 0.35;
+
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .product-pagination {
+    gap: 6px;
+  }
+
+  .pagination-arrow,
+  .page-number {
+    width: 36px;
+
+    height: 36px;
+  }
+
+  .pagination-numbers {
+    gap: 5px;
+  }
+}
