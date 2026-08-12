@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
 
 import ProductBanner from "../../components/product/ProductBanner";
-
 import ProductSidebar from "../../components/product/ProductSidebar";
-
 import ProductSearch from "../../components/product/ProductSearch";
-
 import ProductSort from "../../components/product/ProductSort";
-
 import ProductGrid from "../../components/product/ProductGrid";
-
 import ProductPagination from "../../components/product/ProductPagination";
 
 import { getAllProducts } from "../../services/productService";
@@ -17,6 +12,10 @@ import { getAllProducts } from "../../services/productService";
 import "./Products.css";
 
 function Products() {
+  // -----------------------------
+  // STATES
+  // -----------------------------
+
   const [products, setProducts] = useState([]);
 
   const [search, setSearch] = useState("");
@@ -27,7 +26,12 @@ function Products() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Products displayed on one page
   const productsPerPage = 8;
+
+  // -----------------------------
+  // FETCH PRODUCTS
+  // -----------------------------
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -45,9 +49,9 @@ function Products() {
     fetchProducts();
   }, []);
 
-  /*
-    SEARCH
-  */
+  // -----------------------------
+  // SEARCH
+  // -----------------------------
 
   const filteredProducts = products.filter((product) => {
     const searchText = search.toLowerCase().trim();
@@ -59,9 +63,9 @@ function Products() {
     );
   });
 
-  /*
-    SORT
-  */
+  // -----------------------------
+  // SORT
+  // -----------------------------
 
   const sortedProducts = [...filteredProducts];
 
@@ -102,12 +106,13 @@ function Products() {
       break;
 
     default:
+      // Featured
       break;
   }
 
-  /*
-    PAGINATION
-  */
+  // -----------------------------
+  // PAGINATION
+  // -----------------------------
 
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
 
@@ -117,6 +122,10 @@ function Products() {
     startIndex,
     startIndex + productsPerPage,
   );
+
+  // -----------------------------
+  // RETURN UI
+  // -----------------------------
 
   return (
     <>
@@ -130,6 +139,8 @@ function Products() {
             search={search}
             setSearch={(value) => {
               setSearch(value);
+
+              // Reset pagination
               setCurrentPage(1);
             }}
           />
@@ -140,9 +151,23 @@ function Products() {
         {/* RIGHT SIDE */}
 
         <div>
-          <ProductSort sortOption={sortOption} setSortOption={setSortOption} />
+          {/* SORT */}
+
+          <ProductSort
+            sortOption={sortOption}
+            setSortOption={(value) => {
+              setSortOption(value);
+
+              // Reset pagination
+              setCurrentPage(1);
+            }}
+          />
+
+          {/* PRODUCTS */}
 
           <ProductGrid products={paginatedProducts} loading={loading} />
+
+          {/* PAGINATION */}
 
           <ProductPagination
             currentPage={currentPage}
