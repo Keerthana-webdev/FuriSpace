@@ -210,7 +210,7 @@ function ProductSidebar({
         <div className="price-range">
           <span>₹0</span>
 
-          <strong>₹{maxPrice.toLocaleString("en-IN")}</strong>
+          <strong>₹{(maxPrice || 0).toLocaleString()}</strong>
         </div>
       </div>
     </aside>
