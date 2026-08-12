@@ -118,12 +118,6 @@ function Products() {
     startIndex + productsPerPage,
   );
 
-  /*
-    RESET PAGE WHEN SEARCH CHANGES
-  */
-
-  useEffect(() => {setCurrentPage(1);}, [search]);
-
   return (
     <>
       <ProductBanner />
@@ -132,7 +126,13 @@ function Products() {
         {/* LEFT SIDE */}
 
         <div>
-          <ProductSearch search={search} setSearch={setSearch} />
+          <ProductSearch
+            search={search}
+            setSearch={(value) => {
+              setSearch(value);
+              setCurrentPage(1);
+            }}
+          />
 
           <ProductSidebar />
         </div>
