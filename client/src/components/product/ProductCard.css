@@ -182,3 +182,15 @@
     flex-direction: column;
   }
 }
+
+.product-card-image {
+  cursor: pointer;
+}
+
+.product-name-clickable {
+  cursor: pointer;
+}
+
+.product-name-clickable:hover {
+  text-decoration: underline;
+}
