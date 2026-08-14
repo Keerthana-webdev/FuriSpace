@@ -12,9 +12,10 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
+
 import Dashboard from "./pages/Admin/Dashboard";
+
 import NotFound from "./pages/NotFound/NotFound";
-import ProductDetails from "./pages/ProductDetails/ProductDetails";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AdminRoute from "./components/common/AdminRoute";
@@ -23,10 +24,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route element={<MainLayout />}>
+          {/* HOME */}
+
           <Route path="/" element={<Home />} />
+
+          {/* PRODUCTS */}
+
           <Route path="/products" element={<Products />} />
+
+          {/* PRODUCT DETAILS */}
+
           <Route path="/products/:id" element={<ProductDetails />} />
+
+          {/* CART */}
+
           <Route path="/cart" element={<Cart />} />
 
           <Route
@@ -58,7 +71,9 @@ function App() {
         </Route>
 
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
+
         <Route
           path="/admin"
           element={
@@ -69,8 +84,8 @@ function App() {
         >
           <Route index element={<Dashboard />} />
         </Route>
+
         <Route path="*" element={<NotFound />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
       </Routes>
     </BrowserRouter>
   );
