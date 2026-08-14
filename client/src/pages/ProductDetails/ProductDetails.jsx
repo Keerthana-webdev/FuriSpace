@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   FiArrowLeft,
   FiMinus,
@@ -9,23 +10,17 @@ import {
   FiHeart,
 } from "react-icons/fi";
 
-import { getProductById } from "../../services/productService";
+import { getProductById } from "../../services/ProductService";
 
 import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
-
   const navigate = useNavigate();
-
   const [product, setProduct] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
-
   const [selectedImage, setSelectedImage] = useState(0);
-
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -36,6 +31,8 @@ function ProductDetails() {
         setError("");
 
         const data = await getProductById(id);
+
+        console.log("Product Details Response:", data);
 
         if (data.success) {
           setProduct(data.product);
@@ -76,18 +73,56 @@ function ProductDetails() {
     );
   }
 
+  // ==========================================
+  // PRODUCT IMAGES
+  // ==========================================
+
   const images =
     product.images && product.images.length > 0
       ? product.images
-      : ["https://via.placeholder.com/700x700?text=Furniture"];
 
-  const currentImage = images[selectedImage] || images[0];
+          .map((image) => {
+            // If image is an object
+            if (typeof image === "object" && image !== null) {
+              return image.url || image.secure_url || "";
+            }
+
+            // If image is already a string
+            if (typeof image === "string") {
+              return image;
+            }
+
+            return "";
+          })
+
+          .filter(Boolean)
+      : [];
+
+  // ==========================================
+  // FALLBACK IMAGE
+  // ==========================================
+
+  const finalImages = images.length > 0 ? images : ["/placeholder.jpg"];
+
+  // ==========================================
+  // CURRENT IMAGE
+  // ==========================================
+
+  const currentImage = finalImages[selectedImage] || finalImages[0];
+
+  // ==========================================
+  // PRICE / DISCOUNT
+  // ==========================================
 
   const discount = Number(product.discount || 0);
 
   const price = Number(product.price || 0);
 
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : price;
+
+  // ==========================================
+  // QUANTITY
+  // ==========================================
 
   const increaseQuantity = () => {
     if (quantity < Number(product.stock || 1)) {
@@ -101,11 +136,19 @@ function ProductDetails() {
     }
   };
 
+  // ==========================================
+  // ADD TO CART
+  // ==========================================
+
   const handleAddToCart = () => {
     console.log("Add to cart:", product._id, quantity);
 
     alert(`${product.name} added to cart`);
   };
+
+  // ==========================================
+  // BUY NOW
+  // ==========================================
 
   const handleBuyNow = () => {
     console.log("Buy now:", product._id, quantity);
@@ -113,11 +156,27 @@ function ProductDetails() {
     alert("Proceeding to checkout");
   };
 
+  // ==========================================
+  // IMAGE ERROR HANDLER
+  // ==========================================
+
+  const handleImageError = (event) => {
+    event.target.onerror = null;
+
+    event.target.src = "/placeholder.jpg";
+  };
+
+  // ==========================================
+  // UI
+  // ==========================================
+
   return (
     <main className="product-details-page">
-      {/* BACK BUTTON */}
-
       <div className="details-container">
+        {/* ======================================
+            BACK BUTTON
+        ====================================== */}
+
         <button
           className="back-to-products"
           onClick={() => navigate("/products")}
@@ -127,7 +186,9 @@ function ProductDetails() {
           <span>Back to Products</span>
         </button>
 
-        {/* BREADCRUMB */}
+        {/* ======================================
+            BREADCRUMB
+        ====================================== */}
 
         <div className="product-breadcrumb">
           Home
@@ -139,34 +200,58 @@ function ProductDetails() {
           <strong>{product.name}</strong>
         </div>
 
-        {/* MAIN PRODUCT */}
+        {/* ======================================
+            MAIN PRODUCT
+        ====================================== */}
 
         <section className="product-details-main">
-          {/* IMAGE SECTION */}
+          {/* ====================================
+              IMAGE SECTION
+          ==================================== */}
 
           <div className="product-gallery">
+            {/* THUMBNAILS */}
+
             <div className="thumbnail-list">
-              {images.map((image, index) => (
+              {finalImages.map((image, index) => (
                 <button
                   key={index}
+                  type="button"
                   className={
                     selectedImage === index ? "thumbnail active" : "thumbnail"
                   }
                   onClick={() => setSelectedImage(index)}
                 >
-                  <img src={image} alt={`${product.name} ${index + 1}`} />
+                  <img
+                    src={image}
+                    alt={`${product.name} ${index + 1}`}
+                    onError={handleImageError}
+                  />
                 </button>
               ))}
             </div>
 
+            {/* MAIN IMAGE */}
+
             <div className="main-product-image">
+              {/* DISCOUNT */}
+
               {discount > 0 && (
                 <div className="discount-badge">{discount}% OFF</div>
               )}
 
-              <img src={currentImage} alt={product.name} />
+              {/* PRODUCT IMAGE */}
+
+              <img
+                src={currentImage}
+                alt={product.name}
+                onError={handleImageError}
+              />
+
+              {/* WISHLIST */}
 
               <button
+                type="button"
                 className="image-wishlist"
                 onClick={() => console.log("Wishlist:", product._id)}
               >
@@ -175,10 +260,16 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* PRODUCT INFORMATION */}
+          {/* ====================================
+              PRODUCT INFORMATION
+          ==================================== */}
 
           <div className="product-information">
+            {/* BRAND */}
+
             <p className="product-brand">{product.brand || "FurniSpace"}</p>
+
+            {/* PRODUCT NAME */}
 
             <h1>{product.name}</h1>
 
@@ -186,11 +277,23 @@ function ProductDetails() {
 
             <div className="product-rating">
               <span className="stars">
-                {"★".repeat(Math.round(Number(product.rating || 0)))}
+                {"★".repeat(
+                  Math.min(
+                    5,
+
+                    Math.max(
+                      0,
+
+                      Math.round(Number(product.rating || 0)),
+                    ),
+                  ),
+                )}
               </span>
 
-              <span>{product.rating || "No rating"}</span>
+              <span>{product.rating ? product.rating : "No rating"}</span>
             </div>
+
+            {/* PRICE */}
 
             <div className="product-price-section">
               <span className="current-price">
@@ -208,12 +311,16 @@ function ProductDetails() {
               )}
             </div>
 
+            {/* DESCRIPTION */}
+
             <p className="product-description">
               {product.description ||
                 "Beautifully designed furniture created to bring comfort, style and functionality to your home."}
             </p>
 
-            {/* SPECIFICATIONS */}
+            {/* ==================================
+                QUICK SPECIFICATIONS
+            ================================== */}
 
             <div className="quick-specifications">
               <div className="quick-spec">
@@ -247,19 +354,26 @@ function ProductDetails() {
               </div>
             </div>
 
-            {/* QUANTITY */}
+            {/* ==================================
+                QUANTITY
+            ================================== */}
 
             <div className="quantity-section">
               <span>Quantity</span>
 
               <div className="quantity-control">
-                <button onClick={decreaseQuantity} disabled={quantity === 1}>
+                <button
+                  type="button"
+                  onClick={decreaseQuantity}
+                  disabled={quantity === 1}
+                >
                   <FiMinus />
                 </button>
 
                 <span>{quantity}</span>
 
                 <button
+                  type="button"
                   onClick={increaseQuantity}
                   disabled={quantity >= Number(product.stock || 1)}
                 >
@@ -268,10 +382,13 @@ function ProductDetails() {
               </div>
             </div>
 
-            {/* ACTION BUTTONS */}
+            {/* ==================================
+                ACTION BUTTONS
+            ================================== */}
 
             <div className="product-actions">
               <button
+                type="button"
                 className="add-cart-button"
                 onClick={handleAddToCart}
                 disabled={Number(product.stock || 0) <= 0}
@@ -281,6 +398,7 @@ function ProductDetails() {
               </button>
 
               <button
+                type="button"
                 className="buy-now-button"
                 onClick={handleBuyNow}
                 disabled={Number(product.stock || 0) <= 0}
@@ -290,7 +408,7 @@ function ProductDetails() {
               </button>
             </div>
 
-            {/* STOCK MESSAGE */}
+            {/* LOW STOCK */}
 
             {Number(product.stock || 0) > 0 && Number(product.stock) <= 5 && (
               <p className="low-stock-message">
@@ -300,7 +418,9 @@ function ProductDetails() {
           </div>
         </section>
 
-        {/* PRODUCT INFORMATION */}
+        {/* ======================================
+            PRODUCT SPECIFICATIONS
+        ====================================== */}
 
         <section className="product-extra-information">
           <div className="extra-heading">
