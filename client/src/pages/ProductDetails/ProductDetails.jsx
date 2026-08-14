@@ -73,10 +73,6 @@ function ProductDetails() {
     );
   }
 
-  // ==========================================
-  // PRODUCT IMAGES
-  // ==========================================
-
   const images =
     product.images && product.images.length > 0
       ? product.images
@@ -98,31 +94,15 @@ function ProductDetails() {
           .filter(Boolean)
       : [];
 
-  // ==========================================
-  // FALLBACK IMAGE
-  // ==========================================
-
   const finalImages = images.length > 0 ? images : ["/placeholder.jpg"];
 
-  // ==========================================
-  // CURRENT IMAGE
-  // ==========================================
-
   const currentImage = finalImages[selectedImage] || finalImages[0];
-
-  // ==========================================
-  // PRICE / DISCOUNT
-  // ==========================================
 
   const discount = Number(product.discount || 0);
 
   const price = Number(product.price || 0);
 
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : price;
-
-  // ==========================================
-  // QUANTITY
-  // ==========================================
 
   const increaseQuantity = () => {
     if (quantity < Number(product.stock || 1)) {
@@ -136,19 +116,11 @@ function ProductDetails() {
     }
   };
 
-  // ==========================================
-  // ADD TO CART
-  // ==========================================
-
   const handleAddToCart = () => {
     console.log("Add to cart:", product._id, quantity);
 
     alert(`${product.name} added to cart`);
   };
-
-  // ==========================================
-  // BUY NOW
-  // ==========================================
 
   const handleBuyNow = () => {
     console.log("Buy now:", product._id, quantity);
@@ -156,26 +128,16 @@ function ProductDetails() {
     alert("Proceeding to checkout");
   };
 
-  // ==========================================
-  // IMAGE ERROR HANDLER
-  // ==========================================
-
   const handleImageError = (event) => {
     event.target.onerror = null;
 
     event.target.src = "/placeholder.jpg";
   };
 
-  // ==========================================
-  // UI
-  // ==========================================
-
   return (
     <main className="product-details-page">
       <div className="details-container">
-        {/* ======================================
-            BACK BUTTON
-        ====================================== */}
+
 
         <button
           className="back-to-products"
@@ -185,10 +147,6 @@ function ProductDetails() {
 
           <span>Back to Products</span>
         </button>
-
-        {/* ======================================
-            BREADCRUMB
-        ====================================== */}
 
         <div className="product-breadcrumb">
           Home
@@ -200,15 +158,7 @@ function ProductDetails() {
           <strong>{product.name}</strong>
         </div>
 
-        {/* ======================================
-            MAIN PRODUCT
-        ====================================== */}
-
         <section className="product-details-main">
-          {/* ====================================
-              IMAGE SECTION
-          ==================================== */}
-
           <div className="product-gallery">
             {/* THUMBNAILS */}
 
@@ -259,10 +209,6 @@ function ProductDetails() {
               </button>
             </div>
           </div>
-
-          {/* ====================================
-              PRODUCT INFORMATION
-          ==================================== */}
 
           <div className="product-information">
             {/* BRAND */}
@@ -318,10 +264,6 @@ function ProductDetails() {
                 "Beautifully designed furniture created to bring comfort, style and functionality to your home."}
             </p>
 
-            {/* ==================================
-                QUICK SPECIFICATIONS
-            ================================== */}
-
             <div className="quick-specifications">
               <div className="quick-spec">
                 <span>Material</span>
@@ -354,10 +296,6 @@ function ProductDetails() {
               </div>
             </div>
 
-            {/* ==================================
-                QUANTITY
-            ================================== */}
-
             <div className="quantity-section">
               <span>Quantity</span>
 
@@ -381,10 +319,6 @@ function ProductDetails() {
                 </button>
               </div>
             </div>
-
-            {/* ==================================
-                ACTION BUTTONS
-            ================================== */}
 
             <div className="product-actions">
               <button
@@ -417,10 +351,6 @@ function ProductDetails() {
             )}
           </div>
         </section>
-
-        {/* ======================================
-            PRODUCT SPECIFICATIONS
-        ====================================== */}
 
         <section className="product-extra-information">
           <div className="extra-heading">
