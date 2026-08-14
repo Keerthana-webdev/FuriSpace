@@ -14,64 +14,66 @@ import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
 import Dashboard from "./pages/Admin/Dashboard";
 import NotFound from "./pages/NotFound/NotFound";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AdminRoute from "./components/common/AdminRoute";
 
 function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route element={<MainLayout />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/products/:id" element={<ProductDetails />} />
-                    <Route path="/cart" element={<Cart />} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
 
-                    <Route
-                        path="/checkout"
-                        element={
-                            <ProtectedRoute>
-                                <Checkout />
-                            </ProtectedRoute>
-                        }
-                    />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
 
-                    <Route
-                        path="/orders"
-                        element={
-                            <ProtectedRoute>
-                                <Orders />
-                            </ProtectedRoute>
-                        }
-                    />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
+              </ProtectedRoute>
+            }
+          />
 
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProtectedRoute>
-                                <Profile />
-                            </ProtectedRoute>
-                        }
-                    />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
-                </Route>
-
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route
-                    path="/admin"
-                    element={
-                        <AdminRoute>
-                            <AdminLayout />
-                        </AdminRoute>
-                    }>
-                    <Route index element={<Dashboard />} />
-                </Route>
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-        </BrowserRouter>
-    );
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+        <Route path="/products/:id" element={<ProductDetails />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;

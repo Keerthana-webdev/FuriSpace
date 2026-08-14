@@ -1,40 +1,85 @@
 import { FiHeart, FiShoppingCart, FiEye } from "react-icons/fi";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./ProductCard.css";
 
 function ProductCard({ product }) {
-  const image = product.images?.[0]?.url || "/placeholder.jpg";
+  const navigate = useNavigate();
 
+  // Product image
+  const image =
+    product.images?.[0]?.url || product.images?.[0] || "/placeholder.jpg";
+
+  // Product price
   const price = Number(product.price || 0);
 
+  // Discount
   const discount = Number(product.discount || 0);
 
+  // Rating
   const rating = Number(product.rating || 0);
+
+  // Open product details page
+  const openProductDetails = () => {
+    navigate(`/products/${product._id}`);
+  };
 
   return (
     <div className="product-card">
-      {/* DISCOUNT */}
+      {/* ==============================
+          DISCOUNT
+      ============================== */}
 
       {discount > 0 && <span className="discount-badge">{discount}% OFF</span>}
 
-      {/* WISHLIST */}
+      {/* ==============================
+          WISHLIST
+      ============================== */}
 
-      <button className="wishlist-btn" type="button">
+      <button
+        className="wishlist-btn"
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("Wishlist:", product._id);
+        }}
+      >
         <FiHeart />
       </button>
 
-      {/* PRODUCT IMAGE */}
+      {/* ==============================
+          PRODUCT IMAGE
+      ============================== */}
 
-      <img src={image} alt={product.name || "Furniture"} />
+      <div
+        className="product-card-image"
+        onClick={openProductDetails}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            openProductDetails();
+          }
+        }}
+      >
+        <img src={image} alt={product.name || "Furniture"} />
+      </div>
 
-      {/* PRODUCT INFORMATION */}
+      {/* ==============================
+          PRODUCT INFORMATION
+      ============================== */}
 
       <div className="product-card-content">
-        <h3>{product.name}</h3>
+        {/* PRODUCT NAME */}
 
-        {/* RATING */}
+        <h3 onClick={openProductDetails} className="product-name-clickable">
+          {product.name}
+        </h3>
+
+        {/* ==============================
+            RATING
+        ============================== */}
 
         <div className="rating">
           {"★".repeat(Math.min(5, Math.max(0, Math.round(rating))))}
@@ -42,19 +87,39 @@ function ProductCard({ product }) {
           <span>{rating > 0 ? ` ${rating}` : " No rating"}</span>
         </div>
 
-        {/* PRICE */}
+        {/* ==============================
+            PRICE
+        ============================== */}
 
         <p className="price">₹{price.toLocaleString("en-IN")}</p>
 
-        {/* BUTTONS */}
+        {/* ==============================
+            BUTTONS
+        ============================== */}
 
         <div className="product-buttons">
-          <Link to={`/products/${product._id}`} className="view-btn">
+          {/* QUICK VIEW */}
+
+          <Link
+            to={`/products/${product._id}`}
+            className="view-btn"
+            onClick={(e) => e.stopPropagation()}
+          >
             <FiEye />
             Quick View
           </Link>
 
-          <button className="cart-btn" type="button">
+          {/* ADD TO CART */}
+
+          <button
+            className="cart-btn"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+
+              console.log("Add to cart:", product._id);
+            }}
+          >
             <FiShoppingCart />
             Add To Cart
           </button>
