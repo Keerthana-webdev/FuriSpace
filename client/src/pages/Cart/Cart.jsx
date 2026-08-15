@@ -5,9 +5,17 @@ import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
 import "./Cart.css";
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([]);
+  // LOAD CART DIRECTLY WHEN COMPONENT IS CREATED
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("cartItems")) || [];
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      return [];
+    }
+  });
 
-  // LOAD CART
+  // LOAD CART FROM LOCAL STORAGE
   const loadCart = () => {
     try {
       const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
@@ -19,10 +27,8 @@ function Cart() {
     }
   };
 
-  // LOAD CART WHEN PAGE OPENS
+  // LISTEN FOR CART CHANGES
   useEffect(() => {
-    loadCart();
-
     const handleCartUpdate = () => {
       loadCart();
     };
@@ -40,7 +46,7 @@ function Cart() {
       item._id === id
         ? {
             ...item,
-            quantity: item.quantity + 1,
+            quantity: Number(item.quantity || 1) + 1,
           }
         : item,
     );
@@ -58,7 +64,7 @@ function Cart() {
       item._id === id
         ? {
             ...item,
-            quantity: Math.max(1, item.quantity - 1),
+            quantity: Math.max(1, Number(item.quantity || 1) - 1),
           }
         : item,
     );
@@ -70,7 +76,7 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // REMOVE PRODUCT
+  // REMOVE ITEM
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item._id !== id);
 
@@ -90,7 +96,7 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // TOTAL ITEMS
+  // TOTAL NUMBER OF ITEMS
   const totalItems = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 1),
     0,
@@ -124,10 +130,11 @@ function Cart() {
     );
   }
 
+  // CART WITH PRODUCTS
   return (
     <main className="cart-page">
       <div className="cart-container">
-        {/* TITLE */}
+        {/* CART HEADER */}
         <div className="cart-header">
           <div>
             <h1>Shopping Cart</h1>
@@ -144,13 +151,13 @@ function Cart() {
 
         {/* CART CONTENT */}
         <div className="cart-content">
-          {/* ITEMS */}
+          {/* CART ITEMS */}
           <div className="cart-items">
             {cartItems.map((item) => {
               const image =
                 item.images?.[0]?.url || item.images?.[0] || "/placeholder.jpg";
 
-              const itemPrice = Number(item.price || 0);
+              const price = Number(item.price || 0);
 
               const quantity = Number(item.quantity || 1);
 
@@ -158,16 +165,16 @@ function Cart() {
                 <div className="cart-item" key={item._id}>
                   {/* IMAGE */}
                   <div className="cart-item-image">
-                    <img src={image} alt={item.name} />
+                    <img src={image} alt={item.name || "Furniture"} />
                   </div>
 
-                  {/* DETAILS */}
+                  {/* PRODUCT DETAILS */}
                   <div className="cart-item-details">
                     <h3>{item.name}</h3>
 
                     <p>{item.category || "Furniture"}</p>
 
-                    <strong>₹{itemPrice.toLocaleString("en-IN")}</strong>
+                    <strong>₹{price.toLocaleString("en-IN")}</strong>
                   </div>
 
                   {/* QUANTITY */}
@@ -186,9 +193,9 @@ function Cart() {
                     </button>
                   </div>
 
-                  {/* ITEM TOTAL */}
+                  {/* TOTAL */}
                   <div className="cart-item-total">
-                    ₹{(itemPrice * quantity).toLocaleString("en-IN")}
+                    ₹{(price * quantity).toLocaleString("en-IN")}
                   </div>
 
                   {/* REMOVE */}
@@ -203,13 +210,12 @@ function Cart() {
             })}
           </div>
 
-          {/* SUMMARY */}
+          {/* ORDER SUMMARY */}
           <div className="cart-summary">
             <h2>Order Summary</h2>
 
             <div className="summary-row">
               <span>Items</span>
-
               <span>{totalItems}</span>
             </div>
 
@@ -221,7 +227,6 @@ function Cart() {
 
             <div className="summary-row">
               <span>Delivery</span>
-
               <span>FREE</span>
             </div>
 
