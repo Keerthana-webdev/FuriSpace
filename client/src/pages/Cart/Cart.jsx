@@ -1,91 +1,107 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
+  FiArrowLeft,
   FiMinus,
   FiPlus,
   FiTrash2,
-  FiArrowLeft,
   FiShoppingBag,
 } from "react-icons/fi";
-
-import { Link, useNavigate } from "react-router-dom";
-
-import {
-  getCart,
-  updateCartQuantity,
-  removeFromCart,
-  getCartTotal,
-} from "../../utils/cartUtils";
 
 import "./Cart.css";
 
 function Cart() {
   const navigate = useNavigate();
 
-  const [cart, setCart] = useState([]);
+  // Load cart from localStorage when component starts
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem("cart");
 
-  const loadCart = () => {
-    setCart(getCart());
-  };
-
-  useEffect(() => {
-    loadCart();
-
-    const handleCartUpdate = () => {
-      loadCart();
-    };
-
-    window.addEventListener("cartUpdated", handleCartUpdate);
-
-    return () => {
-      window.removeEventListener("cartUpdated", handleCartUpdate);
-    };
-  }, []);
-
-  const increaseQuantity = (item) => {
-    updateCartQuantity(item._id, item.quantity + 1);
-
-    loadCart();
-  };
-
-  const decreaseQuantity = (item) => {
-    if (item.quantity <= 1) {
-      removeFromCart(item._id);
-    } else {
-      updateCartQuantity(item._id, item.quantity - 1);
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      return [];
     }
+  });
 
-    loadCart();
+  // Save cart whenever cartItems changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  // Increase quantity
+  const increaseQuantity = (id) => {
+    setCartItems((items) =>
+      items.map((item) =>
+        item._id === id
+          ? {
+              ...item,
+              quantity: Math.min(
+                Number(item.quantity || 1) + 1,
+                Number(item.stock || 99),
+              ),
+            }
+          : item,
+      ),
+    );
   };
 
-  const handleRemove = (id) => {
-    removeFromCart(id);
-
-    loadCart();
+  // Decrease quantity
+  const decreaseQuantity = (id) => {
+    setCartItems((items) =>
+      items.map((item) =>
+        item._id === id
+          ? {
+              ...item,
+              quantity: Math.max(Number(item.quantity || 1) - 1, 1),
+            }
+          : item,
+      ),
+    );
   };
 
-  const subtotal = getCartTotal();
+  // Remove product
+  const removeItem = (id) => {
+    setCartItems((items) => items.filter((item) => item._id !== id));
+  };
 
-  const deliveryCharge = subtotal > 0 ? 0 : 0;
+  // Clear entire cart
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+  };
 
-  const total = subtotal + deliveryCharge;
+  // Calculate subtotal
+  const subtotal = cartItems.reduce((total, item) => {
+    return total + Number(item.price || 0) * Number(item.quantity || 1);
+  }, 0);
 
-  if (cart.length === 0) {
+  // Shipping
+  const shipping = subtotal > 0 ? 0 : 0;
+
+  // Total
+  const total = subtotal + shipping;
+
+  // Empty cart
+  if (cartItems.length === 0) {
     return (
       <main className="cart-page">
         <div className="cart-container">
           <div className="empty-cart">
-            <div className="empty-cart-icon">
-              <FiShoppingBag />
-            </div>
+            <FiShoppingBag className="empty-cart-icon" />
 
-            <h1>Your Cart is Empty</h1>
+            <h2>Your Cart is Empty</h2>
 
-            <p>Looks like you haven't added anything to your cart yet.</p>
+            <p>You haven't added any furniture to your cart yet.</p>
 
-            <Link to="/products" className="continue-shopping-btn">
-              Browse Furniture
-            </Link>
+            <button
+              className="continue-shopping-btn"
+              onClick={() => navigate("/products")}
+            >
+              <FiArrowLeft />
+              Continue Shopping
+            </button>
           </div>
         </div>
       </main>
@@ -95,93 +111,116 @@ function Cart() {
   return (
     <main className="cart-page">
       <div className="cart-container">
+        {/* HEADER */}
         <div className="cart-header">
           <button
-            className="back-shopping"
+            className="back-products-btn"
             onClick={() => navigate("/products")}
           >
             <FiArrowLeft />
-            Continue Shopping
+            Back to Products
           </button>
 
-          <div>
-            <p className="cart-label">YOUR BAG</p>
+          <div className="cart-title-row">
+            <div>
+              <p className="cart-label">YOUR SHOPPING BAG</p>
 
-            <h1>Shopping Cart</h1>
+              <h1>Shopping Cart</h1>
+
+              <p>
+                {cartItems.length} {cartItems.length === 1 ? "item" : "items"}{" "}
+                in your cart
+              </p>
+            </div>
+
+            <button className="clear-cart-btn" onClick={clearCart}>
+              <FiTrash2 />
+              Clear Cart
+            </button>
           </div>
         </div>
 
-        <div className="cart-layout">
+        {/* CART CONTENT */}
+        <div className="cart-content">
+          {/* CART ITEMS */}
           <section className="cart-items">
-            {cart.map((item) => (
-              <div className="cart-item" key={item._id}>
+            {cartItems.map((item) => {
+              const image =
+                item.images?.[0]?.url || item.images?.[0] || "/placeholder.jpg";
 
-                <div className="cart-item-image">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    onError={(event) => {
-                      event.target.onerror = null;
+              const price = Number(item.price || 0);
 
-                      event.target.src = "/placeholder.jpg";
-                    }}
-                  />
-                </div>
+              const quantity = Number(item.quantity || 1);
 
-                <div className="cart-item-info">
-                  <p className="cart-item-brand">{item.brand}</p>
+              return (
+                <div className="cart-item" key={item._id}>
+                  {/* IMAGE */}
+                  <div
+                    className="cart-item-image"
+                    onClick={() => navigate(`/products/${item._id}`)}
+                  >
+                    <img src={image} alt={item.name || "Furniture"} />
+                  </div>
 
-                  <h2>{item.name}</h2>
+                  {/* DETAILS */}
+                  <div className="cart-item-details">
+                    <p className="cart-item-brand">
+                      {item.brand || "FurniSpace"}
+                    </p>
 
-                  <p className="cart-item-price">
-                    ₹{Number(item.price).toLocaleString("en-IN")}
-                  </p>
+                    <h3 onClick={() => navigate(`/products/${item._id}`)}>
+                      {item.name}
+                    </h3>
 
+                    <p className="cart-item-category">
+                      {item.category || "Furniture"}
+                    </p>
+
+                    <div className="cart-item-price">
+                      ₹{price.toLocaleString("en-IN")}
+                    </div>
+                  </div>
+
+                  {/* QUANTITY */}
                   <div className="cart-quantity">
                     <button
-                      type="button"
-                      onClick={() => decreaseQuantity(item)}
+                      onClick={() => decreaseQuantity(item._id)}
+                      disabled={quantity <= 1}
                     >
                       <FiMinus />
                     </button>
 
-                    <span>{item.quantity}</span>
+                    <span>{quantity}</span>
 
                     <button
-                      type="button"
-                      onClick={() => increaseQuantity(item)}
-                      disabled={item.quantity >= item.stock}
+                      onClick={() => increaseQuantity(item._id)}
+                      disabled={quantity >= Number(item.stock || 99)}
                     >
                       <FiPlus />
                     </button>
                   </div>
-                </div>
 
-                <div className="cart-item-right">
-                  <strong>
-                    ₹
-                    {(
-                      Number(item.price) * Number(item.quantity)
-                    ).toLocaleString("en-IN")}
-                  </strong>
+                  {/* ITEM TOTAL */}
+                  <div className="cart-item-total">
+                    ₹{(price * quantity).toLocaleString("en-IN")}
+                  </div>
 
+                  {/* REMOVE */}
                   <button
-                    type="button"
-                    className="remove-item"
-                    onClick={() => handleRemove(item._id)}
+                    className="remove-cart-item"
+                    onClick={() => removeItem(item._id)}
+                    title="Remove item"
                   >
                     <FiTrash2 />
-                    Remove
                   </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </section>
 
+          {/* ORDER SUMMARY */}
           <aside className="cart-summary">
-            <p className="summary-label">ORDER SUMMARY</p>
-
-            <h2>Your Order</h2>
+            <h2>Order Summary</h2>
 
             <div className="summary-row">
               <span>Subtotal</span>
@@ -190,9 +229,9 @@ function Cart() {
             </div>
 
             <div className="summary-row">
-              <span>Delivery</span>
+              <span>Shipping</span>
 
-              <strong className="free">FREE</strong>
+              <strong>{shipping === 0 ? "FREE" : `₹${shipping}`}</strong>
             </div>
 
             <div className="summary-divider"></div>
@@ -210,9 +249,12 @@ function Cart() {
               Proceed to Checkout
             </button>
 
-            <Link to="/products" className="summary-continue">
+            <button
+              className="continue-shopping-btn"
+              onClick={() => navigate("/products")}
+            >
               Continue Shopping
-            </Link>
+            </button>
           </aside>
         </div>
       </div>
