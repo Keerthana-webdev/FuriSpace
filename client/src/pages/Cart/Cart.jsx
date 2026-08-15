@@ -1,108 +1,124 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  FiArrowLeft,
-  FiMinus,
-  FiPlus,
-  FiTrash2,
-  FiShoppingBag,
-} from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
 
 import "./Cart.css";
 
 function Cart() {
-  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
 
-  // Load cart from localStorage when component starts
-  const [cartItems, setCartItems] = useState(() => {
+  // LOAD CART
+  const loadCart = () => {
     try {
-      const savedCart = localStorage.getItem("cart");
+      const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-      return savedCart ? JSON.parse(savedCart) : [];
+      setCartItems(savedCart);
     } catch (error) {
       console.error("Error loading cart:", error);
-      return [];
+      setCartItems([]);
     }
-  });
+  };
 
-  // Save cart whenever cartItems changes
+  // LOAD CART WHEN PAGE OPENS
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+    loadCart();
 
-  // Increase quantity
+    const handleCartUpdate = () => {
+      loadCart();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
+
+  // INCREASE QUANTITY
   const increaseQuantity = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item._id === id
-          ? {
-              ...item,
-              quantity: Math.min(
-                Number(item.quantity || 1) + 1,
-                Number(item.stock || 99),
-              ),
-            }
-          : item,
-      ),
+    const updatedCart = cartItems.map((item) =>
+      item._id === id
+        ? {
+            ...item,
+            quantity: item.quantity + 1,
+          }
+        : item,
     );
+
+    setCartItems(updatedCart);
+
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // Decrease quantity
+  // DECREASE QUANTITY
   const decreaseQuantity = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item._id === id
-          ? {
-              ...item,
-              quantity: Math.max(Number(item.quantity || 1) - 1, 1),
-            }
-          : item,
-      ),
+    const updatedCart = cartItems.map((item) =>
+      item._id === id
+        ? {
+            ...item,
+            quantity: Math.max(1, item.quantity - 1),
+          }
+        : item,
     );
+
+    setCartItems(updatedCart);
+
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // Remove product
+  // REMOVE PRODUCT
   const removeItem = (id) => {
-    setCartItems((items) => items.filter((item) => item._id !== id));
+    const updatedCart = cartItems.filter((item) => item._id !== id);
+
+    setCartItems(updatedCart);
+
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // Clear entire cart
+  // CLEAR CART
   const clearCart = () => {
+    localStorage.removeItem("cartItems");
+
     setCartItems([]);
-    localStorage.removeItem("cart");
+
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // Calculate subtotal
-  const subtotal = cartItems.reduce((total, item) => {
-    return total + Number(item.price || 0) * Number(item.quantity || 1);
-  }, 0);
+  // TOTAL ITEMS
+  const totalItems = cartItems.reduce(
+    (total, item) => total + Number(item.quantity || 1),
+    0,
+  );
 
-  // Shipping
-  const shipping = subtotal > 0 ? 0 : 0;
+  // TOTAL PRICE
+  const totalPrice = cartItems.reduce(
+    (total, item) =>
+      total + Number(item.price || 0) * Number(item.quantity || 1),
+    0,
+  );
 
-  // Total
-  const total = subtotal + shipping;
-
-  // Empty cart
+  // EMPTY CART
   if (cartItems.length === 0) {
     return (
       <main className="cart-page">
-        <div className="cart-container">
-          <div className="empty-cart">
-            <FiShoppingBag className="empty-cart-icon" />
-
-            <h2>Your Cart is Empty</h2>
-
-            <p>You haven't added any furniture to your cart yet.</p>
-
-            <button
-              className="continue-shopping-btn"
-              onClick={() => navigate("/products")}
-            >
-              <FiArrowLeft />
-              Continue Shopping
-            </button>
+        <div className="empty-cart">
+          <div className="empty-cart-icon">
+            <FiShoppingBag />
           </div>
+
+          <h2>Your Cart is Empty</h2>
+
+          <p>You haven't added any furniture to your cart yet.</p>
+
+          <Link to="/products" className="continue-shopping">
+            ← Continue Shopping
+          </Link>
         </div>
       </main>
     );
@@ -111,74 +127,47 @@ function Cart() {
   return (
     <main className="cart-page">
       <div className="cart-container">
-        {/* HEADER */}
+        {/* TITLE */}
         <div className="cart-header">
-          <button
-            className="back-products-btn"
-            onClick={() => navigate("/products")}
-          >
-            <FiArrowLeft />
-            Back to Products
-          </button>
+          <div>
+            <h1>Shopping Cart</h1>
 
-          <div className="cart-title-row">
-            <div>
-              <p className="cart-label">YOUR SHOPPING BAG</p>
-
-              <h1>Shopping Cart</h1>
-
-              <p>
-                {cartItems.length} {cartItems.length === 1 ? "item" : "items"}{" "}
-                in your cart
-              </p>
-            </div>
-
-            <button className="clear-cart-btn" onClick={clearCart}>
-              <FiTrash2 />
-              Clear Cart
-            </button>
+            <p>
+              {totalItems} {totalItems === 1 ? "item" : "items"} in your cart
+            </p>
           </div>
+
+          <button className="clear-cart-btn" onClick={clearCart}>
+            Clear Cart
+          </button>
         </div>
 
         {/* CART CONTENT */}
         <div className="cart-content">
-          {/* CART ITEMS */}
-          <section className="cart-items">
+          {/* ITEMS */}
+          <div className="cart-items">
             {cartItems.map((item) => {
               const image =
                 item.images?.[0]?.url || item.images?.[0] || "/placeholder.jpg";
 
-              const price = Number(item.price || 0);
+              const itemPrice = Number(item.price || 0);
 
               const quantity = Number(item.quantity || 1);
 
               return (
                 <div className="cart-item" key={item._id}>
                   {/* IMAGE */}
-                  <div
-                    className="cart-item-image"
-                    onClick={() => navigate(`/products/${item._id}`)}
-                  >
-                    <img src={image} alt={item.name || "Furniture"} />
+                  <div className="cart-item-image">
+                    <img src={image} alt={item.name} />
                   </div>
 
                   {/* DETAILS */}
                   <div className="cart-item-details">
-                    <p className="cart-item-brand">
-                      {item.brand || "FurniSpace"}
-                    </p>
+                    <h3>{item.name}</h3>
 
-                    <h3 onClick={() => navigate(`/products/${item._id}`)}>
-                      {item.name}
-                    </h3>
+                    <p>{item.category || "Furniture"}</p>
 
-                    <p className="cart-item-category">
-                      {item.category || "Furniture"}
-                    </p>
-
-                    <div className="cart-item-price">
-                      ₹{price.toLocaleString("en-IN")}
-                    </div>
+                    <strong>₹{itemPrice.toLocaleString("en-IN")}</strong>
                   </div>
 
                   {/* QUANTITY */}
@@ -192,70 +181,66 @@ function Cart() {
 
                     <span>{quantity}</span>
 
-                    <button
-                      onClick={() => increaseQuantity(item._id)}
-                      disabled={quantity >= Number(item.stock || 99)}
-                    >
+                    <button onClick={() => increaseQuantity(item._id)}>
                       <FiPlus />
                     </button>
                   </div>
 
                   {/* ITEM TOTAL */}
                   <div className="cart-item-total">
-                    ₹{(price * quantity).toLocaleString("en-IN")}
+                    ₹{(itemPrice * quantity).toLocaleString("en-IN")}
                   </div>
 
                   {/* REMOVE */}
                   <button
                     className="remove-cart-item"
                     onClick={() => removeItem(item._id)}
-                    title="Remove item"
                   >
                     <FiTrash2 />
                   </button>
                 </div>
               );
             })}
-          </section>
+          </div>
 
-          {/* ORDER SUMMARY */}
-          <aside className="cart-summary">
+          {/* SUMMARY */}
+          <div className="cart-summary">
             <h2>Order Summary</h2>
+
+            <div className="summary-row">
+              <span>Items</span>
+
+              <span>{totalItems}</span>
+            </div>
 
             <div className="summary-row">
               <span>Subtotal</span>
 
-              <strong>₹{subtotal.toLocaleString("en-IN")}</strong>
+              <span>₹{totalPrice.toLocaleString("en-IN")}</span>
             </div>
 
             <div className="summary-row">
-              <span>Shipping</span>
+              <span>Delivery</span>
 
-              <strong>{shipping === 0 ? "FREE" : `₹${shipping}`}</strong>
+              <span>FREE</span>
             </div>
 
-            <div className="summary-divider"></div>
+            <hr />
 
             <div className="summary-total">
               <span>Total</span>
 
-              <strong>₹{total.toLocaleString("en-IN")}</strong>
+              <strong>₹{totalPrice.toLocaleString("en-IN")}</strong>
             </div>
 
-            <button
-              className="checkout-btn"
-              onClick={() => navigate("/checkout")}
-            >
+            <Link to="/checkout" className="checkout-btn">
               Proceed to Checkout
-            </button>
+            </Link>
 
-            <button
-              className="continue-shopping-btn"
-              onClick={() => navigate("/products")}
-            >
-              Continue Shopping
-            </button>
-          </aside>
+            <Link to="/products" className="continue-shopping-link">
+              ← Continue Shopping
+            </Link>
+          </div>
         </div>
       </div>
     </main>
