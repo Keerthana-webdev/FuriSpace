@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 
 import { getProductById } from "../../services/ProductService";
+import { addToCart } from "../../utils/cartUtils";
 
 import "./ProductDetails.css";
 
@@ -117,15 +118,15 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    console.log("Add to cart:", product._id, quantity);
+    addToCart(product, quantity);
 
     alert(`${product.name} added to cart`);
   };
 
   const handleBuyNow = () => {
-    console.log("Buy now:", product._id, quantity);
+    addToCart(product, quantity);
 
-    alert("Proceeding to checkout");
+    navigate("/checkout");
   };
 
   const handleImageError = (event) => {
@@ -137,8 +138,6 @@ function ProductDetails() {
   return (
     <main className="product-details-page">
       <div className="details-container">
-
-
         <button
           className="back-to-products"
           onClick={() => navigate("/products")}
