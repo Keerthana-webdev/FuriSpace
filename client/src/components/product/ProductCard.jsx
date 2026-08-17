@@ -1,41 +1,41 @@
 import { FiHeart, FiShoppingCart, FiEye } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./ProductCard.css";
 
 function ProductCard({ product }) {
+  const navigate = useNavigate();
+
   const image =
     product.images?.[0]?.url || product.images?.[0] || "/placeholder.jpg";
 
   const price = Number(product.price || 0);
+
   const discount = Number(product.discount || 0);
+
   const rating = Number(product.rating || 0);
 
   // ADD PRODUCT TO CART
   const handleAddToCart = () => {
     try {
-      // Get existing cart
       const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-      // Check if product already exists
-      const existingProduct = existingCart.find(
+      const existingItem = existingCart.find(
         (item) => item._id === product._id,
       );
 
       let updatedCart;
 
-      if (existingProduct) {
-        // Increase quantity
+      if (existingItem) {
         updatedCart = existingCart.map((item) =>
           item._id === product._id
             ? {
                 ...item,
-                quantity: item.quantity + 1,
+                quantity: Number(item.quantity || 1) + 1,
               }
             : item,
         );
       } else {
-        // Add new product
         updatedCart = [
           ...existingCart,
           {
@@ -45,15 +45,15 @@ function ProductCard({ product }) {
         ];
       }
 
-      // Save cart
       localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
-      // Tell other components that cart changed
       window.dispatchEvent(new Event("cartUpdated"));
 
       alert(`${product.name} added to cart`);
     } catch (error) {
       console.error("Error adding product to cart:", error);
+
+      alert("Unable to add product to cart");
     }
   };
 
@@ -63,30 +63,27 @@ function ProductCard({ product }) {
       {discount > 0 && <span className="discount-badge">{discount}% OFF</span>}
 
       {/* WISHLIST */}
-      <button
-        className="wishlist-btn"
-        type="button"
-        onClick={() => console.log("Wishlist:", product._id)}
-      >
+      <button className="wishlist-btn" type="button">
         <FiHeart />
       </button>
 
       {/* PRODUCT IMAGE */}
-      <Link to={`/products/${product._id}`}>
+      <div
+        className="product-card-image"
+        onClick={() => navigate(`/products/${product._id}`)}
+        style={{ cursor: "pointer" }}
+      >
         <img src={image} alt={product.name || "Furniture"} />
-      </Link>
+      </div>
 
       {/* PRODUCT INFORMATION */}
       <div className="product-card-content">
-        <Link
-          to={`/products/${product._id}`}
-          style={{
-            textDecoration: "none",
-            color: "inherit",
-          }}
+        <h3
+          onClick={() => navigate(`/products/${product._id}`)}
+          style={{ cursor: "pointer" }}
         >
-          <h3>{product.name}</h3>
-        </Link>
+          {product.name}
+        </h3>
 
         {/* RATING */}
         <div className="rating">
@@ -100,13 +97,11 @@ function ProductCard({ product }) {
 
         {/* BUTTONS */}
         <div className="product-buttons">
-          {/* QUICK VIEW */}
           <Link to={`/products/${product._id}`} className="view-btn">
             <FiEye />
             Quick View
           </Link>
 
-          {/* ADD TO CART */}
           <button className="cart-btn" type="button" onClick={handleAddToCart}>
             <FiShoppingCart />
             Add To Cart

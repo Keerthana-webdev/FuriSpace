@@ -5,29 +5,48 @@ import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
 import "./Cart.css";
 
 function Cart() {
-  // LOAD CART DIRECTLY WHEN COMPONENT IS CREATED
+  // ================================
+  // LOAD CART FROM LOCAL STORAGE
+  // ================================
   const [cartItems, setCartItems] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem("cartItems")) || [];
+      const savedCart = localStorage.getItem("cartItems");
+
+      if (!savedCart) {
+        return [];
+      }
+
+      return JSON.parse(savedCart);
     } catch (error) {
       console.error("Error loading cart:", error);
       return [];
     }
   });
 
-  // LOAD CART FROM LOCAL STORAGE
+  // ================================
+  // REFRESH CART
+  // ================================
   const loadCart = () => {
     try {
-      const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const savedCart = localStorage.getItem("cartItems");
 
-      setCartItems(savedCart);
+      if (!savedCart) {
+        setCartItems([]);
+        return;
+      }
+
+      const parsedCart = JSON.parse(savedCart);
+
+      setCartItems(Array.isArray(parsedCart) ? parsedCart : []);
     } catch (error) {
       console.error("Error loading cart:", error);
       setCartItems([]);
     }
   };
 
-  // LISTEN FOR CART CHANGES
+  // ================================
+  // LISTEN FOR CART UPDATES
+  // ================================
   useEffect(() => {
     const handleCartUpdate = () => {
       loadCart();
@@ -35,21 +54,29 @@ function Cart() {
 
     window.addEventListener("cartUpdated", handleCartUpdate);
 
+    window.addEventListener("storage", handleCartUpdate);
+
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
+
+      window.removeEventListener("storage", handleCartUpdate);
     };
   }, []);
 
+  // ================================
   // INCREASE QUANTITY
+  // ================================
   const increaseQuantity = (id) => {
-    const updatedCart = cartItems.map((item) =>
-      item._id === id
-        ? {
-            ...item,
-            quantity: Number(item.quantity || 1) + 1,
-          }
-        : item,
-    );
+    const updatedCart = cartItems.map((item) => {
+      if (item._id === id) {
+        return {
+          ...item,
+          quantity: Number(item.quantity || 1) + 1,
+        };
+      }
+
+      return item;
+    });
 
     setCartItems(updatedCart);
 
@@ -58,16 +85,20 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
+  // ================================
   // DECREASE QUANTITY
+  // ================================
   const decreaseQuantity = (id) => {
-    const updatedCart = cartItems.map((item) =>
-      item._id === id
-        ? {
-            ...item,
-            quantity: Math.max(1, Number(item.quantity || 1) - 1),
-          }
-        : item,
-    );
+    const updatedCart = cartItems.map((item) => {
+      if (item._id === id) {
+        return {
+          ...item,
+          quantity: Math.max(1, Number(item.quantity || 1) - 1),
+        };
+      }
+
+      return item;
+    });
 
     setCartItems(updatedCart);
 
@@ -76,7 +107,9 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
+  // ================================
   // REMOVE ITEM
+  // ================================
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item._id !== id);
 
@@ -87,7 +120,9 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
+  // ================================
   // CLEAR CART
+  // ================================
   const clearCart = () => {
     localStorage.removeItem("cartItems");
 
@@ -96,20 +131,26 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // TOTAL NUMBER OF ITEMS
+  // ================================
+  // TOTAL ITEMS
+  // ================================
   const totalItems = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 1),
     0,
   );
 
+  // ================================
   // TOTAL PRICE
+  // ================================
   const totalPrice = cartItems.reduce(
     (total, item) =>
       total + Number(item.price || 0) * Number(item.quantity || 1),
     0,
   );
 
+  // ================================
   // EMPTY CART
+  // ================================
   if (cartItems.length === 0) {
     return (
       <main className="cart-page">
@@ -130,7 +171,9 @@ function Cart() {
     );
   }
 
+  // ================================
   // CART WITH PRODUCTS
+  // ================================
   return (
     <main className="cart-page">
       <div className="cart-container">
@@ -170,7 +213,7 @@ function Cart() {
 
                   {/* PRODUCT DETAILS */}
                   <div className="cart-item-details">
-                    <h3>{item.name}</h3>
+                    <h3>{item.name || "Furniture Product"}</h3>
 
                     <p>{item.category || "Furniture"}</p>
 
@@ -180,6 +223,7 @@ function Cart() {
                   {/* QUANTITY */}
                   <div className="cart-quantity">
                     <button
+                      type="button"
                       onClick={() => decreaseQuantity(item._id)}
                       disabled={quantity <= 1}
                     >
@@ -188,18 +232,22 @@ function Cart() {
 
                     <span>{quantity}</span>
 
-                    <button onClick={() => increaseQuantity(item._id)}>
+                    <button
+                      type="button"
+                      onClick={() => increaseQuantity(item._id)}
+                    >
                       <FiPlus />
                     </button>
                   </div>
 
-                  {/* TOTAL */}
+                  {/* ITEM TOTAL */}
                   <div className="cart-item-total">
                     ₹{(price * quantity).toLocaleString("en-IN")}
                   </div>
 
                   {/* REMOVE */}
                   <button
+                    type="button"
                     className="remove-cart-item"
                     onClick={() => removeItem(item._id)}
                   >
