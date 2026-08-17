@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
 import {
   FiArrowLeft,
   FiMinus,
@@ -15,20 +16,28 @@ import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
+
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState("");
 
   const [selectedImage, setSelectedImage] = useState(0);
+
   const [quantity, setQuantity] = useState(1);
 
-  // LOAD PRODUCT
+  // =====================================================
+  // GET PRODUCT
+  // =====================================================
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+
         setError("");
 
         const data = await getProductById(id);
@@ -40,6 +49,7 @@ function ProductDetails() {
         }
       } catch (error) {
         console.error("Error fetching product:", error);
+
         setError("Unable to load product");
       } finally {
         setLoading(false);
@@ -49,17 +59,24 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
+  // =====================================================
   // LOADING
+  // =====================================================
+
   if (loading) {
     return (
       <div className="product-details-loading">
         <div className="details-spinner"></div>
+
         <p>Loading product...</p>
       </div>
     );
   }
 
+  // =====================================================
   // ERROR
+  // =====================================================
+
   if (error || !product) {
     return (
       <div className="product-details-error">
@@ -72,64 +89,99 @@ function ProductDetails() {
     );
   }
 
-  // PRODUCT IMAGES
+  // =====================================================
+  // PRODUCT DATA
+  // =====================================================
+
   const images =
     product.images && product.images.length > 0
-      ? product.images.map((image) =>
-          typeof image === "string" ? image : image.url,
-        )
+      ? product.images
       : ["https://via.placeholder.com/700x700?text=Furniture"];
 
   const currentImage = images[selectedImage] || images[0];
 
-  // PRODUCT DATA
   const discount = Number(product.discount || 0);
+
   const price = Number(product.price || 0);
+
+  const stock = Number(product.stock || 0);
 
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : price;
 
-  // INCREASE QUANTITY
+  // =====================================================
+  // QUANTITY
+  // =====================================================
+
   const increaseQuantity = () => {
-    if (quantity < Number(product.stock || 1)) {
-      setQuantity((prev) => prev + 1);
+    if (quantity < stock) {
+      setQuantity(quantity + 1);
     }
   };
 
-  // DECREASE QUANTITY
   const decreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
+      setQuantity(quantity - 1);
     }
   };
 
-  // ==========================================
-  // ADD PRODUCT TO CART
-  // ==========================================
+  // =====================================================
+  // ADD TO CART
+  // =====================================================
+
   const handleAddToCart = () => {
     try {
-      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+      // Get existing cart
+      const savedCart = localStorage.getItem("cartItems");
 
-      const existingItem = existingCart.find(
-        (item) => item.product._id === product._id,
-      );
+      const cart = savedCart ? JSON.parse(savedCart) : [];
+
+      // Check whether product already exists
+      const existingItem = cart.find((item) => item._id === product._id);
+
+      let updatedCart;
+
+      // =================================================
+      // PRODUCT ALREADY IN CART
+      // =================================================
 
       if (existingItem) {
-        existingItem.quantity += quantity;
-      } else {
-        existingCart.push({
-          product: product,
-          quantity: quantity,
+        updatedCart = cart.map((item) => {
+          if (item._id === product._id) {
+            return {
+              ...item,
+
+              quantity: Number(item.quantity || 1) + quantity,
+            };
+          }
+
+          return item;
         });
       }
 
-      localStorage.setItem("cart", JSON.stringify(existingCart));
+      // =================================================
+      // NEW PRODUCT
+      // =================================================
+      else {
+        updatedCart = [
+          ...cart,
 
-      // Tell Navbar and Cart that cart changed
+          {
+            ...product,
+
+            quantity: quantity,
+          },
+        ];
+      }
+
+      // Save cart
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+      // Tell other components cart changed
       window.dispatchEvent(new Event("cartUpdated"));
 
-      alert(`${product.name} added to cart`);
+      console.log("Cart updated:", updatedCart);
 
-      console.log("Cart updated:", existingCart);
+      alert(`${product.name} added to cart`);
     } catch (error) {
       console.error("Error adding product to cart:", error);
 
@@ -137,26 +189,74 @@ function ProductDetails() {
     }
   };
 
+  // =====================================================
   // BUY NOW
-  const handleBuyNow = () => {
-    handleAddToCart();
+  // =====================================================
 
-    navigate("/cart");
+  const handleBuyNow = () => {
+    try {
+      const savedCart = localStorage.getItem("cartItems");
+
+      const cart = savedCart ? JSON.parse(savedCart) : [];
+
+      const existingItem = cart.find((item) => item._id === product._id);
+
+      let updatedCart;
+
+      if (existingItem) {
+        updatedCart = cart.map((item) =>
+          item._id === product._id
+            ? {
+                ...item,
+
+                quantity: Number(item.quantity || 1) + quantity,
+              }
+            : item,
+        );
+      } else {
+        updatedCart = [
+          ...cart,
+
+          {
+            ...product,
+
+            quantity: quantity,
+          },
+        ];
+      }
+
+      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+      window.dispatchEvent(new Event("cartUpdated"));
+
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Error processing Buy Now:", error);
+
+      alert("Unable to proceed to checkout");
+    }
   };
+
+  // =====================================================
+  // UI
+  // =====================================================
 
   return (
     <main className="product-details-page">
       <div className="details-container">
         {/* BACK BUTTON */}
+
         <button
           className="back-to-products"
           onClick={() => navigate("/products")}
         >
           <FiArrowLeft />
+
           <span>Back to Products</span>
         </button>
 
         {/* BREADCRUMB */}
+
         <div className="product-breadcrumb">
           Home
           <span>/</span>
@@ -168,10 +268,11 @@ function ProductDetails() {
         </div>
 
         {/* MAIN PRODUCT */}
+
         <section className="product-details-main">
           {/* IMAGE SECTION */}
+
           <div className="product-gallery">
-            {/* THUMBNAILS */}
             <div className="thumbnail-list">
               {images.map((image, index) => (
                 <button
@@ -186,7 +287,6 @@ function ProductDetails() {
               ))}
             </div>
 
-            {/* MAIN IMAGE */}
             <div className="main-product-image">
               {discount > 0 && (
                 <div className="discount-badge">{discount}% OFF</div>
@@ -204,12 +304,14 @@ function ProductDetails() {
           </div>
 
           {/* PRODUCT INFORMATION */}
+
           <div className="product-information">
             <p className="product-brand">{product.brand || "FurniSpace"}</p>
 
             <h1>{product.name}</h1>
 
             {/* RATING */}
+
             <div className="product-rating">
               <span className="stars">
                 {"★".repeat(Math.round(Number(product.rating || 0)))}
@@ -219,6 +321,7 @@ function ProductDetails() {
             </div>
 
             {/* PRICE */}
+
             <div className="product-price-section">
               <span className="current-price">
                 ₹{price.toLocaleString("en-IN")}
@@ -236,12 +339,14 @@ function ProductDetails() {
             </div>
 
             {/* DESCRIPTION */}
+
             <p className="product-description">
               {product.description ||
                 "Beautifully designed furniture created to bring comfort, style and functionality to your home."}
             </p>
 
-            {/* SPECIFICATIONS */}
+            {/* QUICK SPECIFICATIONS */}
+
             <div className="quick-specifications">
               <div className="quick-spec">
                 <span>Material</span>
@@ -264,17 +369,14 @@ function ProductDetails() {
               <div className="quick-spec">
                 <span>Stock</span>
 
-                <strong
-                  className={
-                    Number(product.stock) > 0 ? "in-stock" : "out-stock"
-                  }
-                >
-                  {Number(product.stock || 0) > 0 ? "In Stock" : "Out of Stock"}
+                <strong className={stock > 0 ? "in-stock" : "out-stock"}>
+                  {stock > 0 ? "In Stock" : "Out of Stock"}
                 </strong>
               </div>
             </div>
 
             {/* QUANTITY */}
+
             <div className="quantity-section">
               <span>Quantity</span>
 
@@ -285,21 +387,19 @@ function ProductDetails() {
 
                 <span>{quantity}</span>
 
-                <button
-                  onClick={increaseQuantity}
-                  disabled={quantity >= Number(product.stock || 1)}
-                >
+                <button onClick={increaseQuantity} disabled={quantity >= stock}>
                   <FiPlus />
                 </button>
               </div>
             </div>
 
             {/* ACTION BUTTONS */}
+
             <div className="product-actions">
               <button
                 className="add-cart-button"
                 onClick={handleAddToCart}
-                disabled={Number(product.stock || 0) <= 0}
+                disabled={stock <= 0}
               >
                 <FiShoppingBag />
                 Add to Cart
@@ -308,23 +408,25 @@ function ProductDetails() {
               <button
                 className="buy-now-button"
                 onClick={handleBuyNow}
-                disabled={Number(product.stock || 0) <= 0}
+                disabled={stock <= 0}
               >
                 <FiZap />
                 Buy Now
               </button>
             </div>
 
-            {/* LOW STOCK MESSAGE */}
-            {Number(product.stock || 0) > 0 && Number(product.stock) <= 5 && (
+            {/* LOW STOCK */}
+
+            {stock > 0 && stock <= 5 && (
               <p className="low-stock-message">
-                Only {product.stock} left in stock — order soon!
+                Only {stock} left in stock — order soon!
               </p>
             )}
           </div>
         </section>
 
-        {/* PRODUCT EXTRA INFORMATION */}
+        {/* SPECIFICATIONS */}
+
         <section className="product-extra-information">
           <div className="extra-heading">
             <span>DETAILS</span>
@@ -367,9 +469,7 @@ function ProductDetails() {
               <span>Availability</span>
 
               <strong>
-                {Number(product.stock || 0) > 0
-                  ? "Available"
-                  : "Currently unavailable"}
+                {stock > 0 ? "Available" : "Currently unavailable"}
               </strong>
             </div>
           </div>

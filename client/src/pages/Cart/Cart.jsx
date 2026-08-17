@@ -5,73 +5,62 @@ import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
 import "./Cart.css";
 
 function Cart() {
-  // ================================
+  // ==========================================
   // LOAD CART FROM LOCAL STORAGE
-  // ================================
+  // ==========================================
+
   const [cartItems, setCartItems] = useState(() => {
     try {
       const savedCart = localStorage.getItem("cartItems");
 
-      if (!savedCart) {
-        return [];
-      }
-
-      return JSON.parse(savedCart);
+      return savedCart ? JSON.parse(savedCart) : [];
     } catch (error) {
       console.error("Error loading cart:", error);
+
       return [];
     }
   });
 
-  // ================================
-  // REFRESH CART
-  // ================================
-  const loadCart = () => {
-    try {
-      const savedCart = localStorage.getItem("cartItems");
-
-      if (!savedCart) {
-        setCartItems([]);
-        return;
-      }
-
-      const parsedCart = JSON.parse(savedCart);
-
-      setCartItems(Array.isArray(parsedCart) ? parsedCart : []);
-    } catch (error) {
-      console.error("Error loading cart:", error);
-      setCartItems([]);
-    }
-  };
-
-  // ================================
+  // ==========================================
   // LISTEN FOR CART UPDATES
-  // ================================
+  // ==========================================
+
   useEffect(() => {
     const handleCartUpdate = () => {
-      loadCart();
+      try {
+        const savedCart = localStorage.getItem("cartItems");
+
+        const updatedCart = savedCart ? JSON.parse(savedCart) : [];
+
+        setCartItems(updatedCart);
+      } catch (error) {
+        console.error("Error updating cart:", error);
+
+        setCartItems([]);
+      }
     };
 
     window.addEventListener("cartUpdated", handleCartUpdate);
 
-    window.addEventListener("storage", handleCartUpdate);
-
     return () => {
       window.removeEventListener("cartUpdated", handleCartUpdate);
-
-      window.removeEventListener("storage", handleCartUpdate);
     };
   }, []);
 
-  // ================================
+  // ==========================================
   // INCREASE QUANTITY
-  // ================================
+  // ==========================================
+
   const increaseQuantity = (id) => {
     const updatedCart = cartItems.map((item) => {
       if (item._id === id) {
+        const currentQuantity = Number(item.quantity || 1);
+
+        const stock = Number(item.stock || 999);
+
         return {
           ...item,
-          quantity: Number(item.quantity || 1) + 1,
+          quantity: Math.min(currentQuantity + 1, stock),
         };
       }
 
@@ -85,15 +74,18 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ================================
+  // ==========================================
   // DECREASE QUANTITY
-  // ================================
+  // ==========================================
+
   const decreaseQuantity = (id) => {
     const updatedCart = cartItems.map((item) => {
       if (item._id === id) {
+        const currentQuantity = Number(item.quantity || 1);
+
         return {
           ...item,
-          quantity: Math.max(1, Number(item.quantity || 1) - 1),
+          quantity: Math.max(currentQuantity - 1, 1),
         };
       }
 
@@ -107,9 +99,10 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ================================
+  // ==========================================
   // REMOVE ITEM
-  // ================================
+  // ==========================================
+
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item._id !== id);
 
@@ -120,9 +113,10 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ================================
+  // ==========================================
   // CLEAR CART
-  // ================================
+  // ==========================================
+
   const clearCart = () => {
     localStorage.removeItem("cartItems");
 
@@ -131,26 +125,29 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ================================
+  // ==========================================
   // TOTAL ITEMS
-  // ================================
+  // ==========================================
+
   const totalItems = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 1),
     0,
   );
 
-  // ================================
+  // ==========================================
   // TOTAL PRICE
-  // ================================
+  // ==========================================
+
   const totalPrice = cartItems.reduce(
     (total, item) =>
       total + Number(item.price || 0) * Number(item.quantity || 1),
     0,
   );
 
-  // ================================
+  // ==========================================
   // EMPTY CART
-  // ================================
+  // ==========================================
+
   if (cartItems.length === 0) {
     return (
       <main className="cart-page">
@@ -171,13 +168,17 @@ function Cart() {
     );
   }
 
-  // ================================
+  // ==========================================
   // CART WITH PRODUCTS
-  // ================================
+  // ==========================================
+
   return (
     <main className="cart-page">
       <div className="cart-container">
-        {/* CART HEADER */}
+        {/* =====================================
+            CART HEADER
+        ====================================== */}
+
         <div className="cart-header">
           <div>
             <h1>Shopping Cart</h1>
@@ -192,9 +193,15 @@ function Cart() {
           </button>
         </div>
 
-        {/* CART CONTENT */}
+        {/* =====================================
+            CART CONTENT
+        ====================================== */}
+
         <div className="cart-content">
-          {/* CART ITEMS */}
+          {/* ===================================
+              CART ITEMS
+          ==================================== */}
+
           <div className="cart-items">
             {cartItems.map((item) => {
               const image =
@@ -204,16 +211,20 @@ function Cart() {
 
               const quantity = Number(item.quantity || 1);
 
+              const stock = Number(item.stock || 999);
+
               return (
                 <div className="cart-item" key={item._id}>
                   {/* IMAGE */}
+
                   <div className="cart-item-image">
                     <img src={image} alt={item.name || "Furniture"} />
                   </div>
 
                   {/* PRODUCT DETAILS */}
+
                   <div className="cart-item-details">
-                    <h3>{item.name || "Furniture Product"}</h3>
+                    <h3>{item.name}</h3>
 
                     <p>{item.category || "Furniture"}</p>
 
@@ -221,9 +232,9 @@ function Cart() {
                   </div>
 
                   {/* QUANTITY */}
+
                   <div className="cart-quantity">
                     <button
-                      type="button"
                       onClick={() => decreaseQuantity(item._id)}
                       disabled={quantity <= 1}
                     >
@@ -233,23 +244,25 @@ function Cart() {
                     <span>{quantity}</span>
 
                     <button
-                      type="button"
                       onClick={() => increaseQuantity(item._id)}
+                      disabled={quantity >= stock}
                     >
                       <FiPlus />
                     </button>
                   </div>
 
                   {/* ITEM TOTAL */}
+
                   <div className="cart-item-total">
                     ₹{(price * quantity).toLocaleString("en-IN")}
                   </div>
 
                   {/* REMOVE */}
+
                   <button
-                    type="button"
                     className="remove-cart-item"
                     onClick={() => removeItem(item._id)}
+                    title="Remove item"
                   >
                     <FiTrash2 />
                   </button>
@@ -258,12 +271,16 @@ function Cart() {
             })}
           </div>
 
-          {/* ORDER SUMMARY */}
+          {/* ===================================
+              ORDER SUMMARY
+          ==================================== */}
+
           <div className="cart-summary">
             <h2>Order Summary</h2>
 
             <div className="summary-row">
               <span>Items</span>
+
               <span>{totalItems}</span>
             </div>
 
@@ -275,6 +292,7 @@ function Cart() {
 
             <div className="summary-row">
               <span>Delivery</span>
+
               <span>FREE</span>
             </div>
 
