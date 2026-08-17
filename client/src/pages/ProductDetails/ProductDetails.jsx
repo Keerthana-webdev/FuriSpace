@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import {
   FiArrowLeft,
   FiMinus,
@@ -10,30 +9,29 @@ import {
   FiHeart,
 } from "react-icons/fi";
 
-import { getProductById } from "../../services/ProductService";
-import { addToCart } from "../../utils/cartUtils";
+import { getProductById } from "../../services/productService";
 
 import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
+  // LOAD PRODUCT
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-
         setError("");
 
         const data = await getProductById(id);
-
-        console.log("Product Details Response:", data);
 
         if (data.success) {
           setProduct(data.product);
@@ -42,7 +40,6 @@ function ProductDetails() {
         }
       } catch (error) {
         console.error("Error fetching product:", error);
-
         setError("Unable to load product");
       } finally {
         setLoading(false);
@@ -52,16 +49,17 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
+  // LOADING
   if (loading) {
     return (
       <div className="product-details-loading">
         <div className="details-spinner"></div>
-
         <p>Loading product...</p>
       </div>
     );
   }
 
+  // ERROR
   if (error || !product) {
     return (
       <div className="product-details-error">
@@ -74,79 +72,91 @@ function ProductDetails() {
     );
   }
 
+  // PRODUCT IMAGES
   const images =
     product.images && product.images.length > 0
-      ? product.images
+      ? product.images.map((image) =>
+          typeof image === "string" ? image : image.url,
+        )
+      : ["https://via.placeholder.com/700x700?text=Furniture"];
 
-          .map((image) => {
-            // If image is an object
-            if (typeof image === "object" && image !== null) {
-              return image.url || image.secure_url || "";
-            }
+  const currentImage = images[selectedImage] || images[0];
 
-            // If image is already a string
-            if (typeof image === "string") {
-              return image;
-            }
-
-            return "";
-          })
-
-          .filter(Boolean)
-      : [];
-
-  const finalImages = images.length > 0 ? images : ["/placeholder.jpg"];
-
-  const currentImage = finalImages[selectedImage] || finalImages[0];
-
+  // PRODUCT DATA
   const discount = Number(product.discount || 0);
-
   const price = Number(product.price || 0);
 
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : price;
 
+  // INCREASE QUANTITY
   const increaseQuantity = () => {
     if (quantity < Number(product.stock || 1)) {
-      setQuantity(quantity + 1);
+      setQuantity((prev) => prev + 1);
     }
   };
 
+  // DECREASE QUANTITY
   const decreaseQuantity = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      setQuantity((prev) => prev - 1);
     }
   };
 
+  // ==========================================
+  // ADD PRODUCT TO CART
+  // ==========================================
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    try {
+      const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    alert(`${product.name} added to cart`);
+      const existingItem = existingCart.find(
+        (item) => item.product._id === product._id,
+      );
+
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        existingCart.push({
+          product: product,
+          quantity: quantity,
+        });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(existingCart));
+
+      // Tell Navbar and Cart that cart changed
+      window.dispatchEvent(new Event("cartUpdated"));
+
+      alert(`${product.name} added to cart`);
+
+      console.log("Cart updated:", existingCart);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+
+      alert("Unable to add product to cart");
+    }
   };
 
+  // BUY NOW
   const handleBuyNow = () => {
-    addToCart(product, quantity);
+    handleAddToCart();
 
-    navigate("/checkout");
-  };
-
-  const handleImageError = (event) => {
-    event.target.onerror = null;
-
-    event.target.src = "/placeholder.jpg";
+    navigate("/cart");
   };
 
   return (
     <main className="product-details-page">
       <div className="details-container">
+        {/* BACK BUTTON */}
         <button
           className="back-to-products"
           onClick={() => navigate("/products")}
         >
           <FiArrowLeft />
-
           <span>Back to Products</span>
         </button>
 
+        {/* BREADCRUMB */}
         <div className="product-breadcrumb">
           Home
           <span>/</span>
@@ -157,50 +167,34 @@ function ProductDetails() {
           <strong>{product.name}</strong>
         </div>
 
+        {/* MAIN PRODUCT */}
         <section className="product-details-main">
+          {/* IMAGE SECTION */}
           <div className="product-gallery">
             {/* THUMBNAILS */}
-
             <div className="thumbnail-list">
-              {finalImages.map((image, index) => (
+              {images.map((image, index) => (
                 <button
                   key={index}
-                  type="button"
                   className={
                     selectedImage === index ? "thumbnail active" : "thumbnail"
                   }
                   onClick={() => setSelectedImage(index)}
                 >
-                  <img
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    onError={handleImageError}
-                  />
+                  <img src={image} alt={`${product.name} ${index + 1}`} />
                 </button>
               ))}
             </div>
 
             {/* MAIN IMAGE */}
-
             <div className="main-product-image">
-              {/* DISCOUNT */}
-
               {discount > 0 && (
                 <div className="discount-badge">{discount}% OFF</div>
               )}
 
-              {/* PRODUCT IMAGE */}
-
-              <img
-                src={currentImage}
-                alt={product.name}
-                onError={handleImageError}
-              />
-
-              {/* WISHLIST */}
+              <img src={currentImage} alt={product.name} />
 
               <button
-                type="button"
                 className="image-wishlist"
                 onClick={() => console.log("Wishlist:", product._id)}
               >
@@ -209,37 +203,22 @@ function ProductDetails() {
             </div>
           </div>
 
+          {/* PRODUCT INFORMATION */}
           <div className="product-information">
-            {/* BRAND */}
-
             <p className="product-brand">{product.brand || "FurniSpace"}</p>
-
-            {/* PRODUCT NAME */}
 
             <h1>{product.name}</h1>
 
             {/* RATING */}
-
             <div className="product-rating">
               <span className="stars">
-                {"★".repeat(
-                  Math.min(
-                    5,
-
-                    Math.max(
-                      0,
-
-                      Math.round(Number(product.rating || 0)),
-                    ),
-                  ),
-                )}
+                {"★".repeat(Math.round(Number(product.rating || 0)))}
               </span>
 
-              <span>{product.rating ? product.rating : "No rating"}</span>
+              <span>{product.rating || "No rating"}</span>
             </div>
 
             {/* PRICE */}
-
             <div className="product-price-section">
               <span className="current-price">
                 ₹{price.toLocaleString("en-IN")}
@@ -257,12 +236,12 @@ function ProductDetails() {
             </div>
 
             {/* DESCRIPTION */}
-
             <p className="product-description">
               {product.description ||
                 "Beautifully designed furniture created to bring comfort, style and functionality to your home."}
             </p>
 
+            {/* SPECIFICATIONS */}
             <div className="quick-specifications">
               <div className="quick-spec">
                 <span>Material</span>
@@ -295,22 +274,18 @@ function ProductDetails() {
               </div>
             </div>
 
+            {/* QUANTITY */}
             <div className="quantity-section">
               <span>Quantity</span>
 
               <div className="quantity-control">
-                <button
-                  type="button"
-                  onClick={decreaseQuantity}
-                  disabled={quantity === 1}
-                >
+                <button onClick={decreaseQuantity} disabled={quantity === 1}>
                   <FiMinus />
                 </button>
 
                 <span>{quantity}</span>
 
                 <button
-                  type="button"
                   onClick={increaseQuantity}
                   disabled={quantity >= Number(product.stock || 1)}
                 >
@@ -319,9 +294,9 @@ function ProductDetails() {
               </div>
             </div>
 
+            {/* ACTION BUTTONS */}
             <div className="product-actions">
               <button
-                type="button"
                 className="add-cart-button"
                 onClick={handleAddToCart}
                 disabled={Number(product.stock || 0) <= 0}
@@ -331,7 +306,6 @@ function ProductDetails() {
               </button>
 
               <button
-                type="button"
                 className="buy-now-button"
                 onClick={handleBuyNow}
                 disabled={Number(product.stock || 0) <= 0}
@@ -341,8 +315,7 @@ function ProductDetails() {
               </button>
             </div>
 
-            {/* LOW STOCK */}
-
+            {/* LOW STOCK MESSAGE */}
             {Number(product.stock || 0) > 0 && Number(product.stock) <= 5 && (
               <p className="low-stock-message">
                 Only {product.stock} left in stock — order soon!
@@ -351,6 +324,7 @@ function ProductDetails() {
           </div>
         </section>
 
+        {/* PRODUCT EXTRA INFORMATION */}
         <section className="product-extra-information">
           <div className="extra-heading">
             <span>DETAILS</span>
