@@ -5,10 +5,6 @@ import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
 import "./Cart.css";
 
 function Cart() {
-  // ==========================================
-  // LOAD CART FROM LOCAL STORAGE
-  // ==========================================
-
   const [cartItems, setCartItems] = useState(() => {
     try {
       const savedCart = localStorage.getItem("cartItems");
@@ -20,10 +16,6 @@ function Cart() {
       return [];
     }
   });
-
-  // ==========================================
-  // LISTEN FOR CART UPDATES
-  // ==========================================
 
   useEffect(() => {
     const handleCartUpdate = () => {
@@ -46,10 +38,6 @@ function Cart() {
       window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, []);
-
-  // ==========================================
-  // INCREASE QUANTITY
-  // ==========================================
 
   const increaseQuantity = (id) => {
     const updatedCart = cartItems.map((item) => {
@@ -74,10 +62,6 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ==========================================
-  // DECREASE QUANTITY
-  // ==========================================
-
   const decreaseQuantity = (id) => {
     const updatedCart = cartItems.map((item) => {
       if (item._id === id) {
@@ -99,10 +83,6 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ==========================================
-  // REMOVE ITEM
-  // ==========================================
-
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item._id !== id);
 
@@ -113,10 +93,6 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ==========================================
-  // CLEAR CART
-  // ==========================================
-
   const clearCart = () => {
     localStorage.removeItem("cartItems");
 
@@ -125,28 +101,16 @@ function Cart() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  // ==========================================
-  // TOTAL ITEMS
-  // ==========================================
-
   const totalItems = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 1),
     0,
   );
-
-  // ==========================================
-  // TOTAL PRICE
-  // ==========================================
 
   const totalPrice = cartItems.reduce(
     (total, item) =>
       total + Number(item.price || 0) * Number(item.quantity || 1),
     0,
   );
-
-  // ==========================================
-  // EMPTY CART
-  // ==========================================
 
   if (cartItems.length === 0) {
     return (
@@ -168,16 +132,9 @@ function Cart() {
     );
   }
 
-  // ==========================================
-  // CART WITH PRODUCTS
-  // ==========================================
-
   return (
     <main className="cart-page">
       <div className="cart-container">
-        {/* =====================================
-            CART HEADER
-        ====================================== */}
 
         <div className="cart-header">
           <div>
@@ -193,15 +150,7 @@ function Cart() {
           </button>
         </div>
 
-        {/* =====================================
-            CART CONTENT
-        ====================================== */}
-
         <div className="cart-content">
-          {/* ===================================
-              CART ITEMS
-          ==================================== */}
-
           <div className="cart-items">
             {cartItems.map((item) => {
               const image =
@@ -270,10 +219,6 @@ function Cart() {
               );
             })}
           </div>
-
-          {/* ===================================
-              ORDER SUMMARY
-          ==================================== */}
 
           <div className="cart-summary">
             <h2>Order Summary</h2>
