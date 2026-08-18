@@ -29,10 +29,6 @@ function ProductDetails() {
 
   const [quantity, setQuantity] = useState(1);
 
-  // =====================================================
-  // GET PRODUCT
-  // =====================================================
-
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -59,10 +55,6 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
-  // =====================================================
-  // LOADING
-  // =====================================================
-
   if (loading) {
     return (
       <div className="product-details-loading">
@@ -72,10 +64,6 @@ function ProductDetails() {
       </div>
     );
   }
-
-  // =====================================================
-  // ERROR
-  // =====================================================
 
   if (error || !product) {
     return (
@@ -88,10 +76,6 @@ function ProductDetails() {
       </div>
     );
   }
-
-  // =====================================================
-  // PRODUCT DATA
-  // =====================================================
 
   const images =
     product.images && product.images.length > 0
@@ -108,10 +92,6 @@ function ProductDetails() {
 
   const originalPrice = discount > 0 ? price / (1 - discount / 100) : price;
 
-  // =====================================================
-  // QUANTITY
-  // =====================================================
-
   const increaseQuantity = () => {
     if (quantity < stock) {
       setQuantity(quantity + 1);
@@ -124,10 +104,6 @@ function ProductDetails() {
     }
   };
 
-  // =====================================================
-  // ADD TO CART
-  // =====================================================
-
   const handleAddToCart = () => {
     try {
       // Get existing cart
@@ -139,10 +115,6 @@ function ProductDetails() {
       const existingItem = cart.find((item) => item._id === product._id);
 
       let updatedCart;
-
-      // =================================================
-      // PRODUCT ALREADY IN CART
-      // =================================================
 
       if (existingItem) {
         updatedCart = cart.map((item) => {
@@ -158,9 +130,6 @@ function ProductDetails() {
         });
       }
 
-      // =================================================
-      // NEW PRODUCT
-      // =================================================
       else {
         updatedCart = [
           ...cart,
@@ -188,10 +157,6 @@ function ProductDetails() {
       alert("Unable to add product to cart");
     }
   };
-
-  // =====================================================
-  // BUY NOW
-  // =====================================================
 
   const handleBuyNow = () => {
     try {
@@ -236,10 +201,6 @@ function ProductDetails() {
       alert("Unable to proceed to checkout");
     }
   };
-
-  // =====================================================
-  // UI
-  // =====================================================
 
   return (
     <main className="product-details-page">
