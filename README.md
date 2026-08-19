@@ -108,3 +108,27 @@ npm start
 - Dark Mode
 
 ---
+
+ 🤝 Contributing
+
+Contributions are welcome.
+
+Fork the repository and create your feature branch.
+
+```bash
+git checkout -b feature/NewFeature
+```
+
+Commit your changes.
+
+```bash
+git commit -m "Added new feature"
+```
+
+Push to GitHub.
+
+```bash
+git push origin feature/NewFeature
+```
+
+Open a Pull Request.
