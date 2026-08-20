@@ -111,18 +111,48 @@ function ProductDetails() {
 
       const cart = savedCart ? JSON.parse(savedCart) : [];
 
-      // Check whether product already exists
-      const existingItem = cart.find((item) => item._id === product._id);
+      // Find existing product
+      const existingProductIndex = cart.findIndex(
+        (item) => item._id === product._id,
+      );
 
       let updatedCart;
 
-      if (existingItem) {
-        updatedCart = cart.map((item) => {
-          if (item._id === product._id) {
+      if (existingProductIndex !== -1) {
+        const existingItem = cart[existingProductIndex];
+
+        const existingQuantity = Number(existingItem.quantity || 1);
+
+        const newQuantity = existingQuantity + quantity;
+
+        // Do not exceed stock
+        if (newQuantity > stock) {
+          updatedCart = cart.map((item, index) => {
+            if (index === existingProductIndex) {
+              return {
+                ...item,
+                quantity: stock,
+              };
+            }
+
+            return item;
+          });
+
+          localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+
+          window.dispatchEvent(new Event("cartUpdated"));
+
+          alert(`Only ${stock} units of ${product.name} are available.`);
+
+          return;
+        }
+
+        // Add selected quantity
+        updatedCart = cart.map((item, index) => {
+          if (index === existingProductIndex) {
             return {
               ...item,
-
-              quantity: Number(item.quantity || 1) + quantity,
+              quantity: newQuantity,
             };
           }
 
@@ -133,19 +163,26 @@ function ProductDetails() {
       else {
         updatedCart = [
           ...cart,
-
           {
-            ...product,
-
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            images: product.images || [],
             quantity: quantity,
+            stock: product.stock,
+            discount: product.discount || 0,
+            category: product.category || "Furniture",
+            brand: product.brand || "FurniSpace",
+            material: product.material || "",
+            color: product.color || "",
+            dimensions: product.dimensions || "",
           },
         ];
       }
 
-      // Save cart
       localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
-      // Tell other components cart changed
+      // Notify Cart and Navbar
       window.dispatchEvent(new Event("cartUpdated"));
 
       console.log("Cart updated:", updatedCart);
@@ -160,40 +197,70 @@ function ProductDetails() {
 
   const handleBuyNow = () => {
     try {
+      // Get existing cart
       const savedCart = localStorage.getItem("cartItems");
 
       const cart = savedCart ? JSON.parse(savedCart) : [];
 
-      const existingItem = cart.find((item) => item._id === product._id);
+      // Find existing product
+      const existingProductIndex = cart.findIndex(
+        (item) => item._id === product._id,
+      );
 
       let updatedCart;
 
-      if (existingItem) {
-        updatedCart = cart.map((item) =>
-          item._id === product._id
-            ? {
-                ...item,
+      if (existingProductIndex !== -1) {
+        const existingItem = cart[existingProductIndex];
 
-                quantity: Number(item.quantity || 1) + quantity,
-              }
-            : item,
-        );
-      } else {
+        const existingQuantity = Number(existingItem.quantity || 1);
+
+        const newQuantity = existingQuantity + quantity;
+
+        // Prevent quantity above stock
+        if (newQuantity > stock) {
+          alert(`Only ${stock} units of ${product.name} are available.`);
+
+          return;
+        }
+
+        updatedCart = cart.map((item, index) => {
+          if (index === existingProductIndex) {
+            return {
+              ...item,
+              quantity: newQuantity,
+            };
+          }
+
+          return item;
+        });
+      }
+
+      else {
         updatedCart = [
           ...cart,
-
           {
-            ...product,
-
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            images: product.images || [],
             quantity: quantity,
+            stock: product.stock,
+            discount: product.discount || 0,
+            category: product.category || "Furniture",
+            brand: product.brand || "FurniSpace",
+            material: product.material || "",
+            color: product.color || "",
+            dimensions: product.dimensions || "",
           },
         ];
       }
 
       localStorage.setItem("cartItems", JSON.stringify(updatedCart));
 
+      // Notify other components
       window.dispatchEvent(new Event("cartUpdated"));
 
+      // Go to checkout
       navigate("/checkout");
     } catch (error) {
       console.error("Error processing Buy Now:", error);
@@ -249,11 +316,17 @@ function ProductDetails() {
             </div>
 
             <div className="main-product-image">
+              {/* DISCOUNT */}
+
               {discount > 0 && (
                 <div className="discount-badge">{discount}% OFF</div>
               )}
 
+              {/* MAIN IMAGE */}
+
               <img src={currentImage} alt={product.name} />
+
+              {/* WISHLIST */}
 
               <button
                 className="image-wishlist"
@@ -275,7 +348,12 @@ function ProductDetails() {
 
             <div className="product-rating">
               <span className="stars">
-                {"★".repeat(Math.round(Number(product.rating || 0)))}
+                {"★".repeat(
+                  Math.min(
+                    5,
+                    Math.max(0, Math.round(Number(product.rating || 0))),
+                  ),
+                )}
               </span>
 
               <span>{product.rating || "No rating"}</span>
@@ -386,7 +464,7 @@ function ProductDetails() {
           </div>
         </section>
 
-        {/* SPECIFICATIONS */}
+        {/* PRODUCT SPECIFICATIONS */}
 
         <section className="product-extra-information">
           <div className="extra-heading">
