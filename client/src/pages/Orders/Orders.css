@@ -31,20 +31,39 @@
   color: #777;
 }
 
-.orders-back-btn {
-  justify-self: start;
+.orders-back-btn,
+.clear-orders-btn {
   border: none;
   background: transparent;
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #555;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
+}
+
+.orders-back-btn {
+  justify-self: start;
+  color: #555;
 }
 
 .orders-back-btn:hover {
   color: #222;
+}
+
+.clear-orders-btn {
+  justify-self: end;
+  color: #c62828;
+}
+
+.clear-orders-btn:hover {
+  color: #a51f1f;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .order-card {
@@ -71,8 +90,9 @@
 
 .order-card-header h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
   color: #222;
+  word-break: break-word;
 }
 
 .order-status {
@@ -104,6 +124,7 @@
 .order-info-item > svg {
   font-size: 22px;
   color: #555;
+  flex-shrink: 0;
 }
 
 .order-info-item span {
@@ -188,6 +209,7 @@
 .ordered-product > strong {
   font-size: 15px;
   color: #222;
+  white-space: nowrap;
 }
 
 .order-summary {
@@ -234,24 +256,24 @@
 .order-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 30px;
+  margin-top: 25px;
 }
 
-.orders-continue-btn {
-  border: none;
-  background: #222;
-  color: white;
-  padding: 13px 20px;
+.delete-order-btn {
+  border: 1px solid #e0b4b4;
+  background: #fff5f5;
+  color: #c62828;
+  padding: 10px 15px;
   border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.orders-continue-btn:hover {
-  background: #333;
+.delete-order-btn:hover {
+  background: #ffeaea;
 }
 
 .orders-empty {
@@ -315,7 +337,8 @@
     order: -1;
   }
 
-  .orders-back-btn {
+  .orders-back-btn,
+  .clear-orders-btn {
     align-self: flex-start;
   }
 
@@ -357,7 +380,7 @@
     justify-content: stretch;
   }
 
-  .orders-continue-btn {
+  .delete-order-btn {
     width: 100%;
     justify-content: center;
   }
