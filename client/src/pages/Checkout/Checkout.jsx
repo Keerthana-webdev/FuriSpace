@@ -24,11 +24,13 @@ function Checkout() {
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem("cartItems");
+
       const cart = savedCart ? JSON.parse(savedCart) : [];
 
       setCartItems(Array.isArray(cart) ? cart : []);
     } catch (error) {
       console.error("Error loading checkout cart:", error);
+
       setCartItems([]);
     }
   }, []);
@@ -56,84 +58,128 @@ function Checkout() {
   );
 
   const deliveryCharge = 0;
+
   const totalPrice = subtotal + deliveryCharge;
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
+
     setFormError("");
 
+    // Check cart
     if (cartItems.length === 0) {
       setFormError("Your cart is empty.");
       return;
     }
 
+    // Validate full name
     if (!formData.fullName.trim()) {
       setFormError("Please enter your full name.");
       return;
     }
 
+    // Validate email
     if (!formData.email.trim()) {
       setFormError("Please enter your email.");
       return;
     }
 
-    if (!formData.phone.trim()) {
-      setFormError("Please enter your phone number.");
-      return;
-    }
-
+    // Validate phone
     if (!/^\d{10}$/.test(formData.phone)) {
       setFormError("Please enter a valid 10-digit phone number.");
       return;
     }
 
+    // Validate address
     if (!formData.address.trim()) {
       setFormError("Please enter your address.");
       return;
     }
 
+    // Validate city
     if (!formData.city.trim()) {
       setFormError("Please enter your city.");
       return;
     }
 
+    // Validate state
     if (!formData.state.trim()) {
       setFormError("Please enter your state.");
       return;
     }
 
+    // Validate pincode
     if (!/^\d{6}$/.test(formData.pincode)) {
       setFormError("Please enter a valid 6-digit pincode.");
       return;
     }
 
+    // Create order
     const orderData = {
+      orderId: `ORD-${Date.now()}`,
+
       items: cartItems,
+
       customer: {
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
       },
+
       shippingAddress: {
         address: formData.address,
         city: formData.city,
         state: formData.state,
         pincode: formData.pincode,
       },
-      subtotal,
-      deliveryCharge,
+
+      subtotal: subtotal,
+
+      deliveryCharge: deliveryCharge,
+
       totalAmount: totalPrice,
+
+      status: "Order Placed",
+
       createdAt: new Date().toISOString(),
     };
 
-    console.log("Order data:", orderData);
+    console.log("New Order:", orderData);
 
+    // Get existing orders
+    let existingOrders = [];
+
+    try {
+      const savedOrders = localStorage.getItem("orders");
+
+      existingOrders = savedOrders ? JSON.parse(savedOrders) : [];
+
+      if (!Array.isArray(existingOrders)) {
+        existingOrders = [];
+      }
+    } catch (error) {
+      console.error("Error reading existing orders:", error);
+
+      existingOrders = [];
+    }
+
+    // Add new order
+    existingOrders.push(orderData);
+
+    // Save all orders
+    localStorage.setItem("orders", JSON.stringify(existingOrders));
+
+    // Save latest order separately
     localStorage.setItem("lastOrder", JSON.stringify(orderData));
+
+    // Clear cart
     localStorage.removeItem("cartItems");
 
+    // Show success screen
     setOrderPlaced(true);
   };
 
+  // SUCCESS SCREEN
   if (orderPlaced) {
     return (
       <main className="checkout-page">
@@ -173,6 +219,7 @@ function Checkout() {
     );
   }
 
+  // EMPTY CART
   if (cartItems.length === 0) {
     return (
       <main className="checkout-page">
@@ -193,9 +240,11 @@ function Checkout() {
     );
   }
 
+  // CHECKOUT PAGE
   return (
     <main className="checkout-page">
       <div className="checkout-container">
+        {/* HEADER */}
         <div className="checkout-header">
           <button className="back-to-cart" onClick={() => navigate("/cart")}>
             <FiArrowLeft />
@@ -214,6 +263,7 @@ function Checkout() {
         </div>
 
         <div className="checkout-content">
+          {/* FORM */}
           <div className="checkout-form-section">
             <div className="checkout-section-card">
               <div className="section-title">
@@ -226,6 +276,7 @@ function Checkout() {
               </div>
 
               <form onSubmit={handlePlaceOrder}>
+                {/* FULL NAME */}
                 <div className="form-group">
                   <label>Full Name</label>
 
@@ -238,6 +289,7 @@ function Checkout() {
                   />
                 </div>
 
+                {/* EMAIL + PHONE */}
                 <div className="form-row">
                   <div className="form-group">
                     <label>Email</label>
@@ -265,6 +317,7 @@ function Checkout() {
                   </div>
                 </div>
 
+                {/* ADDRESS */}
                 <div className="form-group">
                   <label>Address</label>
 
@@ -277,6 +330,7 @@ function Checkout() {
                   />
                 </div>
 
+                {/* CITY + STATE */}
                 <div className="form-row">
                   <div className="form-group">
                     <label>City</label>
@@ -303,6 +357,7 @@ function Checkout() {
                   </div>
                 </div>
 
+                {/* PINCODE */}
                 <div className="form-group">
                   <label>Pincode</label>
 
@@ -316,8 +371,10 @@ function Checkout() {
                   />
                 </div>
 
+                {/* ERROR */}
                 {formError && <div className="checkout-error">{formError}</div>}
 
+                {/* PLACE ORDER */}
                 <button type="submit" className="place-order-btn">
                   <FiCheck />
                   Place Order
@@ -326,6 +383,7 @@ function Checkout() {
             </div>
           </div>
 
+          {/* ORDER SUMMARY */}
           <div className="checkout-summary-section">
             <div className="checkout-summary-card">
               <h2>Order Summary</h2>
@@ -339,6 +397,7 @@ function Checkout() {
                     "/placeholder.jpg";
 
                   const price = Number(item.price || 0);
+
                   const quantity = Number(item.quantity || 1);
 
                   return (
@@ -368,6 +427,7 @@ function Checkout() {
                 })}
               </div>
 
+              {/* TOTALS */}
               <div className="summary-details">
                 <div className="summary-row">
                   <span>Items</span>
@@ -376,11 +436,13 @@ function Checkout() {
 
                 <div className="summary-row">
                   <span>Subtotal</span>
+
                   <span>₹{subtotal.toLocaleString("en-IN")}</span>
                 </div>
 
                 <div className="summary-row">
                   <span>Delivery</span>
+
                   <span className="free-delivery">FREE</span>
                 </div>
 
@@ -393,6 +455,7 @@ function Checkout() {
                 </div>
               </div>
 
+              {/* SECURITY */}
               <div className="checkout-security">
                 <FiLock />
 
