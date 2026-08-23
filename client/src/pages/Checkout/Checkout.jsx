@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft, FiCheck, FiLock, FiShoppingBag } from "react-icons/fi";
 
@@ -8,8 +9,6 @@ function Checkout() {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
-  const [formError, setFormError] = useState("");
-  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -21,6 +20,11 @@ function Checkout() {
     pincode: "",
   });
 
+  const [formError, setFormError] = useState("");
+
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  // Load cart items
   useEffect(() => {
     try {
       const savedCart = localStorage.getItem("cartItems");
@@ -35,6 +39,7 @@ function Checkout() {
     }
   }, []);
 
+  // Handle form input
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -46,21 +51,26 @@ function Checkout() {
     setFormError("");
   };
 
+  // Total quantity
   const totalItems = cartItems.reduce(
     (total, item) => total + Number(item.quantity || 1),
     0,
   );
 
+  // Subtotal
   const subtotal = cartItems.reduce(
     (total, item) =>
       total + Number(item.price || 0) * Number(item.quantity || 1),
     0,
   );
 
+  // Free delivery
   const deliveryCharge = 0;
 
+  // Final total
   const totalPrice = subtotal + deliveryCharge;
 
+  // Place order
   const handlePlaceOrder = (e) => {
     e.preventDefault();
 
@@ -85,7 +95,12 @@ function Checkout() {
     }
 
     // Validate phone
-    if (!/^\d{10}$/.test(formData.phone)) {
+    if (!formData.phone.trim()) {
+      setFormError("Please enter your phone number.");
+      return;
+    }
+
+    if (formData.phone.length !== 10) {
       setFormError("Please enter a valid 10-digit phone number.");
       return;
     }
@@ -109,23 +124,44 @@ function Checkout() {
     }
 
     // Validate pincode
-    if (!/^\d{6}$/.test(formData.pincode)) {
+    if (!formData.pincode.trim()) {
+      setFormError("Please enter your pincode.");
+      return;
+    }
+
+    if (formData.pincode.length !== 6) {
       setFormError("Please enter a valid 6-digit pincode.");
       return;
     }
 
-    // Create order
+    // ==========================================
+    // CREATE ORDER
+    // ==========================================
+
     const orderData = {
+      // Unique order ID
       orderId: `ORD-${Date.now()}`,
 
+      // Order tracking status
+      status: "Order Placed",
+
+      // 1 = Order Placed
+      // 2 = Order Confirmed
+      // 3 = Shipped
+      // 4 = Delivered
+      statusStep: 1,
+
+      // Products
       items: cartItems,
 
+      // Customer details
       customer: {
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
       },
 
+      // Delivery address
       shippingAddress: {
         address: formData.address,
         city: formData.city,
@@ -133,53 +169,81 @@ function Checkout() {
         pincode: formData.pincode,
       },
 
+      // Price details
       subtotal: subtotal,
 
       deliveryCharge: deliveryCharge,
 
       totalAmount: totalPrice,
 
-      status: "Order Placed",
-
+      // Order creation date
       createdAt: new Date().toISOString(),
     };
 
-    console.log("New Order:", orderData);
+    console.log("Order data:", orderData);
 
-    // Get existing orders
-    let existingOrders = [];
+    // ==========================================
+    // SAVE ORDER
+    // ==========================================
 
     try {
       const savedOrders = localStorage.getItem("orders");
 
-      existingOrders = savedOrders ? JSON.parse(savedOrders) : [];
+      const existingOrders = savedOrders ? JSON.parse(savedOrders) : [];
 
-      if (!Array.isArray(existingOrders)) {
-        existingOrders = [];
-      }
+      // Make sure existing orders are an array
+      const ordersArray = Array.isArray(existingOrders) ? existingOrders : [];
+
+      // Add new order without deleting old orders
+      const updatedOrders = [...ordersArray, orderData];
+
+      localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+      // ==========================================
+      // CLEAR CART AFTER ORDER
+      // ==========================================
+
+      localStorage.removeItem("cartItems");
+
+      setCartItems([]);
+
+      // Show success page
+      setOrderPlaced(true);
     } catch (error) {
-      console.error("Error reading existing orders:", error);
+      console.error("Error saving order:", error);
 
-      existingOrders = [];
+      setFormError("Unable to save your order. Please try again.");
     }
-
-    // Add new order
-    existingOrders.push(orderData);
-
-    // Save all orders
-    localStorage.setItem("orders", JSON.stringify(existingOrders));
-
-    // Save latest order separately
-    localStorage.setItem("lastOrder", JSON.stringify(orderData));
-
-    // Clear cart
-    localStorage.removeItem("cartItems");
-
-    // Show success screen
-    setOrderPlaced(true);
   };
 
-  // SUCCESS SCREEN
+  // ==========================================
+  // EMPTY CART
+  // ==========================================
+
+  if (cartItems.length === 0 && !orderPlaced) {
+    return (
+      <main className="checkout-page">
+        <div className="checkout-empty">
+          <div className="checkout-empty-icon">
+            <FiShoppingBag />
+          </div>
+
+          <h2>Your Cart is Empty</h2>
+
+          <p>Add some furniture to your cart before checking out.</p>
+
+          <Link to="/products" className="checkout-shop-btn">
+            Continue Shopping
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  // ==========================================
+  // ORDER SUCCESS
+  // ==========================================
+
   if (orderPlaced) {
     return (
       <main className="checkout-page">
@@ -190,9 +254,7 @@ function Checkout() {
 
           <h1>Order Placed Successfully!</h1>
 
-          <p>
-            Thank you for your order, <strong>{formData.fullName}</strong>.
-          </p>
+          <p>Thank you for your order, {formData.fullName}.</p>
 
           <p>
             Your order total is{" "}
@@ -219,51 +281,42 @@ function Checkout() {
     );
   }
 
-  // EMPTY CART
-  if (cartItems.length === 0) {
-    return (
-      <main className="checkout-page">
-        <div className="checkout-empty">
-          <div className="checkout-empty-icon">
-            <FiShoppingBag />
-          </div>
-
-          <h2>Your Cart is Empty</h2>
-
-          <p>Add some furniture to your cart before checking out.</p>
-
-          <Link to="/products" className="checkout-shop-btn">
-            Continue Shopping
-          </Link>
-        </div>
-      </main>
-    );
-  }
-
+  // ==========================================
   // CHECKOUT PAGE
+  // ==========================================
+
   return (
     <main className="checkout-page">
       <div className="checkout-container">
         {/* HEADER */}
+
         <div className="checkout-header">
           <button className="back-to-cart" onClick={() => navigate("/cart")}>
             <FiArrowLeft />
+
             <span>Back to Cart</span>
           </button>
 
           <div className="checkout-title">
             <h1>Checkout</h1>
+
             <p>Complete your order</p>
           </div>
 
           <div className="checkout-secure">
             <FiLock />
+
             <span>Secure Checkout</span>
           </div>
         </div>
 
+        {/* CHECKOUT CONTENT */}
+
         <div className="checkout-content">
-          {/* FORM */}
+          {/* ======================================
+              CUSTOMER FORM
+          ====================================== */}
+
           <div className="checkout-form-section">
             <div className="checkout-section-card">
               <div className="section-title">
@@ -271,12 +324,14 @@ function Checkout() {
 
                 <div>
                   <h2>Delivery Information</h2>
+
                   <p>Enter your delivery details</p>
                 </div>
               </div>
 
               <form onSubmit={handlePlaceOrder}>
                 {/* FULL NAME */}
+
                 <div className="form-group">
                   <label>Full Name</label>
 
@@ -290,6 +345,7 @@ function Checkout() {
                 </div>
 
                 {/* EMAIL + PHONE */}
+
                 <div className="form-row">
                   <div className="form-group">
                     <label>Email</label>
@@ -318,6 +374,7 @@ function Checkout() {
                 </div>
 
                 {/* ADDRESS */}
+
                 <div className="form-group">
                   <label>Address</label>
 
@@ -327,10 +384,11 @@ function Checkout() {
                     onChange={handleChange}
                     placeholder="Enter your complete address"
                     rows="4"
-                  />
+                  ></textarea>
                 </div>
 
                 {/* CITY + STATE */}
+
                 <div className="form-row">
                   <div className="form-group">
                     <label>City</label>
@@ -358,6 +416,7 @@ function Checkout() {
                 </div>
 
                 {/* PINCODE */}
+
                 <div className="form-group">
                   <label>Pincode</label>
 
@@ -372,9 +431,11 @@ function Checkout() {
                 </div>
 
                 {/* ERROR */}
+
                 {formError && <div className="checkout-error">{formError}</div>}
 
                 {/* PLACE ORDER */}
+
                 <button type="submit" className="place-order-btn">
                   <FiCheck />
                   Place Order
@@ -383,10 +444,15 @@ function Checkout() {
             </div>
           </div>
 
-          {/* ORDER SUMMARY */}
+          {/* ======================================
+              ORDER SUMMARY
+          ====================================== */}
+
           <div className="checkout-summary-section">
             <div className="checkout-summary-card">
               <h2>Order Summary</h2>
+
+              {/* PRODUCTS */}
 
               <div className="checkout-products">
                 {cartItems.map((item, index) => {
@@ -428,9 +494,11 @@ function Checkout() {
               </div>
 
               {/* TOTALS */}
+
               <div className="summary-details">
                 <div className="summary-row">
                   <span>Items</span>
+
                   <span>{totalItems}</span>
                 </div>
 
@@ -456,6 +524,7 @@ function Checkout() {
               </div>
 
               {/* SECURITY */}
+
               <div className="checkout-security">
                 <FiLock />
 

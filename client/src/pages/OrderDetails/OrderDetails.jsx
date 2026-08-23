@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+
 import {
   FiArrowLeft,
+  FiCheck,
   FiCheckCircle,
+  FiMapPin,
   FiPackage,
   FiShoppingBag,
-  FiMapPin,
+  FiTruck,
 } from "react-icons/fi";
 
 import "./OrderDetails.css";
 
 function OrderDetails() {
   const { orderId } = useParams();
+
   const navigate = useNavigate();
 
   const [order, setOrder] = useState(null);
@@ -42,7 +46,6 @@ function OrderDetails() {
     }
   }, [orderId]);
 
-  // Order not found
   if (!order) {
     return (
       <main className="order-details-page">
@@ -83,10 +86,52 @@ function OrderDetails() {
       0,
     ) || 0;
 
+  /*
+    ORDER STATUS
+
+    1 = Order Placed
+    2 = Order Confirmed
+    3 = Shipped
+    4 = Delivered
+  */
+
+  const currentStep = Number(order.statusStep) || 1;
+
+  const trackingSteps = [
+    {
+      step: 1,
+      title: "Order Placed",
+      description: "Your order has been successfully placed.",
+      icon: <FiCheckCircle />,
+    },
+
+    {
+      step: 2,
+      title: "Order Confirmed",
+      description: "Your order has been confirmed.",
+      icon: <FiCheck />,
+    },
+
+    {
+      step: 3,
+      title: "Shipped",
+      description: "Your order has been shipped.",
+      icon: <FiTruck />,
+    },
+
+    {
+      step: 4,
+      title: "Delivered",
+      description: "Your order has been delivered.",
+      icon: <FiPackage />,
+    },
+  ];
+
   return (
     <main className="order-details-page">
       <div className="order-details-container">
         {/* HEADER */}
+
         <div className="order-details-header">
           <button
             className="back-orders-btn"
@@ -103,14 +148,15 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* STATUS */}
+        {/* STATUS CARD */}
+
         <div className="order-status-card">
           <div className="status-icon">
             <FiCheckCircle />
           </div>
 
           <div>
-            <span>Order Status</span>
+            <span>Current Status</span>
 
             <h2>{order.status || "Order Placed"}</h2>
           </div>
@@ -122,9 +168,60 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ORDER INFORMATION */}
+        {/* ORDER TRACKING */}
+
+        <div className="tracking-card">
+          <div className="tracking-header">
+            <div>
+              <h2>Track Your Order</h2>
+
+              <p>Follow your order progress</p>
+            </div>
+
+            <FiTruck />
+          </div>
+
+          <div className="tracking-timeline">
+            {trackingSteps.map((item, index) => {
+              const completed = currentStep >= item.step;
+
+              const active = currentStep === item.step;
+
+              return (
+                <div
+                  className={`tracking-step ${completed ? "completed" : ""} ${
+                    active ? "active" : ""
+                  }`}
+                  key={item.step}
+                >
+                  <div className="tracking-icon">
+                    {completed ? <FiCheck /> : item.icon}
+                  </div>
+
+                  <div className="tracking-content">
+                    <h3>{item.title}</h3>
+
+                    <p>{item.description}</p>
+                  </div>
+
+                  {index < trackingSteps.length - 1 && (
+                    <div
+                      className={`tracking-line ${
+                        currentStep > item.step ? "completed-line" : ""
+                      }`}
+                    ></div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* MAIN DETAILS */}
+
         <div className="order-details-grid">
           {/* PRODUCTS */}
+
           <div className="details-card">
             <div className="details-card-title">
               <FiShoppingBag />
@@ -170,7 +267,8 @@ function OrderDetails() {
             </div>
           </div>
 
-          {/* CUSTOMER DETAILS */}
+          {/* DELIVERY INFORMATION */}
+
           <div className="details-card">
             <div className="details-card-title">
               <FiMapPin />
@@ -225,6 +323,7 @@ function OrderDetails() {
         </div>
 
         {/* PRICE SUMMARY */}
+
         <div className="details-card price-card">
           <h2>Order Summary</h2>
 
@@ -258,6 +357,7 @@ function OrderDetails() {
         </div>
 
         {/* BUTTONS */}
+
         <div className="order-details-actions">
           <Link to="/products" className="shop-more-btn">
             <FiShoppingBag />

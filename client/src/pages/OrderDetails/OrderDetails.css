@@ -375,3 +375,165 @@
     box-sizing: border-box;
   }
 }
+
+/* =========================================
+   ORDER TRACKING
+========================================= */
+
+.tracking-card {
+  background: white;
+  border-radius: 14px;
+  padding: 30px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
+}
+
+.tracking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+
+.tracking-header h2 {
+  margin: 0 0 5px;
+  font-size: 21px;
+  color: #222;
+}
+
+.tracking-header p {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+}
+
+.tracking-header > svg {
+  font-size: 25px;
+  color: #555;
+}
+
+.tracking-timeline {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding: 35px 10px 10px;
+}
+
+.tracking-step {
+  flex: 1;
+  position: relative;
+  text-align: center;
+}
+
+.tracking-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: #eee;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.tracking-step.completed .tracking-icon {
+  background: #222;
+  color: white;
+}
+
+.tracking-step.active .tracking-icon {
+  box-shadow: 0 0 0 5px #e5e5e5;
+}
+
+.tracking-content h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #999;
+}
+
+.tracking-step.completed .tracking-content h3 {
+  color: #222;
+}
+
+.tracking-content p {
+  margin: 0;
+  font-size: 11px;
+  color: #999;
+  line-height: 1.5;
+}
+
+.tracking-step.completed .tracking-content p {
+  color: #666;
+}
+
+.tracking-line {
+  position: absolute;
+  height: 3px;
+  background: #eee;
+  top: 23px;
+  left: calc(50% + 24px);
+  width: calc(100% - 48px);
+  z-index: 1;
+}
+
+.tracking-line.completed-line {
+  background: #222;
+}
+
+/* =========================================
+   MOBILE TRACKING
+========================================= */
+
+@media (max-width: 650px) {
+  .tracking-card {
+    padding: 20px;
+  }
+
+  .tracking-header {
+    padding-bottom: 20px;
+  }
+
+  .tracking-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 25px 0 10px;
+  }
+
+  .tracking-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    text-align: left;
+    min-height: 85px;
+  }
+
+  .tracking-icon {
+    margin: 0;
+  }
+
+  .tracking-content {
+    padding-left: 15px;
+    padding-top: 5px;
+  }
+
+  .tracking-content h3 {
+    font-size: 14px;
+  }
+
+  .tracking-content p {
+    font-size: 12px;
+  }
+
+  .tracking-line {
+    width: 3px;
+    height: 37px;
+    top: 48px;
+    left: 22px;
+  }
+}
