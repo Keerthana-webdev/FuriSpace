@@ -295,8 +295,14 @@ function Orders() {
                   </div>
                 </div>
 
-                {/* DELETE ORDER */}
                 <div className="order-footer">
+                  <button
+                    className="view-order-btn"
+                    onClick={() => navigate(`/orders/${order.orderId}`)}
+                  >
+                    View Details
+                  </button>
+
                   <button
                     className="delete-order-btn"
                     onClick={() => handleDeleteOrder(order.orderId)}
