@@ -6,6 +6,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
+import OrderDetails from "./pages/OrderDetails/OrderDetails";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import Login from "./pages/Login/Login";
@@ -24,7 +25,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route element={<MainLayout />}>
           {/* HOME */}
 
@@ -37,6 +37,10 @@ function App() {
           {/* PRODUCT DETAILS */}
 
           <Route path="/products/:id" element={<ProductDetails />} />
+
+          {/* ORDER DETAILS */}
+
+          <Route path="/orders/:orderId" element={<OrderDetails />} />
 
           {/* CART */}
 
