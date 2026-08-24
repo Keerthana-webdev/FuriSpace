@@ -13,6 +13,7 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
+import AdminOrders from "./pages/AdminOrders/AdminOrders";
 
 import Dashboard from "./pages/Admin/Dashboard";
 
@@ -41,6 +42,10 @@ function App() {
           {/* ORDER DETAILS */}
 
           <Route path="/orders/:orderId" element={<OrderDetails />} />
+
+          {/* ADMIN ORDERS */}
+
+          <Route path="/admin/orders" element={<AdminOrders />} />
 
           {/* CART */}
 
