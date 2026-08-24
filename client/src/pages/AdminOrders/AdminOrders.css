@@ -25,11 +25,6 @@
   font-size: 15px;
 }
 
-
-/* =========================================
-   STATISTICS
-========================================= */
-
 .admin-order-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -72,11 +67,6 @@
   font-size: 20px;
 }
 
-
-/* =========================================
-   EMPTY
-========================================= */
-
 .admin-orders-empty {
   background: white;
   padding: 70px 30px;
@@ -100,11 +90,6 @@
   color: #777;
 }
 
-
-/* =========================================
-   ORDER CARD
-========================================= */
-
 .admin-orders-list {
   display: flex;
   flex-direction: column;
@@ -117,11 +102,6 @@
   padding: 25px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
 }
-
-
-/* =========================================
-   ORDER HEADER
-========================================= */
 
 .admin-order-top {
   display: flex;
@@ -159,11 +139,6 @@
   color: #222;
 }
 
-
-/* =========================================
-   CUSTOMER
-========================================= */
-
 .admin-customer {
   display: flex;
   align-items: center;
@@ -195,11 +170,6 @@
   font-size: 12px;
   color: #777;
 }
-
-
-/* =========================================
-   PRODUCTS
-========================================= */
 
 .admin-order-products {
   display: flex;
@@ -237,11 +207,6 @@
   color: #777;
 }
 
-
-/* =========================================
-   ORDER INFO
-========================================= */
-
 .admin-order-info {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -260,11 +225,6 @@
   font-size: 14px;
   color: #333;
 }
-
-
-/* =========================================
-   STATUS
-========================================= */
 
 .admin-status {
   display: inline-block;
@@ -292,11 +252,6 @@
   background: #e8f7ed;
   color: #218838 !important;
 }
-
-
-/* =========================================
-   STATUS CONTROL
-========================================= */
 
 .admin-status-control {
   display: flex;
@@ -328,11 +283,6 @@
   border-color: #222;
 }
 
-
-/* =========================================
-   ACTIONS
-========================================= */
-
 .admin-order-actions {
   display: flex;
   justify-content: flex-end;
@@ -352,11 +302,6 @@
 .admin-delete-btn:hover {
   background: #ffe1e1;
 }
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
 
 @media (max-width: 1000px) {
   .admin-order-stats {
