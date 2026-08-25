@@ -28,32 +28,26 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          {/* HOME */}
 
+          {/* HOME */}
           <Route path="/" element={<Home />} />
 
           {/* PRODUCTS */}
-
           <Route path="/products" element={<Products />} />
 
           {/* PRODUCT DETAILS */}
-
           <Route path="/products/:id" element={<ProductDetails />} />
 
           {/* ORDER DETAILS */}
-
           <Route path="/orders/:orderId" element={<OrderDetails />} />
 
-          {/* ADMIN ORDERS */}
-
-          <Route path="/admin/orders" element={<AdminOrders />} />
-
           {/* ADMIN DASHBOARD */}
-
           <Route path="/admin" element={<AdminDashboard />} />
 
-          {/* CART */}
+          {/* ADMIN ORDERS */}
+          <Route path="/admin/orders" element={<AdminOrders />} />
 
+          {/* CART */}
           <Route path="/cart" element={<Cart />} />
 
           <Route
