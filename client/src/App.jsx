@@ -13,8 +13,10 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
+
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
+
 import NotFound from "./pages/NotFound/NotFound";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -24,6 +26,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         <Route element={<MainLayout />}>
           {/* HOME */}
           <Route path="/" element={<Home />} />
@@ -34,18 +37,10 @@ function App() {
           {/* PRODUCT DETAILS */}
           <Route path="/products/:id" element={<ProductDetails />} />
 
-          {/* ORDER DETAILS */}
-          <Route path="/orders/:orderId" element={<OrderDetails />} />
-
-          {/* ADMIN DASHBOARD */}
-          <Route path="/admin" element={<Dashboard />} />
-
-          {/* ADMIN ORDERS */}
-          <Route path="/admin/orders" element={<AdminOrders />} />
-
           {/* CART */}
           <Route path="/cart" element={<Cart />} />
 
+          {/* CHECKOUT */}
           <Route
             path="/checkout"
             element={
@@ -55,6 +50,7 @@ function App() {
             }
           />
 
+          {/* CUSTOMER ORDERS */}
           <Route
             path="/orders"
             element={
@@ -64,6 +60,10 @@ function App() {
             }
           />
 
+          {/* ORDER DETAILS */}
+          <Route path="/orders/:orderId" element={<OrderDetails />} />
+
+          {/* PROFILE */}
           <Route
             path="/profile"
             element={
@@ -86,7 +86,11 @@ function App() {
             </AdminRoute>
           }
         >
+          {/* ADMIN DASHBOARD */}
           <Route index element={<Dashboard />} />
+
+          {/* ADMIN ORDERS */}
+          <Route path="orders" element={<AdminOrders />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
