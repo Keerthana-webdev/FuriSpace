@@ -9,6 +9,8 @@
   margin: 0 auto;
 }
 
+/* HEADER */
+
 .admin-dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -44,6 +46,8 @@
 .manage-orders-header-btn:hover {
   background: #333;
 }
+
+/* STATISTICS */
 
 .dashboard-stats {
   display: grid;
@@ -87,6 +91,8 @@
   color: #222;
 }
 
+/* REVENUE */
+
 .dashboard-revenue-card {
   background: #222;
   color: white;
@@ -96,7 +102,6 @@
   align-items: center;
   gap: 18px;
   margin-bottom: 30px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
 }
 
 .revenue-icon {
@@ -120,6 +125,8 @@
 .revenue-content strong {
   font-size: 25px;
 }
+
+/* RECENT ORDERS */
 
 .recent-orders-section {
   background: white;
@@ -160,10 +167,7 @@
   font-size: 13px;
 }
 
-.view-all-orders-btn:hover {
-  background: #e7e7e7;
-}
-
+/* TABLE */
 
 .recent-orders-table-wrapper {
   width: 100%;
@@ -192,14 +196,6 @@
   color: #555;
 }
 
-.recent-orders-table tbody tr:hover {
-  background: #fafafa;
-}
-
-.recent-orders-table td strong {
-  color: #333;
-}
-
 .dashboard-customer strong {
   display: block;
   font-size: 13px;
@@ -212,6 +208,8 @@
   font-size: 11px;
   color: #888;
 }
+
+/* STATUS */
 
 .dashboard-status {
   display: inline-block;
@@ -242,6 +240,8 @@
   color: #218838;
 }
 
+/* EMPTY */
+
 .dashboard-empty {
   text-align: center;
   padding: 60px 20px;
@@ -262,6 +262,8 @@
   color: #777;
   font-size: 14px;
 }
+
+/* RESPONSIVE */
 
 @media (max-width: 1000px) {
   .dashboard-stats {
@@ -298,9 +300,9 @@
   }
 
   .recent-orders-header {
+    flex-direction: column;
     align-items: flex-start;
     gap: 15px;
-    flex-direction: column;
   }
 
   .view-all-orders-btn {

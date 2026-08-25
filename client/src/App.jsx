@@ -13,11 +13,8 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
-import AdminOrders from "./pages/AdminOrders/AdminOrders";
-import AdminDashboard from "./pages/AdminDashboard/AdminDashboard";
-
 import Dashboard from "./pages/Admin/Dashboard";
-
+import AdminOrders from "./pages/AdminOrders/AdminOrders";
 import NotFound from "./pages/NotFound/NotFound";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -28,7 +25,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-
           {/* HOME */}
           <Route path="/" element={<Home />} />
 
@@ -42,7 +38,7 @@ function App() {
           <Route path="/orders/:orderId" element={<OrderDetails />} />
 
           {/* ADMIN DASHBOARD */}
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<Dashboard />} />
 
           {/* ADMIN ORDERS */}
           <Route path="/admin/orders" element={<AdminOrders />} />
