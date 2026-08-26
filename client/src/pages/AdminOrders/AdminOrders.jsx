@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
 
-import { FiCheckCircle, FiPackage, FiTruck, FiUser } from "react-icons/fi";
+import {
+  FiCheck,
+  FiCheckCircle,
+  FiPackage,
+  FiTruck,
+  FiUser,
+} from "react-icons/fi";
 
 import "./AdminOrders.css";
 
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
 
-  // Load orders
+  // ==========================================
+  // LOAD ORDERS
+  // ==========================================
+
   useEffect(() => {
     loadOrders();
   }, []);
@@ -35,23 +44,20 @@ function AdminOrders() {
     }
   };
 
-  // Change order status
+  // ==========================================
+  // CHANGE ORDER STATUS
+  // ==========================================
+
   const handleStatusChange = (orderId, newStatus) => {
     let newStatusStep = 1;
 
     if (newStatus === "Order Placed") {
       newStatusStep = 1;
-    }
-
-    if (newStatus === "Order Confirmed") {
+    } else if (newStatus === "Order Confirmed") {
       newStatusStep = 2;
-    }
-
-    if (newStatus === "Shipped") {
+    } else if (newStatus === "Shipped") {
       newStatusStep = 3;
-    }
-
-    if (newStatus === "Delivered") {
+    } else if (newStatus === "Delivered") {
       newStatusStep = 4;
     }
 
@@ -69,10 +75,8 @@ function AdminOrders() {
         return order;
       });
 
-      // Update React state
       setOrders(updatedOrders);
 
-      // Update localStorage
       localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
       alert(`Order status updated to "${newStatus}"`);
@@ -81,7 +85,10 @@ function AdminOrders() {
     }
   };
 
-  // Delete order
+  // ==========================================
+  // DELETE ORDER
+  // ==========================================
+
   const handleDeleteOrder = (orderId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this order?",
@@ -102,24 +109,51 @@ function AdminOrders() {
     }
   };
 
-  // Calculate total orders
+  // ==========================================
+  // STATISTICS
+  // ==========================================
+
   const totalOrders = orders.length;
 
-  // Calculate delivered orders
   const deliveredOrders = orders.filter(
     (order) => Number(order.statusStep) === 4,
   ).length;
 
-  // Calculate pending orders
   const pendingOrders = orders.filter(
     (order) => Number(order.statusStep || 1) < 4,
   ).length;
 
-  // Calculate total revenue
   const totalRevenue = orders.reduce(
     (total, order) => total + Number(order.totalAmount || 0),
     0,
   );
+
+  // ==========================================
+  // STATUS PROGRESS
+  // ==========================================
+
+  const statusSteps = [
+    {
+      number: 1,
+      label: "Order Placed",
+    },
+    {
+      number: 2,
+      label: "Order Confirmed",
+    },
+    {
+      number: 3,
+      label: "Shipped",
+    },
+    {
+      number: 4,
+      label: "Delivered",
+    },
+  ];
+
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <main className="admin-orders-page">
@@ -214,6 +248,8 @@ function AdminOrders() {
                     })
                   : "N/A";
 
+                const currentStep = Number(order.statusStep || 1);
+
                 return (
                   <div className="admin-order-card" key={order.orderId}>
                     {/* ORDER HEADER */}
@@ -297,12 +333,47 @@ function AdminOrders() {
                         <span>Current Status</span>
 
                         <strong
-                          className={`admin-status status-${Number(
-                            order.statusStep || 1,
-                          )}`}
+                          className={`admin-status status-${currentStep}`}
                         >
                           {order.status || "Order Placed"}
                         </strong>
+                      </div>
+                    </div>
+
+                    {/* PROGRESS TRACKER */}
+
+                    <div className="admin-progress-section">
+                      <h3>Order Progress</h3>
+
+                      <div className="admin-progress">
+                        {statusSteps.map((step, index) => {
+                          const completed = currentStep >= step.number;
+
+                          return (
+                            <div
+                              className="admin-progress-step"
+                              key={step.number}
+                            >
+                              <div
+                                className={`progress-circle ${
+                                  completed ? "completed" : ""
+                                }`}
+                              >
+                                {completed ? <FiCheck /> : step.number}
+                              </div>
+
+                              <span>{step.label}</span>
+
+                              {index < statusSteps.length - 1 && (
+                                <div
+                                  className={`progress-line ${
+                                    currentStep > step.number ? "completed" : ""
+                                  }`}
+                                />
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
 

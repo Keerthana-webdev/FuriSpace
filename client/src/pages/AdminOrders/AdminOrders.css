@@ -253,12 +253,78 @@
   color: #218838 !important;
 }
 
+.admin-progress-section {
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-progress-section h3 {
+  margin: 0 0 25px;
+  font-size: 15px;
+  color: #333;
+}
+
+.admin-progress {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.admin-progress-step {
+  position: relative;
+  flex: 1;
+  text-align: center;
+}
+
+.progress-circle {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background: white;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  position: relative;
+  z-index: 2;
+}
+
+.progress-circle.completed {
+  background: #222;
+  border-color: #222;
+  color: white;
+}
+
+.admin-progress-step span {
+  display: block;
+  font-size: 11px;
+  color: #777;
+}
+
+.progress-line {
+  position: absolute;
+  height: 2px;
+  background: #ddd;
+  top: 17px;
+  left: 50%;
+  width: 100%;
+  z-index: 1;
+}
+
+.progress-line.completed {
+  background: #222;
+}
+
 .admin-status-control {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 20px 0;
-  border-top: 1px solid #eee;
 }
 
 .admin-status-control label {
@@ -347,5 +413,14 @@
 
   .admin-order-product {
     min-width: 100%;
+  }
+
+  .admin-progress {
+    overflow-x: auto;
+    min-width: 500px;
+  }
+
+  .admin-progress-section {
+    overflow-x: auto;
   }
 }
