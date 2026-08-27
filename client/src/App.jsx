@@ -14,6 +14,8 @@ import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
 
+import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
+
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
 
@@ -26,7 +28,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route element={<MainLayout />}>
           {/* HOME */}
           <Route path="/" element={<Home />} />
@@ -60,8 +61,15 @@ function App() {
             }
           />
 
-          {/* ORDER DETAILS */}
-          <Route path="/orders/:orderId" element={<OrderDetails />} />
+          {/* CUSTOMER ORDER DETAILS */}
+          <Route
+            path="/orders/:orderId"
+            element={
+              <ProtectedRoute>
+                <OrderDetails />
+              </ProtectedRoute>
+            }
+          />
 
           {/* PROFILE */}
           <Route
@@ -91,6 +99,9 @@ function App() {
 
           {/* ADMIN ORDERS */}
           <Route path="orders" element={<AdminOrders />} />
+
+          {/* ADMIN ORDER DETAILS */}
+          <Route path="orders/:orderId" element={<AdminOrderDetails />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
