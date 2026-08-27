@@ -18,14 +18,6 @@ function Dashboard() {
 
   const [orders, setOrders] = useState([]);
 
-  // ==========================================
-  // LOAD ORDERS
-  // ==========================================
-
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
   const loadOrders = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
@@ -44,13 +36,32 @@ function Dashboard() {
       }
     } catch (error) {
       console.error("Error loading orders:", error);
+
       setOrders([]);
     }
   };
 
-  // ==========================================
-  // STATISTICS
-  // ==========================================
+  useEffect(() => {
+    loadOrders();
+
+    const handleStorageChange = () => {
+      loadOrders();
+    };
+
+    const handleWindowFocus = () => {
+      loadOrders();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    window.addEventListener("focus", handleWindowFocus);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+
+      window.removeEventListener("focus", handleWindowFocus);
+    };
+  }, []);
 
   const totalOrders = orders.length;
 
@@ -71,18 +82,10 @@ function Dashboard() {
     0,
   );
 
-  // ==========================================
-  // RECENT ORDERS
-  // ==========================================
-
   const recentOrders = orders
     .slice()
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
     .slice(0, 5);
-
-  // ==========================================
-  // STATUS
-  // ==========================================
 
   const getStatusClass = (step) => {
     if (Number(step) === 1) {
