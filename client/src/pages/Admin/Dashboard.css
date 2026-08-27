@@ -309,4 +309,18 @@
     width: 100%;
     justify-content: center;
   }
+
+  .dashboard-order-id {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: #222;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .dashboard-order-id:hover {
+    text-decoration: underline;
+  }
 }
