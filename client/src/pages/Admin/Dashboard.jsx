@@ -262,7 +262,14 @@ function Dashboard() {
                     return (
                       <tr key={order.orderId}>
                         <td>
-                          <strong>#{order.orderId}</strong>
+                          <button
+                            className="dashboard-order-id"
+                            onClick={() =>
+                              navigate(`/admin/orders/${order.orderId}`)
+                            }
+                          >
+                            #{order.orderId}
+                          </button>
                         </td>
 
                         <td>
