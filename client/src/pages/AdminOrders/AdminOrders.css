@@ -423,4 +423,31 @@
   .admin-progress-section {
     overflow-x: auto;
   }
+
+  .admin-view-order-btn {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .admin-view-order-btn:hover {
+    background: #333;
+  }
+
+  .admin-order-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding-top: 5px;
+  }
 }

@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
 
 import {
-  FiCheck,
   FiCheckCircle,
   FiPackage,
   FiTruck,
   FiUser,
+  FiArrowRight,
 } from "react-icons/fi";
+
+import { useNavigate } from "react-router-dom";
 
 import "./AdminOrders.css";
 
 function AdminOrders() {
+  const navigate = useNavigate();
+
   const [orders, setOrders] = useState([]);
 
-  // ==========================================
+  // =====================================================
   // LOAD ORDERS
-  // ==========================================
+  // =====================================================
 
   useEffect(() => {
     loadOrders();
@@ -44,20 +48,26 @@ function AdminOrders() {
     }
   };
 
-  // ==========================================
+  // =====================================================
   // CHANGE ORDER STATUS
-  // ==========================================
+  // =====================================================
 
   const handleStatusChange = (orderId, newStatus) => {
     let newStatusStep = 1;
 
     if (newStatus === "Order Placed") {
       newStatusStep = 1;
-    } else if (newStatus === "Order Confirmed") {
+    }
+
+    if (newStatus === "Order Confirmed") {
       newStatusStep = 2;
-    } else if (newStatus === "Shipped") {
+    }
+
+    if (newStatus === "Shipped") {
       newStatusStep = 3;
-    } else if (newStatus === "Delivered") {
+    }
+
+    if (newStatus === "Delivered") {
       newStatusStep = 4;
     }
 
@@ -85,9 +95,9 @@ function AdminOrders() {
     }
   };
 
-  // ==========================================
+  // =====================================================
   // DELETE ORDER
-  // ==========================================
+  // =====================================================
 
   const handleDeleteOrder = (orderId) => {
     const confirmDelete = window.confirm(
@@ -109,9 +119,17 @@ function AdminOrders() {
     }
   };
 
-  // ==========================================
+  // =====================================================
+  // OPEN ORDER DETAILS
+  // =====================================================
+
+  const handleViewOrder = (orderId) => {
+    navigate(`/admin/orders/${orderId}`);
+  };
+
+  // =====================================================
   // STATISTICS
-  // ==========================================
+  // =====================================================
 
   const totalOrders = orders.length;
 
@@ -128,37 +146,16 @@ function AdminOrders() {
     0,
   );
 
-  // ==========================================
-  // STATUS PROGRESS
-  // ==========================================
-
-  const statusSteps = [
-    {
-      number: 1,
-      label: "Order Placed",
-    },
-    {
-      number: 2,
-      label: "Order Confirmed",
-    },
-    {
-      number: 3,
-      label: "Shipped",
-    },
-    {
-      number: 4,
-      label: "Delivered",
-    },
-  ];
-
-  // ==========================================
-  // RENDER
-  // ==========================================
+  // =====================================================
+  // RETURN
+  // =====================================================
 
   return (
     <main className="admin-orders-page">
       <div className="admin-orders-container">
-        {/* HEADER */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
         <div className="admin-orders-header">
           <div>
@@ -168,9 +165,13 @@ function AdminOrders() {
           </div>
         </div>
 
-        {/* STATISTICS */}
+        {/* =================================================
+            STATISTICS
+        ================================================= */}
 
         <div className="admin-order-stats">
+          {/* TOTAL */}
+
           <div className="admin-stat-card">
             <div className="admin-stat-icon">
               <FiPackage />
@@ -182,6 +183,8 @@ function AdminOrders() {
               <strong>{totalOrders}</strong>
             </div>
           </div>
+
+          {/* PENDING */}
 
           <div className="admin-stat-card">
             <div className="admin-stat-icon">
@@ -195,6 +198,8 @@ function AdminOrders() {
             </div>
           </div>
 
+          {/* DELIVERED */}
+
           <div className="admin-stat-card">
             <div className="admin-stat-icon">
               <FiCheckCircle />
@@ -207,6 +212,8 @@ function AdminOrders() {
             </div>
           </div>
 
+          {/* REVENUE */}
+
           <div className="admin-stat-card">
             <div className="admin-stat-icon">₹</div>
 
@@ -218,7 +225,9 @@ function AdminOrders() {
           </div>
         </div>
 
-        {/* ORDERS */}
+        {/* =================================================
+            ORDERS
+        ================================================= */}
 
         {orders.length === 0 ? (
           <div className="admin-orders-empty">
@@ -247,8 +256,6 @@ function AdminOrders() {
                       year: "numeric",
                     })
                   : "N/A";
-
-                const currentStep = Number(order.statusStep || 1);
 
                 return (
                   <div className="admin-order-card" key={order.orderId}>
@@ -333,51 +340,16 @@ function AdminOrders() {
                         <span>Current Status</span>
 
                         <strong
-                          className={`admin-status status-${currentStep}`}
+                          className={`admin-status status-${Number(
+                            order.statusStep || 1,
+                          )}`}
                         >
                           {order.status || "Order Placed"}
                         </strong>
                       </div>
                     </div>
 
-                    {/* PROGRESS TRACKER */}
-
-                    <div className="admin-progress-section">
-                      <h3>Order Progress</h3>
-
-                      <div className="admin-progress">
-                        {statusSteps.map((step, index) => {
-                          const completed = currentStep >= step.number;
-
-                          return (
-                            <div
-                              className="admin-progress-step"
-                              key={step.number}
-                            >
-                              <div
-                                className={`progress-circle ${
-                                  completed ? "completed" : ""
-                                }`}
-                              >
-                                {completed ? <FiCheck /> : step.number}
-                              </div>
-
-                              <span>{step.label}</span>
-
-                              {index < statusSteps.length - 1 && (
-                                <div
-                                  className={`progress-line ${
-                                    currentStep > step.number ? "completed" : ""
-                                  }`}
-                                />
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* STATUS CONTROL */}
+                    {/* STATUS */}
 
                     <div className="admin-status-control">
                       <label>Update Order Status</label>
@@ -398,9 +370,17 @@ function AdminOrders() {
                       </select>
                     </div>
 
-                    {/* DELETE */}
+                    {/* ACTIONS */}
 
                     <div className="admin-order-actions">
+                      <button
+                        className="admin-view-order-btn"
+                        onClick={() => handleViewOrder(order.orderId)}
+                      >
+                        View Details
+                        <FiArrowRight />
+                      </button>
+
                       <button
                         className="admin-delete-btn"
                         onClick={() => handleDeleteOrder(order.orderId)}
