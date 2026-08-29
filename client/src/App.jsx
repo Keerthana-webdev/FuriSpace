@@ -13,7 +13,6 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
-
 import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
 
 import Dashboard from "./pages/Admin/Dashboard";
@@ -28,20 +27,19 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* ==========================================
+            CUSTOMER ROUTES
+        ========================================== */}
+
         <Route element={<MainLayout />}>
-          {/* HOME */}
           <Route path="/" element={<Home />} />
 
-          {/* PRODUCTS */}
           <Route path="/products" element={<Products />} />
 
-          {/* PRODUCT DETAILS */}
           <Route path="/products/:id" element={<ProductDetails />} />
 
-          {/* CART */}
           <Route path="/cart" element={<Cart />} />
 
-          {/* CHECKOUT */}
           <Route
             path="/checkout"
             element={
@@ -51,7 +49,6 @@ function App() {
             }
           />
 
-          {/* CUSTOMER ORDERS */}
           <Route
             path="/orders"
             element={
@@ -61,7 +58,6 @@ function App() {
             }
           />
 
-          {/* CUSTOMER ORDER DETAILS */}
           <Route
             path="/orders/:orderId"
             element={
@@ -71,7 +67,6 @@ function App() {
             }
           />
 
-          {/* PROFILE */}
           <Route
             path="/profile"
             element={
@@ -82,9 +77,17 @@ function App() {
           />
         </Route>
 
+        {/* ==========================================
+            AUTH ROUTES
+        ========================================== */}
+
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
+
+        {/* ==========================================
+            ADMIN ROUTES
+        ========================================== */}
 
         <Route
           path="/admin"
@@ -95,14 +98,21 @@ function App() {
           }
         >
           {/* ADMIN DASHBOARD */}
+
           <Route index element={<Dashboard />} />
 
           {/* ADMIN ORDERS */}
+
           <Route path="orders" element={<AdminOrders />} />
 
           {/* ADMIN ORDER DETAILS */}
+
           <Route path="orders/:orderId" element={<AdminOrderDetails />} />
         </Route>
+
+        {/* ==========================================
+            404
+        ========================================== */}
 
         <Route path="*" element={<NotFound />} />
       </Routes>
