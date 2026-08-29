@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
-
-import {
-  FiCheckCircle,
-  FiPackage,
-  FiTruck,
-  FiUser,
-  FiArrowRight,
-} from "react-icons/fi";
-
 import { useNavigate } from "react-router-dom";
+
+import { FiCheckCircle, FiPackage, FiTruck, FiUser } from "react-icons/fi";
 
 import "./AdminOrders.css";
 
@@ -17,9 +10,9 @@ function AdminOrders() {
 
   const [orders, setOrders] = useState([]);
 
-  // =====================================================
+  // ==========================================
   // LOAD ORDERS
-  // =====================================================
+  // ==========================================
 
   useEffect(() => {
     loadOrders();
@@ -43,14 +36,9 @@ function AdminOrders() {
       }
     } catch (error) {
       console.error("Error loading admin orders:", error);
-
       setOrders([]);
     }
   };
-
-  // =====================================================
-  // CHANGE ORDER STATUS
-  // =====================================================
 
   const handleStatusChange = (orderId, newStatus) => {
     let newStatusStep = 1;
@@ -73,7 +61,7 @@ function AdminOrders() {
 
     try {
       const updatedOrders = orders.map((order) => {
-        if (order.orderId === orderId) {
+        if (String(order.orderId) === String(orderId)) {
           return {
             ...order,
             status: newStatus,
@@ -95,10 +83,6 @@ function AdminOrders() {
     }
   };
 
-  // =====================================================
-  // DELETE ORDER
-  // =====================================================
-
   const handleDeleteOrder = (orderId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this order?",
@@ -109,7 +93,9 @@ function AdminOrders() {
     }
 
     try {
-      const updatedOrders = orders.filter((order) => order.orderId !== orderId);
+      const updatedOrders = orders.filter(
+        (order) => String(order.orderId) !== String(orderId),
+      );
 
       setOrders(updatedOrders);
 
@@ -118,18 +104,6 @@ function AdminOrders() {
       console.error("Error deleting order:", error);
     }
   };
-
-  // =====================================================
-  // OPEN ORDER DETAILS
-  // =====================================================
-
-  const handleViewOrder = (orderId) => {
-    navigate(`/admin/orders/${orderId}`);
-  };
-
-  // =====================================================
-  // STATISTICS
-  // =====================================================
 
   const totalOrders = orders.length;
 
@@ -146,16 +120,10 @@ function AdminOrders() {
     0,
   );
 
-  // =====================================================
-  // RETURN
-  // =====================================================
-
   return (
     <main className="admin-orders-page">
       <div className="admin-orders-container">
-        {/* =================================================
-            HEADER
-        ================================================= */}
+        {/* HEADER */}
 
         <div className="admin-orders-header">
           <div>
@@ -165,13 +133,9 @@ function AdminOrders() {
           </div>
         </div>
 
-        {/* =================================================
-            STATISTICS
-        ================================================= */}
+        {/* STATISTICS */}
 
         <div className="admin-order-stats">
-          {/* TOTAL */}
-
           <div className="admin-stat-card">
             <div className="admin-stat-icon">
               <FiPackage />
@@ -183,8 +147,6 @@ function AdminOrders() {
               <strong>{totalOrders}</strong>
             </div>
           </div>
-
-          {/* PENDING */}
 
           <div className="admin-stat-card">
             <div className="admin-stat-icon">
@@ -198,8 +160,6 @@ function AdminOrders() {
             </div>
           </div>
 
-          {/* DELIVERED */}
-
           <div className="admin-stat-card">
             <div className="admin-stat-icon">
               <FiCheckCircle />
@@ -212,8 +172,6 @@ function AdminOrders() {
             </div>
           </div>
 
-          {/* REVENUE */}
-
           <div className="admin-stat-card">
             <div className="admin-stat-icon">₹</div>
 
@@ -225,9 +183,7 @@ function AdminOrders() {
           </div>
         </div>
 
-        {/* =================================================
-            ORDERS
-        ================================================= */}
+        {/* ORDERS */}
 
         {orders.length === 0 ? (
           <div className="admin-orders-empty">
@@ -349,7 +305,7 @@ function AdminOrders() {
                       </div>
                     </div>
 
-                    {/* STATUS */}
+                    {/* STATUS CONTROL */}
 
                     <div className="admin-status-control">
                       <label>Update Order Status</label>
@@ -374,11 +330,12 @@ function AdminOrders() {
 
                     <div className="admin-order-actions">
                       <button
-                        className="admin-view-order-btn"
-                        onClick={() => handleViewOrder(order.orderId)}
+                        className="admin-view-details-btn"
+                        onClick={() =>
+                          navigate(`/admin/orders/${order.orderId}`)
+                        }
                       >
                         View Details
-                        <FiArrowRight />
                       </button>
 
                       <button
