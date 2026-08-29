@@ -450,4 +450,55 @@
     gap: 10px;
     padding-top: 5px;
   }
+  /* ==========================================
+   ACTION BUTTONS
+========================================== */
+
+  .admin-order-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding-top: 5px;
+  }
+
+  .admin-view-details-btn {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .admin-view-details-btn:hover {
+    background: #333;
+  }
+
+  .admin-delete-btn {
+    border: none;
+    background: #fff0f0;
+    color: #c62828;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .admin-delete-btn:hover {
+    background: #ffe1e1;
+  }
+
+  @media (max-width: 650px) {
+    .admin-order-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .admin-view-details-btn,
+    .admin-delete-btn {
+      width: 100%;
+    }
+  }
 }
