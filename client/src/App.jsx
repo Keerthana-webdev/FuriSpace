@@ -27,9 +27,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ==========================================
-            CUSTOMER ROUTES
-        ========================================== */}
 
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
