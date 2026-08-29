@@ -110,10 +110,6 @@ function App() {
           <Route path="orders/:orderId" element={<AdminOrderDetails />} />
         </Route>
 
-        {/* ==========================================
-            404
-        ========================================== */}
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
