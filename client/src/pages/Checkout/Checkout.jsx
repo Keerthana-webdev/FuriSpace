@@ -134,10 +134,6 @@ function Checkout() {
       return;
     }
 
-    // ==========================================
-    // CREATE ORDER
-    // ==========================================
-
     const orderData = {
       // Unique order ID
       orderId: `ORD-${Date.now()}`,
