@@ -444,10 +444,6 @@ function Checkout() {
             </div>
           </div>
 
-          {/* ======================================
-              ORDER SUMMARY
-          ====================================== */}
-
           <div className="checkout-summary-section">
             <div className="checkout-summary-card">
               <h2>Order Summary</h2>
