@@ -48,10 +48,6 @@ function Products() {
     );
   });
 
-  // -----------------------------
-  // SORT
-  // -----------------------------
-
   const sortedProducts = [...filteredProducts];
 
   switch (sortOption) {
