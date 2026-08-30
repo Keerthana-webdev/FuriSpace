@@ -22,10 +22,6 @@ function AdminOrderDetails() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ==========================================
-  // LOAD ORDER
-  // ==========================================
-
   useEffect(() => {
     try {
       const savedOrders = localStorage.getItem("orders");
