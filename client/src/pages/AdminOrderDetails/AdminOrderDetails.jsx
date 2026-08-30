@@ -56,10 +56,6 @@ function AdminOrderDetails() {
     }
   }, [orderId]);
 
-  // ==========================================
-  // LOADING
-  // ==========================================
-
   if (loading) {
     return (
       <main className="admin-order-details-page">
