@@ -313,10 +313,6 @@ function Checkout() {
         {/* CHECKOUT CONTENT */}
 
         <div className="checkout-content">
-          {/* ======================================
-              CUSTOMER FORM
-          ====================================== */}
-
           <div className="checkout-form-section">
             <div className="checkout-section-card">
               <div className="section-title">
