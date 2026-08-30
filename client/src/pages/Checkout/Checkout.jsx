@@ -240,10 +240,6 @@ function Checkout() {
     );
   }
 
-  // ==========================================
-  // ORDER SUCCESS
-  // ==========================================
-
   if (orderPlaced) {
     return (
       <main className="checkout-page">
