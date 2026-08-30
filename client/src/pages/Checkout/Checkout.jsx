@@ -216,10 +216,6 @@ function Checkout() {
     }
   };
 
-  // ==========================================
-  // EMPTY CART
-  // ==========================================
-
   if (cartItems.length === 0 && !orderPlaced) {
     return (
       <main className="checkout-page">
