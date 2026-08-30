@@ -1,40 +1,26 @@
 .product-sort {
   display: flex;
-
   align-items: center;
-
   justify-content: flex-end;
-
   gap: 12px;
-
   margin-bottom: 25px;
 }
 
 .sort-title {
   display: flex;
-
   align-items: center;
-
   gap: 7px;
-
   color: #555;
-
   font-size: 14px;
 }
 
 .product-sort select {
   padding: 11px 15px;
-
   border: 1px solid #ddd;
-
   border-radius: 10px;
-
   background: white;
-
   outline: none;
-
   cursor: pointer;
-
   font-size: 14px;
 }
 
