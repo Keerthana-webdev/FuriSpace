@@ -199,10 +199,6 @@ function Checkout() {
 
       localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
-      // ==========================================
-      // CLEAR CART AFTER ORDER
-      // ==========================================
-
       localStorage.removeItem("cartItems");
 
       setCartItems([]);
