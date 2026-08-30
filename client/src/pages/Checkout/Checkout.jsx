@@ -144,11 +144,6 @@ function Checkout() {
 
       // Order tracking status
       status: "Order Placed",
-
-      // 1 = Order Placed
-      // 2 = Order Confirmed
-      // 3 = Shipped
-      // 4 = Delivered
       statusStep: 1,
 
       // Products
@@ -171,9 +166,7 @@ function Checkout() {
 
       // Price details
       subtotal: subtotal,
-
       deliveryCharge: deliveryCharge,
-
       totalAmount: totalPrice,
 
       // Order creation date
@@ -181,10 +174,6 @@ function Checkout() {
     };
 
     console.log("Order data:", orderData);
-
-    // ==========================================
-    // SAVE ORDER
-    // ==========================================
 
     try {
       const savedOrders = localStorage.getItem("orders");
