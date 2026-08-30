@@ -281,10 +281,6 @@ function Checkout() {
     );
   }
 
-  // ==========================================
-  // CHECKOUT PAGE
-  // ==========================================
-
   return (
     <main className="checkout-page">
       <div className="checkout-container">
