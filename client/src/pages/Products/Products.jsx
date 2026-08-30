@@ -38,10 +38,6 @@ function Products() {
     fetchProducts();
   }, []);
 
-  // -----------------------------
-  // SEARCH
-  // -----------------------------
-
   const filteredProducts = products.filter((product) => {
     const searchText = search.toLowerCase().trim();
 
