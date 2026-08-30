@@ -6,20 +6,15 @@ import "./ProductCard.css";
 function ProductCard({ product }) {
   const navigate = useNavigate();
 
-  const image =
-    product.images?.[0]?.url || product.images?.[0] || "/placeholder.jpg";
-
+  const image = product.images?.[0]?.url || product.images?.[0] || "/placeholder.jpg";
   const price = Number(product.price || 0);
-
   const discount = Number(product.discount || 0);
-
   const rating = Number(product.rating || 0);
 
   // ADD PRODUCT TO CART
   const handleAddToCart = () => {
     try {
       const existingCart = JSON.parse(localStorage.getItem("cartItems")) || [];
-
       const existingItem = existingCart.find(
         (item) => item._id === product._id,
       );
