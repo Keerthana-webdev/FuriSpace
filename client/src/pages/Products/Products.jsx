@@ -100,10 +100,6 @@ function Products() {
     startIndex + productsPerPage,
   );
 
-  // -----------------------------
-  // RETURN UI
-  // -----------------------------
-
   return (
     <>
       <ProductBanner />
@@ -125,11 +121,7 @@ function Products() {
           <ProductSidebar />
         </div>
 
-        {/* RIGHT SIDE */}
-
         <div>
-          {/* SORT */}
-
           <ProductSort
             sortOption={sortOption}
             setSortOption={(value) => {
