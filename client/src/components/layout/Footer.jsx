@@ -22,8 +22,7 @@ function Footer() {
           <h2 className="footer-logo">FurniSpace</h2>
 
           <p>
-            Premium furniture crafted for modern homes with style, comfort, and
-            quality.
+            Premium furniture crafted for modern homes with style, comfort, and quality.
           </p>
         </div>
 
@@ -31,13 +30,9 @@ function Footer() {
 
         <div className="footer-section">
           <h3>Quick Links</h3>
-
           <Link to="/">Home</Link>
-
           <Link to="/products">Products</Link>
-
           <Link to="#">About</Link>
-
           <Link to="#">Contact</Link>
         </div>
 
@@ -45,13 +40,9 @@ function Footer() {
 
         <div className="footer-section">
           <h3>Support</h3>
-
           <Link to="#">Shipping</Link>
-
           <Link to="#">Returns</Link>
-
           <Link to="#">Privacy Policy</Link>
-
           <Link to="#">Terms & Conditions</Link>
         </div>
 
