@@ -10,14 +10,11 @@ import {
 } from "react-icons/fi";
 
 import { useNavigate } from "react-router-dom";
-
 import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-
   const [orders, setOrders] = useState([]);
-
   const loadOrders = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
