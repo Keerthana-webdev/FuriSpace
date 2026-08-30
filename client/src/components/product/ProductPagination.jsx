@@ -1,5 +1,4 @@
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-
 import "./ProductPagination.css";
 
 function ProductPagination({ currentPage, totalPages, setCurrentPage }) {
