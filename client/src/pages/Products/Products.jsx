@@ -91,10 +91,6 @@ function Products() {
       break;
   }
 
-  // -----------------------------
-  // PAGINATION
-  // -----------------------------
-
   const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
 
   const startIndex = (currentPage - 1) * productsPerPage;
