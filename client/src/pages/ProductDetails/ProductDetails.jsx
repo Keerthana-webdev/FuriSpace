@@ -16,17 +16,11 @@ import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
-
   const navigate = useNavigate();
-
   const [product, setProduct] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
-
   const [selectedImage, setSelectedImage] = useState(0);
-
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
