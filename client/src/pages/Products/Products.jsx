@@ -12,26 +12,15 @@ import { getAllProducts } from "../../services/productService";
 import "./Products.css";
 
 function Products() {
-  // -----------------------------
-  // STATES
-  // -----------------------------
 
   const [products, setProducts] = useState([]);
-
   const [search, setSearch] = useState("");
-
   const [sortOption, setSortOption] = useState("featured");
-
   const [loading, setLoading] = useState(true);
-
   const [currentPage, setCurrentPage] = useState(1);
 
   // Products displayed on one page
   const productsPerPage = 8;
-
-  // -----------------------------
-  // FETCH PRODUCTS
-  // -----------------------------
 
   useEffect(() => {
     const fetchProducts = async () => {
