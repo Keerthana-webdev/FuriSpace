@@ -75,7 +75,6 @@ function AdminOrderDetails() {
           <FiPackage />
 
           <h2>Order Not Found</h2>
-
           <p>The order you are looking for does not exist.</p>
 
           <button onClick={() => navigate("/admin/orders")}>
@@ -85,10 +84,6 @@ function AdminOrderDetails() {
       </main>
     );
   }
-
-  // ==========================================
-  // ORDER VALUES
-  // ==========================================
 
   const totalItems =
     order.items?.reduce(
