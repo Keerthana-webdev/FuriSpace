@@ -18,11 +18,8 @@ import "./AdminOrderDetails.css";
 
 function AdminOrderDetails() {
   const navigate = useNavigate();
-
   const { orderId } = useParams();
-
   const [order, setOrder] = useState(null);
-
   const [loading, setLoading] = useState(true);
 
   // ==========================================
