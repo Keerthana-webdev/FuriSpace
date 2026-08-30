@@ -12,7 +12,6 @@ import { getAllProducts } from "../../services/productService";
 import "./Products.css";
 
 function Products() {
-
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [sortOption, setSortOption] = useState("featured");
