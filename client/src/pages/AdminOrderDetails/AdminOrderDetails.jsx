@@ -266,10 +266,6 @@ function AdminOrderDetails() {
           <div className="status-step">Step {currentStep} of 4</div>
         </div>
 
-        {/* ==========================================
-            UPDATE STATUS
-        ========================================== */}
-
         <section className="admin-details-card admin-status-update-card">
           <div className="admin-details-title">
             <FiRefreshCw />
