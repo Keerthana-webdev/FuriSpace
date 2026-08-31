@@ -206,13 +206,9 @@ function AdminOrderDetails() {
     ) || 0;
 
   const subtotal = Number(order.subtotal || 0);
-
   const deliveryCharge = Number(order.deliveryCharge || 0);
-
   const totalAmount = Number(order.totalAmount || 0);
-
   const currentStep = Number(order.statusStep || 1);
-
   const orderDate = order.createdAt
     ? new Date(order.createdAt).toLocaleString("en-IN", {
         day: "numeric",
