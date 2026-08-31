@@ -173,10 +173,6 @@ function AdminOrderDetails() {
     );
   }
 
-  // ==========================================
-  // ORDER NOT FOUND
-  // ==========================================
-
   if (!order) {
     return (
       <main className="admin-order-details-page">
