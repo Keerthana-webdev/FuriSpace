@@ -226,10 +226,6 @@ function AdminOrderDetails() {
   return (
     <main className="admin-order-details-page">
       <div className="admin-order-details-container">
-        {/* ==========================================
-            HEADER
-        ========================================== */}
-
         <div className="admin-order-details-header">
           <button
             className="admin-back-btn"
