@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import {
   FiArrowLeft,
+  FiCheck,
   FiCheckCircle,
   FiClock,
   FiMapPin,
@@ -10,6 +11,7 @@ import {
   FiMail,
   FiUser,
   FiTruck,
+  FiRefreshCw,
 } from "react-icons/fi";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,11 +20,28 @@ import "./AdminOrderDetails.css";
 
 function AdminOrderDetails() {
   const navigate = useNavigate();
+
   const { orderId } = useParams();
+
   const [order, setOrder] = useState(null);
+
   const [loading, setLoading] = useState(true);
 
+  const [selectedStatus, setSelectedStatus] = useState("1");
+
+  const [updating, setUpdating] = useState(false);
+
+  const [message, setMessage] = useState("");
+
+  // ==========================================
+  // LOAD ORDER
+  // ==========================================
+
   useEffect(() => {
+    loadOrder();
+  }, [orderId]);
+
+  const loadOrder = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
 
@@ -44,7 +63,13 @@ function AdminOrderDetails() {
         (item) => String(item.orderId) === String(orderId),
       );
 
-      setOrder(foundOrder || null);
+      if (foundOrder) {
+        setOrder(foundOrder);
+
+        setSelectedStatus(String(foundOrder.statusStep || 1));
+      } else {
+        setOrder(null);
+      }
 
       setLoading(false);
     } catch (error) {
@@ -54,7 +79,87 @@ function AdminOrderDetails() {
 
       setLoading(false);
     }
-  }, [orderId]);
+  };
+
+  // ==========================================
+  // UPDATE ORDER STATUS
+  // ==========================================
+
+  const updateOrderStatus = () => {
+    if (!order) {
+      return;
+    }
+
+    try {
+      setUpdating(true);
+
+      const savedOrders = localStorage.getItem("orders");
+
+      if (!savedOrders) {
+        setUpdating(false);
+        return;
+      }
+
+      const parsedOrders = JSON.parse(savedOrders);
+
+      if (!Array.isArray(parsedOrders)) {
+        setUpdating(false);
+        return;
+      }
+
+      const statusMap = {
+        1: "Order Placed",
+        2: "Order Confirmed",
+        3: "Shipped",
+        4: "Delivered",
+      };
+
+      const newStatus = statusMap[selectedStatus] || "Order Placed";
+
+      const updatedOrders = parsedOrders.map((item) => {
+        if (String(item.orderId) === String(orderId)) {
+          return {
+            ...item,
+            statusStep: Number(selectedStatus),
+            status: newStatus,
+            updatedAt: new Date().toISOString(),
+          };
+        }
+
+        return item;
+      });
+
+      localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+      const updatedOrder = updatedOrders.find(
+        (item) => String(item.orderId) === String(orderId),
+      );
+
+      setOrder(updatedOrder);
+
+      setMessage(`Order status updated to "${newStatus}"`);
+
+      setUpdating(false);
+
+      // Remove success message after 3 seconds
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
+
+      // Notify other pages/components
+      window.dispatchEvent(new Event("ordersUpdated"));
+    } catch (error) {
+      console.error("Error updating order status:", error);
+
+      setUpdating(false);
+
+      setMessage("Failed to update order status.");
+    }
+  };
+
+  // ==========================================
+  // LOADING
+  // ==========================================
 
   if (loading) {
     return (
@@ -68,6 +173,10 @@ function AdminOrderDetails() {
     );
   }
 
+  // ==========================================
+  // ORDER NOT FOUND
+  // ==========================================
+
   if (!order) {
     return (
       <main className="admin-order-details-page">
@@ -75,6 +184,7 @@ function AdminOrderDetails() {
           <FiPackage />
 
           <h2>Order Not Found</h2>
+
           <p>The order you are looking for does not exist.</p>
 
           <button onClick={() => navigate("/admin/orders")}>
@@ -84,6 +194,10 @@ function AdminOrderDetails() {
       </main>
     );
   }
+
+  // ==========================================
+  // ORDER VALUES
+  // ==========================================
 
   const totalItems =
     order.items?.reduce(
@@ -96,6 +210,8 @@ function AdminOrderDetails() {
   const deliveryCharge = Number(order.deliveryCharge || 0);
 
   const totalAmount = Number(order.totalAmount || 0);
+
+  const currentStep = Number(order.statusStep || 1);
 
   const orderDate = order.createdAt
     ? new Date(order.createdAt).toLocaleString("en-IN", {
@@ -110,7 +226,9 @@ function AdminOrderDetails() {
   return (
     <main className="admin-order-details-page">
       <div className="admin-order-details-container">
-        {/* HEADER */}
+        {/* ==========================================
+            HEADER
+        ========================================== */}
 
         <div className="admin-order-details-header">
           <button
@@ -128,7 +246,9 @@ function AdminOrderDetails() {
           </div>
         </div>
 
-        {/* STATUS */}
+        {/* ==========================================
+            STATUS
+        ========================================== */}
 
         <div className="admin-order-status-card">
           <div className="status-card-left">
@@ -143,12 +263,78 @@ function AdminOrderDetails() {
             </div>
           </div>
 
-          <div className="status-step">
-            Step {Number(order.statusStep || 1)} of 4
-          </div>
+          <div className="status-step">Step {currentStep} of 4</div>
         </div>
 
-        {/* MAIN GRID */}
+        {/* ==========================================
+            UPDATE STATUS
+        ========================================== */}
+
+        <section className="admin-details-card admin-status-update-card">
+          <div className="admin-details-title">
+            <FiRefreshCw />
+
+            <div>
+              <h2>Update Order Status</h2>
+
+              <p>Change the current status of this order</p>
+            </div>
+          </div>
+
+          <div className="status-update-content">
+            <div className="status-select-wrapper">
+              <label htmlFor="order-status">Order Status</label>
+
+              <select
+                id="order-status"
+                value={selectedStatus}
+                onChange={(event) => setSelectedStatus(event.target.value)}
+              >
+                <option value="1">Order Placed</option>
+
+                <option value="2">Order Confirmed</option>
+
+                <option value="3">Shipped</option>
+
+                <option value="4">Delivered</option>
+              </select>
+            </div>
+
+            <button
+              className="update-status-btn"
+              onClick={updateOrderStatus}
+              disabled={updating || Number(selectedStatus) === currentStep}
+            >
+              {updating ? (
+                <>
+                  <FiRefreshCw className="spinning-icon" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <FiCheck />
+                  Update Status
+                </>
+              )}
+            </button>
+          </div>
+
+          {message && (
+            <div
+              className={`status-update-message ${
+                message.includes("Failed") ? "error" : "success"
+              }`}
+            >
+              <FiCheckCircle />
+
+              <span>{message}</span>
+            </div>
+          )}
+        </section>
+
+        {/* ==========================================
+            CUSTOMER + ADDRESS
+        ========================================== */}
 
         <div className="admin-order-details-grid">
           {/* CUSTOMER */}
@@ -217,9 +403,11 @@ function AdminOrderDetails() {
 
               <p>
                 {order.shippingAddress?.city || ""}
+
                 {order.shippingAddress?.city && order.shippingAddress?.state
                   ? ", "
                   : ""}
+
                 {order.shippingAddress?.state || ""}
               </p>
 
@@ -228,7 +416,9 @@ function AdminOrderDetails() {
           </section>
         </div>
 
-        {/* PRODUCTS */}
+        {/* ==========================================
+            PRODUCTS
+        ========================================== */}
 
         <section className="admin-details-card admin-products-card">
           <div className="admin-details-title">
@@ -282,7 +472,9 @@ function AdminOrderDetails() {
           </div>
         </section>
 
-        {/* ORDER SUMMARY */}
+        {/* ==========================================
+            ORDER SUMMARY
+        ========================================== */}
 
         <section className="admin-details-card admin-summary-card">
           <div className="admin-details-title">
@@ -328,7 +520,9 @@ function AdminOrderDetails() {
           </div>
         </section>
 
-        {/* FOOTER */}
+        {/* ==========================================
+            FOOTER
+        ========================================== */}
 
         <div className="admin-details-footer">
           <button
