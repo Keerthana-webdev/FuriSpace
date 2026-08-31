@@ -416,10 +416,6 @@ function AdminOrderDetails() {
           </section>
         </div>
 
-        {/* ==========================================
-            PRODUCTS
-        ========================================== */}
-
         <section className="admin-details-card admin-products-card">
           <div className="admin-details-title">
             <FiPackage />
