@@ -443,10 +443,6 @@
   background: #333;
 }
 
-/* ==========================================
-   LOADING
-========================================== */
-
 .admin-order-details-loading,
 .admin-order-not-found {
   max-width: 500px;
