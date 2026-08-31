@@ -291,11 +291,8 @@ function AdminOrderDetails() {
                 onChange={(event) => setSelectedStatus(event.target.value)}
               >
                 <option value="1">Order Placed</option>
-
                 <option value="2">Order Confirmed</option>
-
                 <option value="3">Shipped</option>
-
                 <option value="4">Delivered</option>
               </select>
             </div>
