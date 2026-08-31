@@ -33,10 +33,6 @@ function AdminOrderDetails() {
 
   const [message, setMessage] = useState("");
 
-  // ==========================================
-  // LOAD ORDER
-  // ==========================================
-
   useEffect(() => {
     loadOrder();
   }, [orderId]);
