@@ -246,10 +246,6 @@ function AdminOrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            STATUS
-        ========================================== */}
-
         <div className="admin-order-status-card">
           <div className="status-card-left">
             <div className="status-card-icon">
