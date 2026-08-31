@@ -195,10 +195,6 @@ function AdminOrderDetails() {
     );
   }
 
-  // ==========================================
-  // ORDER VALUES
-  // ==========================================
-
   const totalItems =
     order.items?.reduce(
       (total, item) => total + Number(item.quantity || 1),
