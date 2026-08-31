@@ -81,10 +81,6 @@ function AdminOrderDetails() {
     }
   };
 
-  // ==========================================
-  // UPDATE ORDER STATUS
-  // ==========================================
-
   const updateOrderStatus = () => {
     if (!order) {
       return;
