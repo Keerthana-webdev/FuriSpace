@@ -520,10 +520,6 @@ function AdminOrderDetails() {
           </div>
         </section>
 
-        {/* ==========================================
-            FOOTER
-        ========================================== */}
-
         <div className="admin-details-footer">
           <button
             className="admin-back-orders-btn"
