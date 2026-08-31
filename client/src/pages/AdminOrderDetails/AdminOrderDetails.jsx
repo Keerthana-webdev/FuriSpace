@@ -15,22 +15,15 @@ import {
 } from "react-icons/fi";
 
 import { useNavigate, useParams } from "react-router-dom";
-
 import "./AdminOrderDetails.css";
 
 function AdminOrderDetails() {
   const navigate = useNavigate();
-
   const { orderId } = useParams();
-
   const [order, setOrder] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [selectedStatus, setSelectedStatus] = useState("1");
-
   const [updating, setUpdating] = useState(false);
-
   const [message, setMessage] = useState("");
 
   useEffect(() => {
