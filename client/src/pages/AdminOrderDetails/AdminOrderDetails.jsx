@@ -332,10 +332,6 @@ function AdminOrderDetails() {
           )}
         </section>
 
-        {/* ==========================================
-            CUSTOMER + ADDRESS
-        ========================================== */}
-
         <div className="admin-order-details-grid">
           {/* CUSTOMER */}
 
