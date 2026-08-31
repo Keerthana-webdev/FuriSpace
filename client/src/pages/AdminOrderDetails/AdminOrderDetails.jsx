@@ -472,10 +472,6 @@ function AdminOrderDetails() {
           </div>
         </section>
 
-        {/* ==========================================
-            ORDER SUMMARY
-        ========================================== */}
-
         <section className="admin-details-card admin-summary-card">
           <div className="admin-details-title">
             <FiCheckCircle />
