@@ -265,10 +265,6 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            MAIN DETAILS
-        ========================================== */}
-
         <div className="order-details-grid">
           {/* PRODUCTS */}
 
