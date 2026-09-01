@@ -135,10 +135,6 @@ function OrderDetails() {
 
   const currentStep = Number(order.statusStep) || 1;
 
-  // ==========================================
-  // TRACKING STEPS
-  // ==========================================
-
   const trackingSteps = [
     {
       step: 1,
