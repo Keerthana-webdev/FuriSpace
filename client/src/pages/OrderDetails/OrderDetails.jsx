@@ -408,10 +408,6 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            BUTTONS
-        ========================================== */}
-
         <div className="order-details-actions">
           <Link to="/products" className="shop-more-btn">
             <FiShoppingBag />
