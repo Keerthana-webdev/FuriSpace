@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
-import { FiArrowRight, FiPackage, FiShoppingBag } from "react-icons/fi";
+
+import {
+  FiArrowRight,
+  FiCalendar,
+  FiCheckCircle,
+  FiClock,
+  FiPackage,
+  FiShoppingBag,
+  FiTruck,
+} from "react-icons/fi";
+
 import { useNavigate } from "react-router-dom";
 
 import "./Orders.css";
@@ -8,6 +18,14 @@ function Orders() {
   const navigate = useNavigate();
 
   const [orders, setOrders] = useState([]);
+
+  // ==========================================
+  // LOAD ORDERS
+  // ==========================================
+
+  useEffect(() => {
+    loadOrders();
+  }, []);
 
   const loadOrders = () => {
     try {
@@ -21,49 +39,78 @@ function Orders() {
       const parsedOrders = JSON.parse(savedOrders);
 
       if (Array.isArray(parsedOrders)) {
-        setOrders(parsedOrders);
+        const sortedOrders = parsedOrders
+          .slice()
+          .sort(
+            (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+          );
+
+        setOrders(sortedOrders);
       } else {
         setOrders([]);
       }
     } catch (error) {
       console.error("Error loading orders:", error);
+
       setOrders([]);
     }
   };
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
+  // ==========================================
+  // STATUS
+  // ==========================================
 
-  useEffect(() => {
-    const handleOrdersUpdated = () => {
-      loadOrders();
-    };
+  const getStatusClass = (step) => {
+    const statusStep = Number(step) || 1;
 
-    window.addEventListener("ordersUpdated", handleOrdersUpdated);
-
-    return () => {
-      window.removeEventListener("ordersUpdated", handleOrdersUpdated);
-    };
-  }, []);
-
-  const getStatusClass = (statusStep) => {
-    const step = Number(statusStep || 1);
-
-    if (step === 2) {
-      return "order-status confirmed";
+    if (statusStep === 1) {
+      return "orders-status orders-status-placed";
     }
 
-    if (step === 3) {
-      return "order-status shipped";
+    if (statusStep === 2) {
+      return "orders-status orders-status-confirmed";
     }
 
-    if (step === 4) {
-      return "order-status delivered";
+    if (statusStep === 3) {
+      return "orders-status orders-status-shipped";
     }
 
-    return "order-status placed";
+    if (statusStep === 4) {
+      return "orders-status orders-status-delivered";
+    }
+
+    return "orders-status orders-status-placed";
   };
+
+  const getStatusIcon = (step) => {
+    const statusStep = Number(step) || 1;
+
+    if (statusStep === 2) {
+      return <FiCheckCircle />;
+    }
+
+    if (statusStep === 3) {
+      return <FiTruck />;
+    }
+
+    if (statusStep === 4) {
+      return <FiCheckCircle />;
+    }
+
+    return <FiClock />;
+  };
+
+  // ==========================================
+  // VIEW ORDER
+  // ==========================================
+
+  const handleViewOrder = (orderId) => {
+    navigate(`/orders/${orderId}`);
+  };
+
+  // ==========================================
+  // EMPTY ORDERS
+  // ==========================================
 
   if (orders.length === 0) {
     return (
@@ -74,24 +121,39 @@ function Orders() {
               <h1>My Orders</h1>
               <p>Track and manage your orders</p>
             </div>
+
+            <div className="orders-count">0 Orders</div>
           </div>
 
           <div className="orders-empty">
-            <FiPackage />
+            <div className="orders-empty-icon">
+              <FiPackage />
+            </div>
 
             <h2>No Orders Yet</h2>
 
-            <p>You haven't placed any orders yet.</p>
+            <p>
+              You haven't placed any orders yet. Start shopping to see your
+              orders here.
+            </p>
 
-            <button onClick={() => navigate("/products")}>
+            <button
+              className="start-shopping-btn"
+              onClick={() => navigate("/products")}
+            >
               <FiShoppingBag />
               Start Shopping
+              <FiArrowRight />
             </button>
           </div>
         </div>
       </main>
     );
   }
+
+  // ==========================================
+  // ORDERS PAGE
+  // ==========================================
 
   return (
     <main className="orders-page">
@@ -105,85 +167,174 @@ function Orders() {
             <p>Track and manage your orders</p>
           </div>
 
-          <span className="orders-count">
+          <div className="orders-count">
             {orders.length} {orders.length === 1 ? "Order" : "Orders"}
-          </span>
+          </div>
         </div>
 
         {/* ORDERS LIST */}
 
         <div className="orders-list">
-          {orders
-            .slice()
-            .sort(
-              (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
-            )
-            .map((order) => {
-              const totalItems =
-                order.items?.reduce(
-                  (total, item) => total + Number(item.quantity || 1),
-                  0,
-                ) || 0;
+          {orders.map((order) => {
+            const totalItems =
+              order.items?.reduce(
+                (total, item) => total + Number(item.quantity || 1),
+                0,
+              ) || 0;
 
-              const orderDate = order.createdAt
-                ? new Date(order.createdAt).toLocaleDateString("en-IN", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })
-                : "N/A";
+            const orderDate = order.createdAt
+              ? new Date(order.createdAt).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "Date unavailable";
 
-              return (
-                <div className="order-card" key={order.orderId}>
-                  {/* ORDER HEADER */}
+            const totalAmount = Number(order.totalAmount || 0);
 
-                  <div className="order-card-header">
-                    <div>
-                      <span className="order-label">Order ID</span>
+            const statusStep = Number(order.statusStep) || 1;
 
-                      <strong>#{order.orderId}</strong>
-                    </div>
+            return (
+              <div className="order-card" key={order.orderId}>
+                {/* ORDER CARD HEADER */}
 
-                    <span className={getStatusClass(order.statusStep)}>
-                      {order.status || "Order Placed"}
-                    </span>
+                <div className="order-card-header">
+                  <div className="order-id-section">
+                    <span>Order ID</span>
+
+                    <strong>#{order.orderId}</strong>
                   </div>
 
-                  {/* ORDER INFO */}
+                  <div className={getStatusClass(statusStep)}>
+                    {getStatusIcon(statusStep)}
 
-                  <div className="order-card-info">
+                    <span>{order.status || "Order Placed"}</span>
+                  </div>
+                </div>
+
+                {/* DIVIDER */}
+
+                <div className="order-card-divider"></div>
+
+                {/* ORDER INFORMATION */}
+
+                <div className="order-card-info">
+                  <div className="order-info-item">
+                    <div className="order-info-icon">
+                      <FiCalendar />
+                    </div>
+
                     <div>
                       <span>Date</span>
+
                       <strong>{orderDate}</strong>
+                    </div>
+                  </div>
+
+                  <div className="order-info-item">
+                    <div className="order-info-icon">
+                      <FiPackage />
                     </div>
 
                     <div>
                       <span>Items</span>
-                      <strong>{totalItems}</strong>
+
+                      <strong>
+                        {totalItems}
+                        {totalItems === 1 ? " Item" : " Items"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="order-info-item">
+                    <div className="order-info-icon">
+                      <FiShoppingBag />
                     </div>
 
                     <div>
                       <span>Total</span>
 
-                      <strong>
-                        ₹
-                        {Number(order.totalAmount || 0).toLocaleString("en-IN")}
-                      </strong>
+                      <strong>₹{totalAmount.toLocaleString("en-IN")}</strong>
                     </div>
                   </div>
+                </div>
 
-                  {/* ORDER BUTTON */}
+                {/* PRODUCTS PREVIEW */}
+
+                {order.items && order.items.length > 0 && (
+                  <div className="order-products-preview">
+                    {order.items.slice(0, 3).map((item, index) => {
+                      const image =
+                        item.images?.[0]?.url ||
+                        item.images?.[0] ||
+                        item.image ||
+                        "/placeholder.jpg";
+
+                      return (
+                        <div
+                          className="order-product-preview"
+                          key={item._id || item.id || index}
+                        >
+                          <img
+                            src={image}
+                            alt={item.name || "Furniture Product"}
+                          />
+
+                          <div>
+                            <strong>{item.name || "Furniture Product"}</strong>
+
+                            <span>Qty: {Number(item.quantity || 1)}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {order.items.length > 3 && (
+                      <span className="more-products">
+                        +{order.items.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* FOOTER */}
+
+                <div className="order-card-footer">
+                  <div className="order-status-message">
+                    {statusStep === 4 ? (
+                      <>
+                        <FiCheckCircle />
+                        <span>Your order has been delivered</span>
+                      </>
+                    ) : statusStep === 3 ? (
+                      <>
+                        <FiTruck />
+                        <span>Your order is on the way</span>
+                      </>
+                    ) : statusStep === 2 ? (
+                      <>
+                        <FiCheckCircle />
+                        <span>Your order has been confirmed</span>
+                      </>
+                    ) : (
+                      <>
+                        <FiClock />
+                        <span>Your order has been placed</span>
+                      </>
+                    )}
+                  </div>
 
                   <button
                     className="view-order-btn"
-                    onClick={() => navigate(`/orders/${order.orderId}`)}
+                    onClick={() => handleViewOrder(order.orderId)}
                   >
                     View Order
                     <FiArrowRight />
                   </button>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </main>
