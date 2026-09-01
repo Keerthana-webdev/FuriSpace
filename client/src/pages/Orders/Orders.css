@@ -35,10 +35,6 @@
   font-weight: 500;
 }
 
-/* ==========================================
-   ORDERS LIST
-========================================== */
-
 .orders-list {
   display: flex;
   flex-direction: column;
