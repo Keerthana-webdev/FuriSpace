@@ -9,10 +9,6 @@ function Orders() {
 
   const [orders, setOrders] = useState([]);
 
-  // ==========================================
-  // LOAD ORDERS
-  // ==========================================
-
   const loadOrders = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
