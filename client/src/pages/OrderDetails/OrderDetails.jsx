@@ -192,10 +192,6 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            STATUS CARD
-        ========================================== */}
-
         <div className="order-status-card">
           <div className="status-icon">
             <FiCheckCircle />
@@ -213,10 +209,6 @@ function OrderDetails() {
             <strong>{orderDate}</strong>
           </div>
         </div>
-
-        {/* ==========================================
-            TRACKING
-        ========================================== */}
 
         <div className="tracking-card">
           <div className="tracking-header">
