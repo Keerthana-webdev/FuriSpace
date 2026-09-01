@@ -124,15 +124,6 @@ function OrderDetails() {
       0,
     ) || 0;
 
-  /*
-    ORDER STATUS
-
-    1 = Order Placed
-    2 = Order Confirmed
-    3 = Shipped
-    4 = Delivered
-  */
-
   const currentStep = Number(order.statusStep) || 1;
 
   const trackingSteps = [
