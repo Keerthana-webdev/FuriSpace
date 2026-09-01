@@ -20,7 +20,11 @@ function OrderDetails() {
 
   const [order, setOrder] = useState(null);
 
-  useEffect(() => {
+  // ==========================================
+  // LOAD ORDER
+  // ==========================================
+
+  const loadOrder = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
 
@@ -36,7 +40,9 @@ function OrderDetails() {
         return;
       }
 
-      const foundOrder = orders.find((item) => item.orderId === orderId);
+      const foundOrder = orders.find(
+        (item) => String(item.orderId) === String(orderId),
+      );
 
       setOrder(foundOrder || null);
     } catch (error) {
@@ -44,7 +50,35 @@ function OrderDetails() {
 
       setOrder(null);
     }
+  };
+
+  // ==========================================
+  // INITIAL LOAD
+  // ==========================================
+
+  useEffect(() => {
+    loadOrder();
   }, [orderId]);
+
+  // ==========================================
+  // LISTEN FOR ADMIN STATUS UPDATE
+  // ==========================================
+
+  useEffect(() => {
+    const handleOrdersUpdated = () => {
+      loadOrder();
+    };
+
+    window.addEventListener("ordersUpdated", handleOrdersUpdated);
+
+    return () => {
+      window.removeEventListener("ordersUpdated", handleOrdersUpdated);
+    };
+  }, [orderId]);
+
+  // ==========================================
+  // ORDER NOT FOUND
+  // ==========================================
 
   if (!order) {
     return (
@@ -69,6 +103,10 @@ function OrderDetails() {
       </main>
     );
   }
+
+  // ==========================================
+  // ORDER VALUES
+  // ==========================================
 
   const orderDate = order.createdAt
     ? new Date(order.createdAt).toLocaleString("en-IN", {
@@ -96,6 +134,10 @@ function OrderDetails() {
   */
 
   const currentStep = Number(order.statusStep) || 1;
+
+  // ==========================================
+  // TRACKING STEPS
+  // ==========================================
 
   const trackingSteps = [
     {
@@ -130,7 +172,9 @@ function OrderDetails() {
   return (
     <main className="order-details-page">
       <div className="order-details-container">
-        {/* HEADER */}
+        {/* ==========================================
+            HEADER
+        ========================================== */}
 
         <div className="order-details-header">
           <button
@@ -148,7 +192,9 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* STATUS CARD */}
+        {/* ==========================================
+            STATUS CARD
+        ========================================== */}
 
         <div className="order-status-card">
           <div className="status-icon">
@@ -168,7 +214,9 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ORDER TRACKING */}
+        {/* ==========================================
+            TRACKING
+        ========================================== */}
 
         <div className="tracking-card">
           <div className="tracking-header">
@@ -209,7 +257,7 @@ function OrderDetails() {
                       className={`tracking-line ${
                         currentStep > item.step ? "completed-line" : ""
                       }`}
-                    ></div>
+                    />
                   )}
                 </div>
               );
@@ -217,7 +265,9 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* MAIN DETAILS */}
+        {/* ==========================================
+            MAIN DETAILS
+        ========================================== */}
 
         <div className="order-details-grid">
           {/* PRODUCTS */}
@@ -267,7 +317,7 @@ function OrderDetails() {
             </div>
           </div>
 
-          {/* DELIVERY INFORMATION */}
+          {/* DELIVERY */}
 
           <div className="details-card">
             <div className="details-card-title">
@@ -322,7 +372,9 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* PRICE SUMMARY */}
+        {/* ==========================================
+            PRICE SUMMARY
+        ========================================== */}
 
         <div className="details-card price-card">
           <h2>Order Summary</h2>
@@ -345,7 +397,7 @@ function OrderDetails() {
             <span className="free">FREE</span>
           </div>
 
-          <div className="price-divider"></div>
+          <div className="price-divider" />
 
           <div className="final-price">
             <span>Total Amount</span>
@@ -356,7 +408,9 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* BUTTONS */}
+        {/* ==========================================
+            BUTTONS
+        ========================================== */}
 
         <div className="order-details-actions">
           <Link to="/products" className="shop-more-btn">
