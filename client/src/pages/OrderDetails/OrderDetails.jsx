@@ -60,10 +60,6 @@ function OrderDetails() {
     loadOrder();
   }, [orderId]);
 
-  // ==========================================
-  // LISTEN FOR ADMIN STATUS UPDATE
-  // ==========================================
-
   useEffect(() => {
     const handleOrdersUpdated = () => {
       loadOrder();
