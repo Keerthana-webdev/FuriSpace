@@ -100,10 +100,6 @@ function Orders() {
     return <FiClock />;
   };
 
-  // ==========================================
-  // VIEW ORDER
-  // ==========================================
-
   const handleViewOrder = (orderId) => {
     navigate(`/orders/${orderId}`);
   };
