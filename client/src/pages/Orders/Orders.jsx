@@ -151,10 +151,6 @@ function Orders() {
     );
   }
 
-  // ==========================================
-  // ORDERS PAGE
-  // ==========================================
-
   return (
     <main className="orders-page">
       <div className="orders-container">
