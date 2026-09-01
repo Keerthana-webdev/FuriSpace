@@ -18,10 +18,6 @@ function OrderDetails() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
 
-  // ==========================================
-  // LOAD ORDER
-  // ==========================================
-
   const loadOrder = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
