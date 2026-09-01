@@ -43,10 +43,6 @@ function Orders() {
     loadOrders();
   }, []);
 
-  // ==========================================
-  // LISTEN FOR ORDER UPDATES
-  // ==========================================
-
   useEffect(() => {
     const handleOrdersUpdated = () => {
       loadOrders();
