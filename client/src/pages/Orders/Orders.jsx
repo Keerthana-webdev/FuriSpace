@@ -56,10 +56,6 @@ function Orders() {
     }
   };
 
-  // ==========================================
-  // STATUS
-  // ==========================================
-
   const getStatusClass = (step) => {
     const statusStep = Number(step) || 1;
 
