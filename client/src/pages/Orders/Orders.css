@@ -9,10 +9,6 @@
   margin: 0 auto;
 }
 
-/* ==========================================
-   HEADER
-========================================== */
-
 .orders-header {
   display: flex;
   justify-content: space-between;
