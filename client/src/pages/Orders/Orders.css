@@ -118,10 +118,6 @@
   margin: 18px 0;
 }
 
-/* ==========================================
-   ORDER INFO
-========================================== */
-
 .order-card-info {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
