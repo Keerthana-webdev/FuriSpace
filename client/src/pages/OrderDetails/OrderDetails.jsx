@@ -15,9 +15,7 @@ import "./OrderDetails.css";
 
 function OrderDetails() {
   const { orderId } = useParams();
-
   const navigate = useNavigate();
-
   const [order, setOrder] = useState(null);
 
   // ==========================================
