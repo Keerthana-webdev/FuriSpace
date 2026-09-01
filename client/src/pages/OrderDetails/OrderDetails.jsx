@@ -372,10 +372,6 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            PRICE SUMMARY
-        ========================================== */}
-
         <div className="details-card price-card">
           <h2>Order Summary</h2>
 
