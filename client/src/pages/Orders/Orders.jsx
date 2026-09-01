@@ -19,10 +19,6 @@ function Orders() {
 
   const [orders, setOrders] = useState([]);
 
-  // ==========================================
-  // LOAD ORDERS
-  // ==========================================
-
   useEffect(() => {
     loadOrders();
   }, []);
