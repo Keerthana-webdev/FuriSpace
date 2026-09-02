@@ -12,10 +12,6 @@
   text-decoration: underline;
 }
 
-/* =====================================================
-   ACTION BUTTONS
-===================================================== */
-
 .admin-order-actions {
   display: flex;
   align-items: center;
