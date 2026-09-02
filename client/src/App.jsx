@@ -27,11 +27,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* =====================================================
-            CUSTOMER WEBSITE
-        ===================================================== */}
-
         <Route element={<MainLayout />}>
 
           {/* HOME */}
