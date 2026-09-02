@@ -106,11 +106,7 @@ function AdminOrders() {
 
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
   };
-
-  // =====================================================
-  // STATUS CLASS
-  // =====================================================
-
+  
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
 
