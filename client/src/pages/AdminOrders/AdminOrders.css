@@ -108,10 +108,6 @@
   font-size: 22px;
 }
 
-/* ==========================================
-   ORDERS CARD
-========================================== */
-
 .admin-orders-card {
   background: white;
   border-radius: 14px;
@@ -139,10 +135,6 @@
   color: #888;
   font-size: 13px;
 }
-
-/* ==========================================
-   TABLE
-========================================== */
 
 .admin-orders-table-wrapper {
   width: 100%;
