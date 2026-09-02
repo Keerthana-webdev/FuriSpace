@@ -85,10 +85,6 @@ function AdminOrders() {
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
   };
 
-  // =====================================================
-  // DELETE ORDER
-  // =====================================================
-
   const handleDeleteOrder = (orderId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this order?",
@@ -106,7 +102,7 @@ function AdminOrders() {
 
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
   };
-  
+
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
 
