@@ -223,10 +223,6 @@
   white-space: nowrap;
 }
 
-/* ==========================================
-   STATUS SELECT
-========================================== */
-
 .admin-status-select {
   min-width: 120px;
   border: 1px solid #ddd;
