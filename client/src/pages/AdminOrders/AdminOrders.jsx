@@ -15,12 +15,7 @@ import "./AdminOrders.css";
 
 function AdminOrders() {
   const navigate = useNavigate();
-
   const [orders, setOrders] = useState([]);
-
-  // =====================================================
-  // LOAD ORDERS
-  // =====================================================
 
   useEffect(() => {
     loadOrders();
