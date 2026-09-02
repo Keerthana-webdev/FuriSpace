@@ -148,10 +148,6 @@ function AdminOrders() {
     0,
   );
 
-  // =====================================================
-  // RENDER
-  // =====================================================
-
   return (
     <main className="admin-orders-page">
       <div className="admin-orders-container">
