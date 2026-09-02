@@ -1,7 +1,3 @@
-/* ==========================================
-   ADMIN ORDERS PAGE
-========================================== */
-
 .admin-orders-page {
   min-height: 100vh;
   background: #f7f5f2;
@@ -12,10 +8,6 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
-/* ==========================================
-   HEADER
-========================================== */
 
 .admin-orders-header {
   display: flex;
@@ -56,10 +48,6 @@
 .admin-dashboard-btn:hover {
   background: #333;
 }
-
-/* ==========================================
-   STATISTICS
-========================================== */
 
 .admin-order-stats {
   display: grid;
