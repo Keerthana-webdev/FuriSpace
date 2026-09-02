@@ -175,10 +175,6 @@ function AdminOrders() {
           </button>
         </div>
 
-        {/* =================================================
-            STATISTICS
-        ================================================= */}
-
         <div className="admin-orders-stats">
           <div className="admin-orders-stat-card">
             <div className="admin-orders-stat-icon">
