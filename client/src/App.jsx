@@ -95,10 +95,6 @@ function App() {
 
         <Route path="/register" element={<Register />} />
 
-        {/* =====================================================
-            ADMIN PANEL
-        ===================================================== */}
-
         <Route
           path="/admin"
           element={
