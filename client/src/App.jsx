@@ -87,10 +87,6 @@ function App() {
           />
         </Route>
 
-        {/* =====================================================
-            AUTHENTICATION
-        ===================================================== */}
-
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
