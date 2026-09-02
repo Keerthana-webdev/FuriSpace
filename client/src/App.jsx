@@ -13,10 +13,10 @@ import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
-import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
 
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
+import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
 
 import NotFound from "./pages/NotFound/NotFound";
 
@@ -28,15 +28,25 @@ function App() {
     <BrowserRouter>
       <Routes>
 
+        {/* =====================================================
+            CUSTOMER WEBSITE
+        ===================================================== */}
+
         <Route element={<MainLayout />}>
+
+          {/* HOME */}
           <Route path="/" element={<Home />} />
 
+          {/* PRODUCTS */}
           <Route path="/products" element={<Products />} />
 
+          {/* PRODUCT DETAILS */}
           <Route path="/products/:id" element={<ProductDetails />} />
 
+          {/* CART */}
           <Route path="/cart" element={<Cart />} />
 
+          {/* CHECKOUT */}
           <Route
             path="/checkout"
             element={
@@ -46,6 +56,7 @@ function App() {
             }
           />
 
+          {/* CUSTOMER ORDERS */}
           <Route
             path="/orders"
             element={
@@ -55,6 +66,7 @@ function App() {
             }
           />
 
+          {/* CUSTOMER ORDER DETAILS */}
           <Route
             path="/orders/:orderId"
             element={
@@ -64,6 +76,7 @@ function App() {
             }
           />
 
+          {/* PROFILE */}
           <Route
             path="/profile"
             element={
@@ -74,9 +87,17 @@ function App() {
           />
         </Route>
 
+        {/* =====================================================
+            AUTHENTICATION
+        ===================================================== */}
+
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
+
+        {/* =====================================================
+            ADMIN PANEL
+        ===================================================== */}
 
         <Route
           path="/admin"
@@ -86,20 +107,27 @@ function App() {
             </AdminRoute>
           }
         >
-          {/* ADMIN DASHBOARD */}
 
+          {/* ADMIN DASHBOARD */}
           <Route index element={<Dashboard />} />
 
           {/* ADMIN ORDERS */}
-
           <Route path="orders" element={<AdminOrders />} />
 
           {/* ADMIN ORDER DETAILS */}
+          <Route
+            path="orders/:orderId"
+            element={<AdminOrderDetails />}
+          />
 
-          <Route path="orders/:orderId" element={<AdminOrderDetails />} />
         </Route>
 
+        {/* =====================================================
+            404
+        ===================================================== */}
+
         <Route path="*" element={<NotFound />} />
+
       </Routes>
     </BrowserRouter>
   );
