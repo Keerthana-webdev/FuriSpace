@@ -225,10 +225,6 @@ function AdminOrders() {
           </div>
         </div>
 
-        {/* =================================================
-            ORDERS
-        ================================================= */}
-
         <div className="admin-orders-card">
           <div className="admin-orders-card-header">
             <div>
