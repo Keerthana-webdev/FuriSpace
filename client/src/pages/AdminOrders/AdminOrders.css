@@ -127,10 +127,6 @@
   background: #333;
 }
 
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
 @media (max-width: 800px) {
   .admin-orders-table-wrapper {
     overflow-x: auto;
