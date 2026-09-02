@@ -11,10 +11,6 @@
   margin: 0 auto;
 }
 
-/* ==========================================
-   HEADER
-========================================== */
-
 .admin-orders-header {
   display: flex;
   justify-content: space-between;
