@@ -129,10 +129,6 @@ function AdminOrders() {
     return "admin-status admin-status-placed";
   };
 
-  // =====================================================
-  // STATISTICS
-  // =====================================================
-
   const totalOrders = orders.length;
 
   const deliveredOrders = orders.filter(
