@@ -187,20 +187,12 @@
   border-bottom: none;
 }
 
-/* ==========================================
-   ORDER ID
-========================================== */
-
 .admin-order-id {
   color: #222;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
 }
-
-/* ==========================================
-   CUSTOMER
-========================================== */
 
 .admin-customer-name {
   display: block;
