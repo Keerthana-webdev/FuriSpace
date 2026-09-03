@@ -193,10 +193,6 @@
   text-decoration: underline;
 }
 
-/* =========================================================
-   CUSTOMER
-   ========================================================= */
-
 .admin-customer {
   display: flex;
   flex-direction: column;
