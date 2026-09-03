@@ -35,7 +35,6 @@
   color: white;
   padding: 12px 18px;
   border-radius: 8px;
-
   display: flex;
   align-items: center;
   gap: 8px;
@@ -111,11 +110,8 @@
 .admin-orders-card {
   background: white;
   border-radius: 14px;
-
   padding: 25px;
-
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
-
   overflow: hidden;
 }
 
@@ -123,13 +119,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   margin-bottom: 20px;
 }
 
 .admin-orders-card-header h2 {
   margin: 0 0 5px;
-
   color: #222;
   font-size: 20px;
   font-weight: 700;
@@ -137,7 +131,6 @@
 
 .admin-orders-card-header p {
   margin: 0;
-
   color: #888;
   font-size: 13px;
 }
@@ -169,26 +162,19 @@
 
 .admin-orders-table th {
   padding: 13px 12px;
-
   color: #555;
   font-size: 11px;
   font-weight: 600;
-
   text-align: left;
-
   white-space: nowrap;
-
   border-bottom: 1px solid #e8e8e8;
 }
 
 .admin-orders-table td {
   padding: 16px 12px;
-
   color: #444;
   font-size: 13px;
-
   border-bottom: 1px solid #eeeeee;
-
   vertical-align: middle;
 }
 
@@ -211,15 +197,11 @@
 .admin-order-id-btn {
   border: none;
   background: transparent;
-
   padding: 0;
-
   color: #222;
   font-size: 13px;
   font-weight: 600;
-
   cursor: pointer;
-
   text-decoration: none;
 }
 
@@ -235,7 +217,6 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-
   min-width: 180px;
 }
 
@@ -248,7 +229,6 @@
 .admin-customer span {
   color: #888;
   font-size: 11px;
-
   word-break: break-word;
 }
 
@@ -268,17 +248,12 @@
 
 .admin-status {
   min-width: 125px;
-
   padding: 8px 28px 8px 10px;
-
   border: 1px solid transparent;
   border-radius: 20px;
-
   font-size: 11px;
   font-weight: 600;
-
   cursor: pointer;
-
   outline: none;
 }
 
@@ -322,7 +297,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-
   white-space: nowrap;
 }
 
@@ -330,19 +304,14 @@
   border: none;
   background: #222;
   color: white;
-
   padding: 8px 11px;
   border-radius: 7px;
-
   display: flex;
   align-items: center;
   gap: 5px;
-
   font-size: 11px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -357,20 +326,14 @@
 .admin-delete-order-btn {
   width: 32px;
   height: 32px;
-
   border: 1px solid #e3e3e3;
   background: white;
-
   border-radius: 7px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #777;
-
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -390,27 +353,23 @@
 
 .admin-orders-empty {
   padding: 70px 20px;
-
   text-align: center;
 }
 
 .admin-orders-empty svg {
   font-size: 45px;
   color: #aaa;
-
   margin-bottom: 15px;
 }
 
 .admin-orders-empty h3 {
   margin: 0 0 8px;
-
   color: #333;
   font-size: 19px;
 }
 
 .admin-orders-empty p {
   margin: 0;
-
   color: #888;
   font-size: 13px;
 }
