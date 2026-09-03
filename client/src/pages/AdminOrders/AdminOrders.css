@@ -56,10 +56,6 @@
   font-size: 15px;
 }
 
-/* =========================================================
-   STATISTICS
-   ========================================================= */
-
 .admin-orders-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
