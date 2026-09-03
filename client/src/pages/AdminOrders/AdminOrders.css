@@ -338,10 +338,6 @@
   font-size: 13px;
 }
 
-/* =========================================================
-   RESPONSIVE - TABLET
-   ========================================================= */
-
 @media (max-width: 950px) {
   .admin-orders-stats {
     grid-template-columns: repeat(2, 1fr);
