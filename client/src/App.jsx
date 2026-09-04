@@ -80,10 +80,6 @@ function App() {
           />
         </Route>
 
-        {/* ==================================================
-            AUTH ROUTES
-        ================================================== */}
-
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
