@@ -81,12 +81,7 @@ function App() {
         </Route>
 
         <Route path="/login" element={<Login />} />
-
         <Route path="/register" element={<Register />} />
-
-        {/* ==================================================
-            ADMIN ROUTES
-        ================================================== */}
 
         <Route
           path="/admin"
