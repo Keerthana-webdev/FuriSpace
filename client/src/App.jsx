@@ -13,10 +13,6 @@ import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
 
-// ==========================================
-// ADMIN PAGES
-// ==========================================
-
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
 import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
