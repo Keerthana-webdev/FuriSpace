@@ -1,7 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import MainLayout from "./layouts/MainLayout";
 import AdminLayout from "./layouts/AdminLayout";
+
+// ==========================================
+// CUSTOMER PAGES
+// ==========================================
 
 import Home from "./pages/Home/Home";
 import Products from "./pages/Products/Products";
@@ -14,11 +17,23 @@ import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
 import Orders from "./pages/Orders/Orders";
 
+// ==========================================
+// ADMIN PAGES
+// ==========================================
+
 import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
 import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
 
+// ==========================================
+// OTHER
+// ==========================================
+
 import NotFound from "./pages/NotFound/NotFound";
+
+// ==========================================
+// ROUTE PROTECTION
+// ==========================================
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AdminRoute from "./components/common/AdminRoute";
@@ -27,8 +42,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<MainLayout />}>
+        {/* ==================================================
+            CUSTOMER ROUTES
+        ================================================== */}
 
+        <Route element={<MainLayout />}>
           {/* HOME */}
           <Route path="/" element={<Home />} />
 
@@ -82,9 +100,17 @@ function App() {
           />
         </Route>
 
+        {/* ==================================================
+            AUTH ROUTES
+        ================================================== */}
+
         <Route path="/login" element={<Login />} />
 
         <Route path="/register" element={<Register />} />
+
+        {/* ==================================================
+            ADMIN ROUTES
+        ================================================== */}
 
         <Route
           path="/admin"
@@ -94,7 +120,6 @@ function App() {
             </AdminRoute>
           }
         >
-
           {/* ADMIN DASHBOARD */}
           <Route index element={<Dashboard />} />
 
@@ -102,15 +127,14 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
 
           {/* ADMIN ORDER DETAILS */}
-          <Route
-            path="orders/:orderId"
-            element={<AdminOrderDetails />}
-          />
-
+          <Route path="orders/:orderId" element={<AdminOrderDetails />} />
         </Route>
 
-        <Route path="*" element={<NotFound />} />
+        {/* ==================================================
+            404
+        ================================================== */}
 
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
