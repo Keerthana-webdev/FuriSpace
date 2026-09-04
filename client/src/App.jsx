@@ -25,9 +25,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ==================================================
-            CUSTOMER ROUTES
-        ================================================== */}
 
         <Route element={<MainLayout />}>
           {/* HOME */}
