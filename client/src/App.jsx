@@ -17,10 +17,6 @@ import Dashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/AdminOrders/AdminOrders";
 import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
 
-// ==========================================
-// OTHER
-// ==========================================
-
 import NotFound from "./pages/NotFound/NotFound";
 
 // ==========================================
