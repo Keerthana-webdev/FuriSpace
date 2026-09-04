@@ -18,11 +18,6 @@ import AdminOrders from "./pages/AdminOrders/AdminOrders";
 import AdminOrderDetails from "./pages/AdminOrderDetails/AdminOrderDetails";
 
 import NotFound from "./pages/NotFound/NotFound";
-
-// ==========================================
-// ROUTE PROTECTION
-// ==========================================
-
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import AdminRoute from "./components/common/AdminRoute";
 
