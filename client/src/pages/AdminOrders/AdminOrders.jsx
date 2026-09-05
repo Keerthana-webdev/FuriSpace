@@ -223,10 +223,6 @@ function AdminOrders() {
             </div>
           </div>
 
-          {/* ==========================================
-              EMPTY STATE
-          ========================================== */}
-
           {orders.length === 0 ? (
             <div className="admin-orders-empty">
               <FiPackage />
