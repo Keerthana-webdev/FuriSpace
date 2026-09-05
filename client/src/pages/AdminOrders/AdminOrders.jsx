@@ -138,14 +138,9 @@ function AdminOrders() {
   return (
     <main className="admin-orders-page">
       <div className="admin-orders-container">
-        {/* ==========================================
-            HEADER
-        ========================================== */}
-
         <div className="admin-orders-header">
           <div>
             <h1>Manage Orders</h1>
-
             <p>View and manage all customer orders.</p>
           </div>
 
