@@ -267,10 +267,6 @@ function OrderDetails() {
             </div>
           </div>
 
-          {/* ==========================================
-              DELIVERY INFORMATION
-          ========================================== */}
-
           <div className="details-card">
             <div className="details-card-title">
               <FiMapPin />
