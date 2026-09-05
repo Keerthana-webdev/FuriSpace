@@ -135,10 +135,6 @@ function OrderDetails() {
   return (
     <main className="order-details-page">
       <div className="order-details-container">
-        {/* ==========================================
-            HEADER
-        ========================================== */}
-
         <div className="order-details-header">
           <button
             className="back-orders-btn"
