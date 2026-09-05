@@ -102,10 +102,6 @@ function AdminOrders() {
     window.dispatchEvent(new Event("ordersUpdated"));
   };
 
-  // ==========================================
-  // STATUS CLASS
-  // ==========================================
-
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
 
