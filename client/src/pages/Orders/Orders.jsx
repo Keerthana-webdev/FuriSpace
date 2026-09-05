@@ -53,10 +53,6 @@ function Orders() {
     };
   }, []);
 
-  // ==========================================
-  // STATUS ICON
-  // ==========================================
-
   const getStatusIcon = (statusStep) => {
     const step = Number(statusStep || 1);
 
