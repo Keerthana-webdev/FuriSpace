@@ -10,19 +10,12 @@ import {
   FiShoppingBag,
   FiTruck,
 } from "react-icons/fi";
-
 import "./OrderDetails.css";
 
 function OrderDetails() {
   const { orderId } = useParams();
-
   const navigate = useNavigate();
-
   const [order, setOrder] = useState(null);
-
-  // ==========================================
-  // LOAD ORDER
-  // ==========================================
 
   const loadOrder = () => {
     try {
