@@ -70,7 +70,7 @@ function Orders() {
 
     return <FiClock />;
   };
-  
+
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
 
@@ -88,10 +88,6 @@ function Orders() {
 
     return "order-status placed";
   };
-
-  // ==========================================
-  // DATE FORMAT
-  // ==========================================
 
   const formatDate = (date) => {
     if (!date) {
