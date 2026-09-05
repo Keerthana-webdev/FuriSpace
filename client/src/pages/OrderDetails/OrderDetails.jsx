@@ -169,10 +169,6 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            TRACKING
-        ========================================== */}
-
         <div className="tracking-card">
           <div className="tracking-header">
             <div>
