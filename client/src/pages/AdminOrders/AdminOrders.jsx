@@ -232,10 +232,7 @@ function AdminOrders() {
               <p>Customer orders will appear here after they place an order.</p>
             </div>
           ) : (
-            /* ==========================================
-               ORDERS TABLE
-            ========================================== */
-
+            
             <div className="admin-orders-table-wrapper">
               <table className="admin-orders-table">
                 <thead>
