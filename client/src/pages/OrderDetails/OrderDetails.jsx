@@ -173,7 +173,6 @@ function OrderDetails() {
           <div className="tracking-header">
             <div>
               <h2>Track Your Order</h2>
-
               <p>Follow your order progress</p>
             </div>
 
@@ -222,15 +221,7 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            DETAILS GRID
-        ========================================== */}
-
         <div className="order-details-grid">
-          {/* ==========================================
-              PRODUCTS
-          ========================================== */}
-
           <div className="details-card">
             <div className="details-card-title">
               <FiShoppingBag />
