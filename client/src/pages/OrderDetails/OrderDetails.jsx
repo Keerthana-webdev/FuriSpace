@@ -151,10 +151,6 @@ function OrderDetails() {
           </div>
         </div>
 
-        {/* ==========================================
-            STATUS CARD
-        ========================================== */}
-
         <div className="order-status-card">
           <div className="status-icon">
             <FiCheckCircle />
