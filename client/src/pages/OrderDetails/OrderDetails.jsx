@@ -62,10 +62,6 @@ function OrderDetails() {
     };
   }, [orderId]);
 
-  // ==========================================
-  // ORDER NOT FOUND
-  // ==========================================
-
   if (!order) {
     return (
       <main className="order-details-page">
