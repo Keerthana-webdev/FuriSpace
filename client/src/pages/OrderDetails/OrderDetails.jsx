@@ -132,10 +132,6 @@ function OrderDetails() {
     },
   ];
 
-  // ==========================================
-  // UI
-  // ==========================================
-
   return (
     <main className="order-details-page">
       <div className="order-details-container">
