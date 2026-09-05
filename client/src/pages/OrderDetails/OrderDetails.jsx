@@ -45,10 +45,6 @@ function OrderDetails() {
     }
   };
 
-  // ==========================================
-  // INITIAL LOAD + STATUS SYNC
-  // ==========================================
-
   useEffect(() => {
     // Load order initially
     loadOrder();
