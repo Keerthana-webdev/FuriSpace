@@ -70,11 +70,7 @@ function Orders() {
 
     return <FiClock />;
   };
-
-  // ==========================================
-  // STATUS CLASS
-  // ==========================================
-
+  
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
 
