@@ -81,10 +81,6 @@ function AdminOrders() {
     window.dispatchEvent(new Event("ordersUpdated"));
   };
 
-  // ==========================================
-  // DELETE ORDER
-  // ==========================================
-
   const handleDeleteOrder = (orderId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this order?",
