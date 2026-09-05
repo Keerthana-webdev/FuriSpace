@@ -101,10 +101,6 @@ function Orders() {
     });
   };
 
-  // ==========================================
-  // EMPTY ORDERS
-  // ==========================================
-
   if (orders.length === 0) {
     return (
       <main className="orders-page">
