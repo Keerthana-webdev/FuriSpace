@@ -110,7 +110,6 @@ function Orders() {
           </div>
 
           <h1>No Orders Yet</h1>
-
           <p>You haven't placed any orders yet.</p>
 
           <Link to="/products" className="start-shopping-btn">
