@@ -83,11 +83,7 @@ function OrderDetails() {
       </main>
     );
   }
-
-  // ==========================================
-  // ORDER DATE
-  // ==========================================
-
+  
   const orderDate = order.createdAt
     ? new Date(order.createdAt).toLocaleString("en-IN", {
         day: "numeric",
