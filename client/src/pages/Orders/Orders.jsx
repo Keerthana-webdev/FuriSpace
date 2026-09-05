@@ -36,10 +36,6 @@ function Orders() {
     }
   };
 
-  // ==========================================
-  // INITIAL LOAD + STATUS SYNC
-  // ==========================================
-
   useEffect(() => {
     // Load orders when page opens
     loadOrders();
