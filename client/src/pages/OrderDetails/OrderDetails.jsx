@@ -69,9 +69,7 @@ function OrderDetails() {
           <div className="not-found-icon">
             <FiPackage />
           </div>
-
           <h1>Order Not Found</h1>
-
           <p>We couldn't find the order you're looking for.</p>
 
           <button
