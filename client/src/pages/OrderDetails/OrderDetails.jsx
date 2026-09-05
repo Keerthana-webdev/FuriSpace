@@ -83,7 +83,7 @@ function OrderDetails() {
       </main>
     );
   }
-  
+
   const orderDate = order.createdAt
     ? new Date(order.createdAt).toLocaleString("en-IN", {
         day: "numeric",
@@ -93,10 +93,6 @@ function OrderDetails() {
         minute: "2-digit",
       })
     : "Date unavailable";
-
-  // ==========================================
-  // TOTAL ITEMS
-  // ==========================================
 
   const totalItems =
     order.items?.reduce(
