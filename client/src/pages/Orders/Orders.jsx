@@ -9,16 +9,10 @@ import {
   FiShoppingBag,
   FiTruck,
 } from "react-icons/fi";
-
 import "./Orders.css";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
-
-  // ==========================================
-  // LOAD ORDERS
-  // ==========================================
-
   const loadOrders = () => {
     try {
       const savedOrders = localStorage.getItem("orders");
