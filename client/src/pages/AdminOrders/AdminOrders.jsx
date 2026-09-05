@@ -43,10 +43,6 @@ function AdminOrders() {
     }
   };
 
-  // ==========================================
-  // CHANGE ORDER STATUS
-  // ==========================================
-
   const handleStatusChange = (orderId, newStatus) => {
     let statusStep = 1;
 
