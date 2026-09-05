@@ -121,10 +121,6 @@ function Orders() {
     );
   }
 
-  // ==========================================
-  // MAIN UI
-  // ==========================================
-
   return (
     <main className="orders-page">
       <div className="orders-container">
@@ -133,7 +129,6 @@ function Orders() {
         <div className="orders-header">
           <div>
             <h1>My Orders</h1>
-
             <p>Track and manage your orders</p>
           </div>
 
@@ -143,7 +138,6 @@ function Orders() {
         </div>
 
         {/* ORDERS LIST */}
-
         <div className="orders-list">
           {orders
             .slice()
