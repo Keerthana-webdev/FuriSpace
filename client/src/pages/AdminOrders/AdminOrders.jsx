@@ -14,7 +14,12 @@ import "./AdminOrders.css";
 
 function AdminOrders() {
   const navigate = useNavigate();
+
   const [orders, setOrders] = useState([]);
+
+  // ==========================================
+  // LOAD ORDERS
+  // ==========================================
 
   useEffect(() => {
     loadOrders();
@@ -38,9 +43,14 @@ function AdminOrders() {
       }
     } catch (error) {
       console.error("Error loading orders:", error);
+
       setOrders([]);
     }
   };
+
+  // ==========================================
+  // CHANGE ORDER STATUS
+  // ==========================================
 
   const handleStatusChange = (orderId, newStatus) => {
     let statusStep = 1;
@@ -70,10 +80,19 @@ function AdminOrders() {
       return order;
     });
 
+    // Update React state
     setOrders(updatedOrders);
 
+    // Save updated orders
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+    // Notify customer pages
+    window.dispatchEvent(new Event("ordersUpdated"));
   };
+
+  // ==========================================
+  // DELETE ORDER
+  // ==========================================
 
   const handleDeleteOrder = (orderId) => {
     const confirmed = window.confirm(
@@ -91,7 +110,14 @@ function AdminOrders() {
     setOrders(updatedOrders);
 
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+    // Notify other pages
+    window.dispatchEvent(new Event("ordersUpdated"));
   };
+
+  // ==========================================
+  // STATUS CLASS
+  // ==========================================
 
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
@@ -111,6 +137,10 @@ function AdminOrders() {
     return "admin-status admin-status-placed";
   };
 
+  // ==========================================
+  // STATISTICS
+  // ==========================================
+
   const totalOrders = orders.length;
 
   const deliveredOrders = orders.filter(
@@ -126,9 +156,17 @@ function AdminOrders() {
     0,
   );
 
+  // ==========================================
+  // UI
+  // ==========================================
+
   return (
     <main className="admin-orders-page">
       <div className="admin-orders-container">
+        {/* ==========================================
+            HEADER
+        ========================================== */}
+
         <div className="admin-orders-header">
           <div>
             <h1>Manage Orders</h1>
@@ -145,7 +183,13 @@ function AdminOrders() {
           </button>
         </div>
 
+        {/* ==========================================
+            STATISTICS
+        ========================================== */}
+
         <div className="admin-orders-stats">
+          {/* TOTAL ORDERS */}
+
           <div className="admin-orders-stat-card">
             <div className="admin-orders-stat-icon">
               <FiPackage />
@@ -153,9 +197,12 @@ function AdminOrders() {
 
             <div>
               <span>Total Orders</span>
+
               <strong>{totalOrders}</strong>
             </div>
           </div>
+
+          {/* PENDING */}
 
           <div className="admin-orders-stat-card">
             <div className="admin-orders-stat-icon">
@@ -164,9 +211,12 @@ function AdminOrders() {
 
             <div>
               <span>Pending</span>
+
               <strong>{pendingOrders}</strong>
             </div>
           </div>
+
+          {/* DELIVERED */}
 
           <div className="admin-orders-stat-card">
             <div className="admin-orders-stat-icon">
@@ -175,9 +225,12 @@ function AdminOrders() {
 
             <div>
               <span>Delivered</span>
+
               <strong>{deliveredOrders}</strong>
             </div>
           </div>
+
+          {/* REVENUE */}
 
           <div className="admin-orders-stat-card">
             <div className="admin-orders-stat-icon">
@@ -186,10 +239,15 @@ function AdminOrders() {
 
             <div>
               <span>Revenue</span>
+
               <strong>₹{totalRevenue.toLocaleString("en-IN")}</strong>
             </div>
           </div>
         </div>
+
+        {/* ==========================================
+            ORDERS CARD
+        ========================================== */}
 
         <div className="admin-orders-card">
           <div className="admin-orders-card-header">
@@ -203,6 +261,10 @@ function AdminOrders() {
             </div>
           </div>
 
+          {/* ==========================================
+              EMPTY STATE
+          ========================================== */}
+
           {orders.length === 0 ? (
             <div className="admin-orders-empty">
               <FiPackage />
@@ -212,6 +274,10 @@ function AdminOrders() {
               <p>Customer orders will appear here after they place an order.</p>
             </div>
           ) : (
+            /* ==========================================
+               ORDERS TABLE
+            ========================================== */
+
             <div className="admin-orders-table-wrapper">
               <table className="admin-orders-table">
                 <thead>
@@ -323,6 +389,8 @@ function AdminOrders() {
 
                           <td>
                             <div className="admin-order-actions">
+                              {/* VIEW */}
+
                               <button
                                 className="admin-view-order-btn"
                                 onClick={() =>
@@ -332,6 +400,8 @@ function AdminOrders() {
                                 View
                                 <FiArrowRight />
                               </button>
+
+                              {/* DELETE */}
 
                               <button
                                 className="admin-delete-order-btn"
