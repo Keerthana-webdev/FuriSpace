@@ -100,15 +100,6 @@ function OrderDetails() {
       0,
     ) || 0;
 
-  // ==========================================
-  // CURRENT STATUS STEP
-  //
-  // 1 = Order Placed
-  // 2 = Order Confirmed
-  // 3 = Shipped
-  // 4 = Delivered
-  // ==========================================
-
   const currentStep = Number(order.statusStep) || 1;
 
   // ==========================================
