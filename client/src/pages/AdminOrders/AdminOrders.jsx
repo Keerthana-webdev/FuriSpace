@@ -44,19 +44,45 @@ function AdminOrders() {
   };
 
   const handleStatusChange = (orderId, newStatus) => {
-    let statusStep = 1;
+  let statusStep = 1;
 
-    if (newStatus === "Order Confirmed") {
-      statusStep = 2;
+  if (newStatus === "Order Confirmed") {
+    statusStep = 2;
+  }
+
+  if (newStatus === "Shipped") {
+    statusStep = 3;
+  }
+
+  if (newStatus === "Delivered") {
+    statusStep = 4;
+  }
+
+  const updatedOrders = orders.map((order) => {
+    if (String(order.orderId) === String(orderId)) {
+      return {
+        ...order,
+        status: newStatus,
+        statusStep: statusStep,
+        updatedAt: new Date().toISOString(),
+      };
     }
 
-    if (newStatus === "Shipped") {
-      statusStep = 3;
-    }
+    return order;
+  });
 
-    if (newStatus === "Delivered") {
-      statusStep = 4;
-    }
+  // Update Admin Orders state
+  setOrders(updatedOrders);
+
+  // Save updated orders
+  localStorage.setItem(
+    "orders",
+    JSON.stringify(updatedOrders),
+  );
+
+  // Tell Customer Orders page that orders changed
+  window.dispatchEvent(new Event("ordersUpdated"));
+};
 
     const updatedOrders = orders.map((order) => {
       if (String(order.orderId) === String(orderId)) {
