@@ -108,13 +108,31 @@ function AdminOrders() {
   };
 
   const handleDeleteOrder = (orderId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this order?",
-    );
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this order?",
+  );
 
-    if (!confirmed) {
-      return;
-    }
+  if (!confirmed) {
+    return;
+  }
+
+  const updatedOrders = orders.filter(
+    (order) =>
+      String(order.orderId) !== String(orderId),
+  );
+
+  // Update state
+  setOrders(updatedOrders);
+
+  // Update localStorage
+  localStorage.setItem(
+    "orders",
+    JSON.stringify(updatedOrders),
+  );
+
+  // Notify other pages
+  window.dispatchEvent(new Event("ordersUpdated"));
+};
 
     const updatedOrders = orders.filter(
       (order) => String(order.orderId) !== String(orderId),
