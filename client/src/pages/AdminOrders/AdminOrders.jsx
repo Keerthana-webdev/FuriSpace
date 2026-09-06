@@ -44,45 +44,19 @@ function AdminOrders() {
   };
 
   const handleStatusChange = (orderId, newStatus) => {
-  let statusStep = 1;
+    let statusStep = 1;
 
-  if (newStatus === "Order Confirmed") {
-    statusStep = 2;
-  }
-
-  if (newStatus === "Shipped") {
-    statusStep = 3;
-  }
-
-  if (newStatus === "Delivered") {
-    statusStep = 4;
-  }
-
-  const updatedOrders = orders.map((order) => {
-    if (String(order.orderId) === String(orderId)) {
-      return {
-        ...order,
-        status: newStatus,
-        statusStep: statusStep,
-        updatedAt: new Date().toISOString(),
-      };
+    if (newStatus === "Order Confirmed") {
+      statusStep = 2;
     }
 
-    return order;
-  });
+    if (newStatus === "Shipped") {
+      statusStep = 3;
+    }
 
-  // Update Admin Orders state
-  setOrders(updatedOrders);
-
-  // Save updated orders
-  localStorage.setItem(
-    "orders",
-    JSON.stringify(updatedOrders),
-  );
-
-  // Tell Customer Orders page that orders changed
-  window.dispatchEvent(new Event("ordersUpdated"));
-};
+    if (newStatus === "Delivered") {
+      statusStep = 4;
+    }
 
     const updatedOrders = orders.map((order) => {
       if (String(order.orderId) === String(orderId)) {
@@ -108,31 +82,13 @@ function AdminOrders() {
   };
 
   const handleDeleteOrder = (orderId) => {
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this order?",
-  );
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this order?",
+    );
 
-  if (!confirmed) {
-    return;
-  }
-
-  const updatedOrders = orders.filter(
-    (order) =>
-      String(order.orderId) !== String(orderId),
-  );
-
-  // Update state
-  setOrders(updatedOrders);
-
-  // Update localStorage
-  localStorage.setItem(
-    "orders",
-    JSON.stringify(updatedOrders),
-  );
-
-  // Notify other pages
-  window.dispatchEvent(new Event("ordersUpdated"));
-};
+    if (!confirmed) {
+      return;
+    }
 
     const updatedOrders = orders.filter(
       (order) => String(order.orderId) !== String(orderId),
