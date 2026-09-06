@@ -247,10 +247,6 @@
   transform: translateY(-1px);
 }
 
-/* =========================
-   TABLET
-========================= */
-
 @media (max-width: 768px) {
   .orders-page {
     padding: 35px 16px 60px;
