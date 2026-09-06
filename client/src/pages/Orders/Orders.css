@@ -325,10 +325,6 @@
   }
 }
 
-/* =========================
-   SMALL MOBILE
-========================= */
-
 @media (max-width: 400px) {
   .orders-page {
     padding: 25px 12px 50px;
