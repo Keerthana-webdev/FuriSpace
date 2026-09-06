@@ -86,10 +86,6 @@
   font-size: 17px;
 }
 
-/* =========================
-   STATUS
-========================= */
-
 .order-status {
   display: inline-flex;
   align-items: center;
