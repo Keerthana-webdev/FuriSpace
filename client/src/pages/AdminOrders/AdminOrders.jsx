@@ -82,25 +82,31 @@ function AdminOrders() {
   };
 
   const handleDeleteOrder = (orderId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this order?",
-    );
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this order?",
+  );
 
-    if (!confirmed) {
-      return;
-    }
+  if (!confirmed) {
+    return;
+  }
 
-    const updatedOrders = orders.filter(
-      (order) => String(order.orderId) !== String(orderId),
-    );
+  const updatedOrders = orders.filter(
+    (order) =>
+      String(order.orderId) !== String(orderId),
+  );
 
-    setOrders(updatedOrders);
+  // Update state
+  setOrders(updatedOrders);
 
-    localStorage.setItem("orders", JSON.stringify(updatedOrders));
+  // Update localStorage
+  localStorage.setItem(
+    "orders",
+    JSON.stringify(updatedOrders),
+  );
 
-    // Notify other pages
-    window.dispatchEvent(new Event("ordersUpdated"));
-  };
+  // Notify other pages
+  window.dispatchEvent(new Event("ordersUpdated"));
+};
 
   const getStatusClass = (statusStep) => {
     const step = Number(statusStep || 1);
