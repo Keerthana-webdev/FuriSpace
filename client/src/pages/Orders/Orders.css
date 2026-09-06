@@ -269,10 +269,6 @@
   }
 }
 
-/* =========================
-   MOBILE
-========================= */
-
 @media (max-width: 600px) {
   .orders-header {
     flex-direction: column;
