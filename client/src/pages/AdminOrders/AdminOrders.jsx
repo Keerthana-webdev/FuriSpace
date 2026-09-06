@@ -71,13 +71,13 @@ function AdminOrders() {
       return order;
     });
 
-    // Update React state
+    // Update Admin Orders state
     setOrders(updatedOrders);
 
     // Save updated orders
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
-    // Notify customer pages
+    // Tell Customer Orders page that orders changed
     window.dispatchEvent(new Event("ordersUpdated"));
   };
 
@@ -232,7 +232,6 @@ function AdminOrders() {
               <p>Customer orders will appear here after they place an order.</p>
             </div>
           ) : (
-            
             <div className="admin-orders-table-wrapper">
               <table className="admin-orders-table">
                 <thead>
