@@ -342,7 +342,7 @@ function AdminOrders() {
 
                           <td>
                             <select
-                              className={getStatusClass(order.statusStep)}
+                              
                               value={order.status || "Order Placed"}
                               onChange={(event) =>
                                 handleStatusChange(
