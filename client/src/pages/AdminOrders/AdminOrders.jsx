@@ -351,6 +351,7 @@ function AdminOrders() {
                               <option value="Order Confirmed">Order Confirmed</option>
                               <option value="Shipped">Shipped</option>
                               <option value="Delivered">Delivered</option>
+                              <option value="Cancelled">Cancelled</option>
                             </select>
                           </td>
 
