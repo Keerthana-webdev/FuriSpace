@@ -221,6 +221,53 @@ function OrderDetails() {
           </div>
         </div>
 
+        {/* STATUS HISTORY */}
+
+        <div className="status-history-card">
+          <div className="status-history-header">
+            <div>
+              <h2>Order Status History</h2>
+              <p>See how your order has progressed</p>
+            </div>
+
+            <FiClock />
+          </div>
+
+          <div className="status-history-list">
+            {(Array.isArray(order.statusHistory)
+              ? order.statusHistory
+              : [
+                  {
+                    status: order.status || "Order Placed",
+                    date: order.createdAt || new Date().toISOString(),
+                  },
+                ]
+            ).map((historyItem, index) => (
+              <div className="status-history-item" key={index}>
+                <div className="status-history-dot">
+                  <FiCheckCircle />
+                </div>
+
+                <div className="status-history-content">
+                  <strong>{historyItem.status}</strong>
+
+                  <span>
+                    {historyItem.date
+                      ? new Date(historyItem.date).toLocaleString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : "Date unavailable"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
         <div className="order-details-grid">
           <div className="details-card">
             <div className="details-card-title">
