@@ -58,26 +58,44 @@ function AdminOrders() {
       statusStep = 4;
     }
 
+    if (newStatus === "Cancelled") {
+      statusStep = 0;
+    }
+
     const updatedOrders = orders.map((order) => {
       if (String(order.orderId) === String(orderId)) {
+        const history = Array.isArray(order.statusHistory)
+          ? order.statusHistory
+          : [
+              {
+                status: order.status || "Order Placed",
+                date: order.createdAt || new Date().toISOString(),
+              },
+            ];
+
         return {
           ...order,
           status: newStatus,
-          statusStep: statusStep,
+          statusStep,
           updatedAt: new Date().toISOString(),
+
+          statusHistory: [
+            ...history,
+            {
+              status: newStatus,
+              date: new Date().toISOString(),
+            },
+          ],
         };
       }
 
       return order;
     });
 
-    // Update Admin Orders state
     setOrders(updatedOrders);
 
-    // Save updated orders
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
 
-    // Tell Customer Orders page that orders changed
     window.dispatchEvent(new Event("ordersUpdated"));
   };
 
@@ -330,13 +348,8 @@ function AdminOrders() {
                               }
                             >
                               <option value="Order Placed">Order Placed</option>
-
-                              <option value="Order Confirmed">
-                                Order Confirmed
-                              </option>
-
+                              <option value="Order Confirmed">Order Confirmed</option>
                               <option value="Shipped">Shipped</option>
-
                               <option value="Delivered">Delivered</option>
                             </select>
                           </td>
