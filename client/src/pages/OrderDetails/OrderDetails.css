@@ -629,8 +629,6 @@
     }
   }
 
-  /* Add to the bottom of src/pages/OrderDetails/OrderDetails.css */
-
   .cancelled-order-card {
     border-color: #edcaca;
     background: #fffafa;
