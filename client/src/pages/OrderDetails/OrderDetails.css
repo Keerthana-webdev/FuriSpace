@@ -536,4 +536,121 @@
     top: 48px;
     left: 22px;
   }
+
+  .status-history-card {
+    margin-top: 24px;
+    padding: 28px;
+
+    background: #fff;
+
+    border: 1px solid #e7e2dc;
+    border-radius: 16px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+  }
+
+  .status-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+  }
+
+  .status-history-header h2 {
+    margin: 0 0 6px;
+
+    font-size: 20px;
+    color: #222;
+  }
+
+  .status-history-header p {
+    margin: 0;
+
+    color: #777;
+    font-size: 14px;
+  }
+
+  .status-history-header > svg {
+    font-size: 24px;
+    color: #555;
+  }
+
+  .status-history-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status-history-item {
+    position: relative;
+
+    display: flex;
+    gap: 16px;
+
+    padding-bottom: 22px;
+  }
+
+  .status-history-item:not(:last-child)::after {
+    content: "";
+
+    position: absolute;
+
+    left: 12px;
+    top: 27px;
+    bottom: 0;
+
+    width: 2px;
+
+    background: #e5e0da;
+  }
+
+  .status-history-dot {
+    position: relative;
+    z-index: 2;
+
+    width: 26px;
+    height: 26px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #222;
+    color: #fff;
+  }
+
+  .status-history-dot svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .status-history-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .status-history-content strong {
+    font-size: 15px;
+    color: #222;
+  }
+
+  .status-history-content span {
+    font-size: 13px;
+    color: #888;
+  }
+
+  @media (max-width: 600px) {
+    .status-history-card {
+      padding: 20px;
+    }
+
+    .status-history-header h2 {
+      font-size: 18px;
+    }
+  }
 }
