@@ -122,7 +122,11 @@ function AdminOrders() {
     window.dispatchEvent(new Event("ordersUpdated"));
   };
 
-  const getStatusClass = (statusStep) => {
+  const getStatusClass = (statusStep, status) => {
+    if (status === "Cancelled") {
+      return "admin-status admin-status-cancelled";
+    }
+
     const step = Number(statusStep || 1);
 
     if (step === 2) {
@@ -348,7 +352,9 @@ function AdminOrders() {
                               }
                             >
                               <option value="Order Placed">Order Placed</option>
-                              <option value="Order Confirmed">Order Confirmed</option>
+                              <option value="Order Confirmed">
+                                Order Confirmed
+                              </option>
                               <option value="Shipped">Shipped</option>
                               <option value="Delivered">Delivered</option>
                               <option value="Cancelled">Cancelled</option>
