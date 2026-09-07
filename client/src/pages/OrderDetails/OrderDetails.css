@@ -482,10 +482,6 @@
   background: #222;
 }
 
-/* =========================================
-   MOBILE TRACKING
-========================================= */
-
 @media (max-width: 650px) {
   .tracking-card {
     padding: 20px;
