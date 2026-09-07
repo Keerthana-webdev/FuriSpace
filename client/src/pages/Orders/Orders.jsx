@@ -1,3 +1,5 @@
+// src/pages/Orders/Orders.jsx
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -56,7 +58,6 @@ function Orders() {
 
     return () => {
       window.removeEventListener("ordersUpdated", handleOrdersUpdated);
-
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
@@ -123,6 +124,76 @@ function Orders() {
     });
   };
 
+  const handleCancelOrder = (orderId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to cancel this order?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const savedOrders = localStorage.getItem("orders");
+
+      if (!savedOrders) {
+        return;
+      }
+
+      const parsedOrders = JSON.parse(savedOrders);
+
+      if (!Array.isArray(parsedOrders)) {
+        return;
+      }
+
+      const now = new Date().toISOString();
+
+      const updatedOrders = parsedOrders.map((order) => {
+        if (String(order.orderId) !== String(orderId)) {
+          return order;
+        }
+
+        const existingHistory = Array.isArray(order.statusHistory)
+          ? order.statusHistory
+          : [
+              {
+                status: order.status || "Order Placed",
+                date: order.createdAt || now,
+              },
+            ];
+
+        const lastStatus = existingHistory[existingHistory.length - 1]?.status;
+
+        const updatedHistory =
+          lastStatus === "Cancelled"
+            ? existingHistory
+            : [
+                ...existingHistory,
+                {
+                  status: "Cancelled",
+                  date: now,
+                },
+              ];
+
+        return {
+          ...order,
+          status: "Cancelled",
+          statusStep: 0,
+          updatedAt: now,
+          statusHistory: updatedHistory,
+        };
+      });
+
+      localStorage.setItem("orders", JSON.stringify(updatedOrders));
+
+      setOrders(updatedOrders);
+
+      window.dispatchEvent(new Event("ordersUpdated"));
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+    }
+  };
+
   if (orders.length === 0) {
     return (
       <main className="orders-page">
@@ -130,11 +201,8 @@ function Orders() {
           <div className="orders-empty-icon">
             <FiShoppingBag />
           </div>
-
           <h1>No Orders Yet</h1>
-
           <p>You haven't placed any orders yet.</p>
-
           <Link to="/products" className="start-shopping-btn">
             Start Shopping
             <FiArrowRight />
@@ -147,7 +215,6 @@ function Orders() {
   return (
     <main className="orders-page">
       <div className="orders-container">
-        {/* HEADER */}
         <div className="orders-header">
           <div>
             <h1>My Orders</h1>
@@ -159,7 +226,6 @@ function Orders() {
           </div>
         </div>
 
-        {/* ORDERS */}
         <div className="orders-list">
           {orders
             .slice()
@@ -177,7 +243,6 @@ function Orders() {
 
               return (
                 <div className="order-card" key={order.orderId}>
-                  {/* HEADER */}
                   <div className="order-card-header">
                     <div>
                       <span className="order-label">Order ID</span>
@@ -192,7 +257,6 @@ function Orders() {
                     </div>
                   </div>
 
-                  {/* INFO */}
                   <div className="order-card-info">
                     <div>
                       <span>Date</span>
@@ -216,7 +280,6 @@ function Orders() {
                     </div>
                   </div>
 
-                  {/* ACTIONS */}
                   <div className="order-card-footer">
                     <Link
                       to={`/orders/${order.orderId}`}
@@ -229,59 +292,7 @@ function Orders() {
                     {canCancel && (
                       <button
                         className="cancel-order-btn"
-                        onClick={() => {
-                          const confirmed = window.confirm(
-                            "Are you sure you want to cancel this order?",
-                          );
-
-                          if (!confirmed) {
-                            return;
-                          }
-
-                          const savedOrders = localStorage.getItem("orders");
-
-                          if (!savedOrders) {
-                            return;
-                          }
-
-                          const allOrders = JSON.parse(savedOrders);
-
-                          const updatedOrders = allOrders.map((item) => {
-                            if (
-                              String(item.orderId) === String(order.orderId)
-                            ) {
-                              const history = Array.isArray(item.statusHistory)
-                                ? item.statusHistory
-                                : [];
-
-                              return {
-                                ...item,
-                                status: "Cancelled",
-                                statusStep: 0,
-                                updatedAt: new Date().toISOString(),
-
-                                statusHistory: [
-                                  ...history,
-                                  {
-                                    status: "Cancelled",
-                                    date: new Date().toISOString(),
-                                  },
-                                ],
-                              };
-                            }
-
-                            return item;
-                          });
-
-                          localStorage.setItem(
-                            "orders",
-                            JSON.stringify(updatedOrders),
-                          );
-
-                          setOrders(updatedOrders);
-
-                          window.dispatchEvent(new Event("ordersUpdated"));
-                        }}
+                        onClick={() => handleCancelOrder(order.orderId)}
                       >
                         <FiXCircle />
                         Cancel Order
