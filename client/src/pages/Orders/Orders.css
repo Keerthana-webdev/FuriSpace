@@ -238,8 +238,8 @@
   font-size: 14px;
   font-weight: 600;
   transition:
-  background 0.2s ease,
-  transform 0.2s ease;
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .start-shopping-btn:hover {
@@ -339,5 +339,55 @@
 
   .orders-header h1 {
     font-size: 24px;
+  }
+
+  .cancel-order-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 12px 18px;
+
+    border: 1px solid #d9b7b7;
+    border-radius: 8px;
+
+    background: #fff;
+    color: #a33a3a;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+  }
+
+  .cancel-order-btn svg {
+    font-size: 17px;
+  }
+
+  .cancel-order-btn:hover {
+    background: #a33a3a;
+    color: #fff;
+    border-color: #a33a3a;
+  }
+
+  .order-status.cancelled {
+    color: #a33a3a;
+    background: #fbeaea;
+    border-color: #edcaca;
+  }
+
+  @media (max-width: 600px) {
+    .order-card-footer {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .view-order-btn,
+    .cancel-order-btn {
+      width: 100%;
+    }
   }
 }
