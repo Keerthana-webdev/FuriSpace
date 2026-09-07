@@ -68,7 +68,9 @@
   align-items: center;
   gap: 15px;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .admin-orders-stat-card:hover {
@@ -392,5 +394,11 @@
 
   .admin-orders-table {
     min-width: 850px;
+  }
+
+  .admin-status-cancelled {
+    color: #a33a3a;
+    background: #fbeaea;
+    border-color: #edcaca;
   }
 }
