@@ -25,11 +25,7 @@ function Login() {
 
     try {
       setLoading(true);
-
-      // -----------------------------
-      // LOGIN API REQUEST
-      // -----------------------------
-
+      
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: {
