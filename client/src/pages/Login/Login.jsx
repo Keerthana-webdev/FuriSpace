@@ -45,10 +45,6 @@ function Login() {
         return;
       }
 
-      // -----------------------------
-      // CHECK LOGIN RESPONSE
-      // -----------------------------
-
       if (!data.token || !data.user) {
         setError("Login failed. Invalid server response.");
 
