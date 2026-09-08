@@ -61,10 +61,6 @@ function Login() {
       // Notify other components/pages
       window.dispatchEvent(new Event("authUpdated"));
 
-      // -----------------------------
-      // REDIRECT
-      // -----------------------------
-
       const from = location.state?.from;
 
       // Admin login
