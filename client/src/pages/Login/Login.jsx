@@ -1,21 +1,17 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     setError("");
 
     // -----------------------------
@@ -41,7 +37,6 @@ function Login() {
 
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
@@ -83,13 +78,9 @@ function Login() {
       // -----------------------------
       // SAVE USER INFORMATION
       // -----------------------------
-
       localStorage.setItem("user", JSON.stringify(data.user));
-
       localStorage.setItem("userEmail", data.user.email);
-
       localStorage.setItem("userName", data.user.name);
-
       localStorage.setItem("userRole", data.user.role);
 
       // Keep this temporarily for
