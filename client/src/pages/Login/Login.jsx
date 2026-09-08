@@ -39,11 +39,6 @@ function Login() {
       });
 
       const data = await response.json();
-
-      // -----------------------------
-      // BACKEND ERROR
-      // -----------------------------
-
       if (!response.ok) {
         setError(data.message || "Invalid email or password.");
 
