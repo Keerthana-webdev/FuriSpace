@@ -56,9 +56,6 @@ function Login() {
       localStorage.setItem("userEmail", data.user.email);
       localStorage.setItem("userName", data.user.name);
       localStorage.setItem("userRole", data.user.role);
-
-      // Keep this temporarily for
-      // existing parts of the project.
       localStorage.setItem("isLoggedIn", "true");
 
       // Notify other components/pages
