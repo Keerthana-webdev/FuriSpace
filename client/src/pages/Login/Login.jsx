@@ -51,10 +51,6 @@ function Login() {
         return;
       }
 
-      // -----------------------------
-      // SAVE JWT
-      // -----------------------------
-
       localStorage.setItem("token", data.token);
 
       // -----------------------------
