@@ -52,10 +52,6 @@ function Login() {
       }
 
       localStorage.setItem("token", data.token);
-
-      // -----------------------------
-      // SAVE USER INFORMATION
-      // -----------------------------
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("userEmail", data.user.email);
       localStorage.setItem("userName", data.user.name);
