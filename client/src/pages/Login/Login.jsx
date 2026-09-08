@@ -13,11 +13,6 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
-    // -----------------------------
-    // FRONTEND VALIDATION
-    // -----------------------------
-
     if (!email.trim()) {
       setError("Please enter your email.");
       return;
