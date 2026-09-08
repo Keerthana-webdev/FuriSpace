@@ -92,12 +92,10 @@ function Login() {
       <div className="login-container">
         <div className="login-card">
           <h1>Welcome Back</h1>
-
           <p className="login-subtitle">Login to continue shopping</p>
 
           <form onSubmit={handleLogin}>
             {/* EMAIL */}
-
             <div className="login-form-group">
               <label htmlFor="login-email">Email</label>
 
@@ -113,7 +111,6 @@ function Login() {
             </div>
 
             {/* PASSWORD */}
-
             <div className="login-form-group">
               <label htmlFor="login-password">Password</label>
 
@@ -129,11 +126,9 @@ function Login() {
             </div>
 
             {/* ERROR */}
-
             {error && <p className="login-error">{error}</p>}
 
             {/* LOGIN BUTTON */}
-
             <button type="submit" className="login-button" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
