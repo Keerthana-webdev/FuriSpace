@@ -16,6 +16,8 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 - Order History
 - User Profile Management
 
+---
+
 #### Admin
 - Admin Dashboard
 - Add/Edit/Delete Products
@@ -24,6 +26,8 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 - Manage Orders
 - Manage Users
 - Inventory Management
+
+---
 
 ###  Tech Stack
 
@@ -43,3 +47,5 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 - bcryptjs
 - Multer
 - Cloudinary
+
+---
