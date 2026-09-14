@@ -4,7 +4,7 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 ### Features
 
 #### User
-- User Authentication (JWT)
+- User Authentication 
 - Register & Login
 - Browse Products
 - Search & Filter Products
