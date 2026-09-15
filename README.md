@@ -21,7 +21,7 @@ FurniSpace is a modern full-stack furniture e-commerce web application built usi
 #### Admin
 - Admin Dashboard
 - Add/Edit/Delete Products
-- Upload Multiple Product Images (Cloudinary)
+- Upload Multiple Product Images 
 - Manage Categories
 - Manage Orders
 - Manage Users
