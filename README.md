@@ -71,3 +71,15 @@ FurniSpace
 └── README.md
 ```
 
+### Future Enhancements
+
+- AI Furniture Recommendation
+- AR Room Preview
+- Voice Search
+- Real-time Order Tracking
+- Product Reviews & Ratings
+- Coupons & Discounts
+- Online Payments (Stripe/Razorpay)
+- Dark Mode
+
+---
