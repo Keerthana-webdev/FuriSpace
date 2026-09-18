@@ -20,10 +20,6 @@ function Register() {
     setError("");
     setSuccess("");
 
-    // -----------------------------
-    // FRONTEND VALIDATION
-    // -----------------------------
-
     if (!name.trim()) {
       setError("Please enter your name.");
       return;
@@ -47,10 +43,6 @@ function Register() {
     try {
       setLoading(true);
 
-      // -----------------------------
-      // REGISTER API REQUEST
-      // -----------------------------
-
       const response = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
 
@@ -67,19 +59,11 @@ function Register() {
 
       const data = await response.json();
 
-      // -----------------------------
-      // BACKEND ERROR
-      // -----------------------------
-
       if (!response.ok) {
         setError(data.message || "Registration failed.");
 
         return;
       }
-
-      // -----------------------------
-      // SUCCESS
-      // -----------------------------
 
       setSuccess("Registration successful! Redirecting to login...");
 
