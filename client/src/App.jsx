@@ -40,28 +40,13 @@ function App() {
           <Route path="/cart" element={<Cart />} />
 
           {/* CHECKOUT */}
-          <Route
-            path="/checkout"
-            element={
-              <ProtectedRoute>
-                <Checkout />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/checkout" element={<ProtectedRoute> <Checkout /> </ProtectedRoute> }/>
 
           {/* CUSTOMER ORDERS */}
-          <Route
-            path="/orders"
-            element={
-              <ProtectedRoute>
-                <Orders />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
 
           {/* CUSTOMER ORDER DETAILS */}
-          <Route
-            path="/orders/:orderId"
+          <Route path="/orders/:orderId"
             element={
               <ProtectedRoute>
                 <OrderDetails />
@@ -108,3 +93,4 @@ function App() {
 }
 
 export default App;
+                                     
