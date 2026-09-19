@@ -49,27 +49,17 @@ function App() {
           <Route path="/orders/:orderId" element={<ProtectedRoute> <OrderDetails /> </ProtectedRoute>} />
 
           {/* PROFILE */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
+          <Route path="/profile"element={<ProtectedRoute><Profile /></ProtectedRoute>}/></Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          {/* LOGIN */}
+          <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminLayout />
-            </AdminRoute>
-          }
-        >
+          {/* REGISTER */}
+          <Route path="/register" element={<Register />} />
+
+          {/* ADMIN */}
+          <Route path="/admin" element={ <AdminRoute> <AdminLayout /> </AdminRoute>}>
+
           {/* ADMIN DASHBOARD */}
           <Route index element={<Dashboard />} />
 
@@ -77,8 +67,7 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
 
           {/* ADMIN ORDER DETAILS */}
-          <Route path="orders/:orderId" element={<AdminOrderDetails />} />
-        </Route>
+          <Route path="orders/:orderId" element={<AdminOrderDetails />} /></Route>
         
         <Route path="*" element={<NotFound />} />
       </Routes>
