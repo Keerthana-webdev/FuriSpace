@@ -164,10 +164,6 @@
   font-weight: 600;
 }
 
-/* =========================
-   LOADING
-========================= */
-
 .profile-loading {
   min-height: 400px;
   display: flex;
