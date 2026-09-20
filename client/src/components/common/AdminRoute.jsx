@@ -1,16 +1,22 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 function AdminRoute({ children }) {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const location = useLocation();
 
-  const userEmail = localStorage.getItem("userEmail");
+  const token = localStorage.getItem("token");
+  const userRole = localStorage.getItem("userRole");
 
-  const isAdmin = isLoggedIn && userEmail === "admin@furnispace.com";
-
-  if (!isAdmin) {
-    return <Navigate to="/login" replace />;
+  // Not logged in
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
+  // Logged in but not an admin
+  if (userRole !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  // Logged in admin
   return children;
 }
 
