@@ -220,10 +220,6 @@
   font-size: 14px;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
 @media (max-width: 600px) {
   .profile-page {
     padding: 30px 15px;
