@@ -16,12 +16,11 @@ import "./Navbar.css";
 
 const getCartCount = () => {
   try {
-    const savedCart =
-      JSON.parse(localStorage.getItem("cartItems")) || [];
+    const savedCart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
     return savedCart.reduce(
       (total, item) => total + Number(item.quantity || 1),
-      0
+      0,
     );
   } catch (error) {
     console.error("Error loading cart count:", error);
@@ -50,21 +49,12 @@ function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
 
-    window.addEventListener(
-      "cartUpdated",
-      handleCartUpdate
-    );
+    window.addEventListener("cartUpdated", handleCartUpdate);
 
     return () => {
-      window.removeEventListener(
-        "scroll",
-        handleScroll
-      );
+      window.removeEventListener("scroll", handleScroll);
 
-      window.removeEventListener(
-        "cartUpdated",
-        handleCartUpdate
-      );
+      window.removeEventListener("cartUpdated", handleCartUpdate);
     };
   }, []);
 
@@ -89,45 +79,27 @@ function Navbar() {
       </div>
 
       {/* NAVIGATION LINKS */}
-      <ul
-        className={
-          menuOpen
-            ? "nav-links active"
-            : "nav-links"
-        }
-      >
+      <ul className={menuOpen ? "nav-links active" : "nav-links"}>
         <li>
-          <Link
-            to="/"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link to="/" onClick={() => setMenuOpen(false)}>
             Home
           </Link>
         </li>
 
         <li>
-          <Link
-            to="/products"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link to="/products" onClick={() => setMenuOpen(false)}>
             Products
           </Link>
         </li>
 
         <li>
-          <Link
-            to="#"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link to="#" onClick={() => setMenuOpen(false)}>
             About
           </Link>
         </li>
 
         <li>
-          <Link
-            to="#"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link to="#" onClick={() => setMenuOpen(false)}>
             Contact
           </Link>
         </li>
@@ -137,20 +109,13 @@ function Navbar() {
       <div className="search-box">
         <FiSearch />
 
-        <input
-          type="text"
-          placeholder="Search furniture..."
-        />
+        <input type="text" placeholder="Search furniture..." />
       </div>
 
       {/* ICONS */}
       <div className="icons">
-
         {/* CART */}
-        <Link
-          to="/cart"
-          className="cart-icon"
-        >
+        <Link to="/cart" className="cart-icon">
           <FiShoppingCart />
 
           <span>{cartCount}</span>
@@ -180,29 +145,15 @@ function Navbar() {
           </>
         ) : (
           /* LOGIN */
-          <Link
-            to="/login"
-            title="Login"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link to="/login" title="Login" onClick={() => setMenuOpen(false)}>
             <FiUser />
           </Link>
         )}
-
       </div>
 
       {/* MOBILE MENU */}
-      <div
-        className="mobile-menu"
-        onClick={() =>
-          setMenuOpen(!menuOpen)
-        }
-      >
-        {menuOpen ? (
-          <FiX />
-        ) : (
-          <FiMenu />
-        )}
+      <div className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? <FiX /> : <FiMenu />}
       </div>
     </motion.nav>
   );
