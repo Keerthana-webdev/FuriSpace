@@ -1,22 +1,27 @@
 import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function AdminRoute({ children }) {
   const location = useLocation();
 
-  const token = localStorage.getItem("token");
-  const userRole = localStorage.getItem("userRole");
+  const { user, loading, isLoggedIn } = useAuth();
 
-  // Not logged in
-  if (!token) {
+  if (loading) {
+    return (
+      <div style={{ padding: "40px", textAlign: "center" }}>
+        Checking authentication...
+      </div>
+    );
+  }
+
+  if (!isLoggedIn) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
-  // Logged in but not an admin
-  if (userRole !== "admin") {
+  if (user?.role !== "admin") {
     return <Navigate to="/" replace />;
   }
 
-  // Logged in admin
   return children;
 }
 
