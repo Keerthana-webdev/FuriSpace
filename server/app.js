@@ -39,4 +39,11 @@ app.get("/", (req, res) => {
   res.send("Welcome to FurniSpace Backend");
 });
 
+app.get("/api/test", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "FurniSpace backend is running correctly"
+    });
+});
+
 module.exports = app;
