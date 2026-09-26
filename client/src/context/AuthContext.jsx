@@ -40,11 +40,59 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  // LOGIN / SET USER
+  const login = (userData) => {
+    setUser(userData);
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
+    );
+
+    localStorage.setItem(
+      "userName",
+      userData.name
+    );
+
+    localStorage.setItem(
+      "userEmail",
+      userData.email
+    );
+
+    localStorage.setItem(
+      "userRole",
+      userData.role
+    );
+
+    localStorage.setItem("isLoggedIn", "true");
+
+    window.dispatchEvent(new Event("authUpdated"));
+  };
+
+  // LOGOUT
+  const logout = () => {
+    // Remove authentication data
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("isLoggedIn");
+
+    // Clear user from React state
+    setUser(null);
+
+    // Tell the application that authentication changed
+    window.dispatchEvent(new Event("authUpdated"));
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         setUser,
+        login,
+        logout,
         loading,
         isLoggedIn: !!user,
       }}
