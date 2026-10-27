@@ -16,19 +16,28 @@ function Products() {
   const [search, setSearch] = useState("");
   const [sortOption, setSortOption] = useState("featured");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Products displayed on one page
   const productsPerPage = 8;
 
+  // Fetch products from the backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
+        setError("");
+
         const data = await getAllProducts();
 
         setProducts(data.products || []);
       } catch (error) {
         console.error("Error fetching products:", error);
+
+        setError(
+          error.message ||
+            "Unable to load products. Please try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -37,6 +46,7 @@ function Products() {
     fetchProducts();
   }, []);
 
+  // Search products by name, category, or brand
   const filteredProducts = products.filter((product) => {
     const searchText = search.toLowerCase().trim();
 
@@ -47,56 +57,57 @@ function Products() {
     );
   });
 
+  // Sort products
   const sortedProducts = [...filteredProducts];
 
   switch (sortOption) {
     case "price-low":
       sortedProducts.sort(
-        (a, b) => Number(a.price || 0) - Number(b.price || 0),
+        (a, b) => Number(a.price || 0) - Number(b.price || 0)
       );
-
       break;
 
     case "price-high":
       sortedProducts.sort(
-        (a, b) => Number(b.price || 0) - Number(a.price || 0),
+        (a, b) => Number(b.price || 0) - Number(a.price || 0)
       );
-
       break;
 
     case "newest":
       sortedProducts.sort(
-        (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+        (a, b) =>
+          new Date(b.createdAt || 0) -
+          new Date(a.createdAt || 0)
       );
-
       break;
 
     case "rating":
       sortedProducts.sort(
-        (a, b) => Number(b.rating || 0) - Number(a.rating || 0),
+        (a, b) => Number(b.rating || 0) - Number(a.rating || 0)
       );
-
       break;
 
     case "discount":
       sortedProducts.sort(
-        (a, b) => Number(b.discount || 0) - Number(a.discount || 0),
+        (a, b) => Number(b.discount || 0) - Number(a.discount || 0)
       );
-
       break;
 
     default:
-      // Featured
+      // Keep the existing default order
       break;
   }
 
-  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  // Pagination
+  const totalPages = Math.ceil(
+    sortedProducts.length / productsPerPage
+  );
 
   const startIndex = (currentPage - 1) * productsPerPage;
 
   const paginatedProducts = sortedProducts.slice(
     startIndex,
-    startIndex + productsPerPage,
+    startIndex + productsPerPage
   );
 
   return (
@@ -105,14 +116,11 @@ function Products() {
 
       <section className="products-page">
         {/* LEFT SIDE */}
-
-        <div>
+        <div className="products-sidebar">
           <ProductSearch
             search={search}
             setSearch={(value) => {
               setSearch(value);
-
-              // Reset pagination
               setCurrentPage(1);
             }}
           />
@@ -120,28 +128,52 @@ function Products() {
           <ProductSidebar />
         </div>
 
-        <div>
+        {/* RIGHT SIDE */}
+        <div className="products-content">
           <ProductSort
             sortOption={sortOption}
             setSortOption={(value) => {
               setSortOption(value);
-
-              // Reset pagination
               setCurrentPage(1);
             }}
           />
 
+          {/* ERROR MESSAGE */}
+          {error && !loading && (
+            <div className="error-message">
+              <p>{error}</p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+
           {/* PRODUCTS */}
+          {!error && (
+            <>
+              {!loading && (
+                <p className="product-count">
+                  {sortedProducts.length} Products Found
+                </p>
+              )}
 
-          <ProductGrid products={paginatedProducts} loading={loading} />
+              <ProductGrid
+                products={paginatedProducts}
+                loading={loading}
+              />
 
-          {/* PAGINATION */}
-
-          <ProductPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
+              {!loading && totalPages > 1 && (
+                <ProductPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
+              )}
+            </>
+          )}
         </div>
       </section>
     </>

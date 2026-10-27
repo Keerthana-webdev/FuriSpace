@@ -111,3 +111,27 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.error-message {
+  background: #fff0f0;
+  color: #c0392b;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.error-message button {
+  margin-top: 10px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #c0392b;
+  color: white;
+  cursor: pointer;
+}
+
+.error-message button:hover {
+  opacity: 0.9;
+}

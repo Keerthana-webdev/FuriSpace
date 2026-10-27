@@ -13,7 +13,6 @@ function ProductGrid({ products, loading, error }) {
     return (
       <div className="no-products">
         <h2>No Products Found</h2>
-
         <p>Try changing your search or filters.</p>
       </div>
     );
@@ -21,11 +20,12 @@ function ProductGrid({ products, loading, error }) {
 
   return (
     <div>
-      <h2 className="product-count">{products.length} Products Found</h2>
-
       <div className="products-grid">
         {products.map((product) => (
-          <ProductCard key={product._id} product={product} />
+          <ProductCard
+            key={product._id}
+            product={product}
+          />
         ))}
       </div>
     </div>
